@@ -7,7 +7,8 @@ import { useSessionConnection } from '@/hooks'
 
 // Redirects here are part of what this page renders for a status, not a side
 // effect — hence <Navigate> rather than navigate() in an effect.
-export function ActiveSessionPage() {
+// Default export so router.tsx can lazy() it directly.
+export default function ActiveSessionPage() {
   const sessionId = useParams().sessionId!
   const { state, isAdmin, select, dismissError, endSession } = useSessionConnection(sessionId)
 

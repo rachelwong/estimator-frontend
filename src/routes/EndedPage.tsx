@@ -7,7 +7,8 @@ import { GridMode, RoutePath } from '@/constants'
 import type { GetSessionResponse } from '@/types'
 
 // The Reveal, straight from REST. No socket — endedLoader already has it all.
-export function EndedPage() {
+// Default export so router.tsx can lazy() it directly.
+export default function EndedPage() {
   const session = useLoaderData() as GetSessionResponse
 
   return (

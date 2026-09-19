@@ -84,8 +84,11 @@ export function createSocketPool(sessionId) {
 // Squares are addressed by axis index, not value. Rows are reversed on screen
 // (highest Resources on top), so these map an index pair to DOM order.
 
+// Scoped to the grid itself. The point-system radio dots are .aspect-square
+// too, and the pages are code-split now, so the create page is still in the DOM
+// for a frame after the URL turns into /start.
 export function cells(page) {
-  return page.locator('main .aspect-square')
+  return page.locator('main .grid.gap-1 .aspect-square')
 }
 
 async function axisLength(page) {

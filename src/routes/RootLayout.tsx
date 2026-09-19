@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { Outlet, useNavigation } from 'react-router'
 import { AppHeader } from '@/components/AppHeader'
 import { LoadingNotice } from '@/components/LoadingNotice'
@@ -10,7 +11,10 @@ export function RootLayout() {
   return (
     <>
       <AppHeader />
-      <Outlet />
+      {/* One boundary for every code-split page under @/routes/lazy. */}
+      <Suspense fallback={<LoadingNotice />}>
+        <Outlet />
+      </Suspense>
       {navigation.state !== 'idle' && <LoadingNotice />}
     </>
   )

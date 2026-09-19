@@ -9,7 +9,8 @@ import { nameError } from '@/lib/validation'
 import type { CreateSessionActionData } from '@/routes/loaders'
 import type { PointSystemType as PointSystemTypeValue } from '@/types'
 
-export function CreateSessionPage() {
+// Default export so router.tsx can lazy() it directly.
+export default function CreateSessionPage() {
   const [adminName, setAdminName] = useState('')
   const [touched, setTouched] = useState(false)
   const [pointSystemType, setPointSystemType] = useState<PointSystemTypeValue>(
