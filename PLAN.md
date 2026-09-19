@@ -692,6 +692,9 @@ no socket import. `src/types/session.ts` holds its state and action types.
 Every transition in the diagram, including the terminal-state guards, the
 Selection toggle, and `ERROR_DISMISSED`.
 
+`IDENTITY_ACKED` carries `isAdmin` and `selection` — null for `joined`, the
+Admin's current Selection for `admin-acknowledged`.
+
 **Done when**: `tsc` passes and every arrow in the diagram has a branch.
 
 ---
