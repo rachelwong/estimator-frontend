@@ -51,6 +51,17 @@ export function peekSessionConnection(sessionId: string): SessionConnectionStore
   return registry.get(sessionId)
 }
 
+// A store still connecting or active. What makes Back from /start safe: /join
+// sees it and returns to /start instead of joining a second time.
+export function hasLiveSessionConnection(sessionId: string): boolean {
+  const store = registry.get(sessionId)
+  if (!store) {
+    return false
+  }
+
+  return !isTerminal(store.getSnapshot())
+}
+
 // Closes the socket, then drops the entry. Closing matters — dropping the
 // entry alone leaks a live socket.
 //

@@ -5,9 +5,15 @@
 // both a component and a plain function loses fast refresh for the whole file.
 import { redirect } from 'react-router'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
+import { SessionConnectionStatus } from '@/constants'
 import { getAdminToken, setAdminToken } from '@/lib/adminToken'
 import { ApiError, createSession, getSession } from '@/lib/api'
-import type { GetSessionResponse, PointSystemType } from '@/types'
+import {
+  getOrCreateSessionConnection,
+  hasLiveSessionConnection,
+  removeSessionConnection,
+} from '@/lib/sessionConnectionRegistry'
+import type { GetSessionResponse, JoinSessionActionData, PointSystemType } from '@/types'
 
 const NOT_FOUND_PATH = '/not-found'
 
@@ -25,10 +31,9 @@ async function loadSession(sessionId: string): Promise<GetSessionResponse> {
 }
 
 // Whether this browser can enter the session without a name. The one place
-// every loader asks. Only an admin has an identity until Phase 9 adds the
-// live-store check for participants.
+// every loader asks: an admin token, or a participant's live connection.
 function hasIdentity(sessionId: string): boolean {
-  return getAdminToken(sessionId) !== null
+  return getAdminToken(sessionId) !== null || hasLiveSessionConnection(sessionId)
 }
 
 // Where an open session sends this browser.
@@ -42,6 +47,13 @@ function openSessionPath(sessionId: string): string {
 
 export async function joinLoader({ params }: LoaderFunctionArgs) {
   const sessionId = params.sessionId!
+
+  // Back from /start. The live connection already answers what REST would,
+  // and joining again would create a second participant.
+  if (hasLiveSessionConnection(sessionId)) {
+    return redirect(`/${sessionId}/start`)
+  }
+
   const session = await loadSession(sessionId)
 
   if (session.ended) {
@@ -79,6 +91,31 @@ export async function endedLoader({ params }: LoaderFunctionArgs) {
   }
 
   return session
+}
+
+export async function joinAction({ params, request }: ActionFunctionArgs) {
+  const sessionId = params.sessionId!
+  const name = String((await request.formData()).get('name') ?? '')
+
+  // Drop a dead store from an earlier drop, so this join gets a fresh socket.
+  removeSessionConnection(sessionId)
+  const store = getOrCreateSessionConnection(sessionId, { name })
+  const state = await store.whenSettled()
+
+  if (state.status === SessionConnectionStatus.ACTIVE) {
+    return redirect(`/${sessionId}/start`)
+  }
+
+  if (state.status === SessionConnectionStatus.ENDED) {
+    return redirect(`/${sessionId}/ended`)
+  }
+
+  // e.g. INVALID_NAME, or UNKNOWN_SESSION after a backend restart.
+  if (state.status === SessionConnectionStatus.REJECTED) {
+    return { error: state.error.message } satisfies JoinSessionActionData
+  }
+
+  return { error: 'Could not connect. Try again.' } satisfies JoinSessionActionData
 }
 
 export interface CreateSessionActionData {

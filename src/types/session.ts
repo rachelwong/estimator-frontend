@@ -57,6 +57,11 @@ export type SessionConnectionAction =
 // name (`join`), or the Admin by stored token (`admin-auth`).
 export type SessionIdentity = { name: string } | { adminToken: string }
 
+// What joinAction hands back to JoinSessionPage when the join did not land.
+export interface JoinSessionActionData {
+  error: string
+}
+
 // One live connection to one Session, kept in lib/sessionConnectionRegistry.ts
 // so it survives the /join → /start navigation.
 export interface SessionConnectionStore {

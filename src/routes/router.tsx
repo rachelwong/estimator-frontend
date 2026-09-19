@@ -10,6 +10,7 @@ import { JoinSessionPage } from '@/routes/JoinSessionPage'
 import {
   createSessionAction,
   endedLoader,
+  joinAction,
   joinLoader,
   startLoader,
 } from '@/routes/loaders'
@@ -39,7 +40,12 @@ export const router = createBrowserRouter([
         element: null,
         loader: ({ params }) => redirect(`/${params.sessionId}/join`),
       },
-      { path: '/:sessionId/join', element: <JoinSessionPage />, loader: joinLoader },
+      {
+        path: '/:sessionId/join',
+        element: <JoinSessionPage />,
+        loader: joinLoader,
+        action: joinAction,
+      },
       { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
       { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
       // Temporary grid preview, dev builds only. Removed in Phase 12.
