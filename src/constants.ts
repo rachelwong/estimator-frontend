@@ -63,6 +63,14 @@ export const WebSocketEvent = {
   ERROR: 'error',
 } as const
 
+// Socket.IO's own reserved client events, not part of the backend's protocol.
+// With reconnection: false, a failed handshake fires CONNECT_ERROR and never
+// DISCONNECT, so both have to be heard.
+export const SocketLifecycleEvent = {
+  DISCONNECT: 'disconnect',
+  CONNECT_ERROR: 'connect_error',
+} as const
+
 // How far the admin's slider goes for each point system. Mirrors
 // estimator-backend/src/pointSystems.ts — the server re-validates anyway, so
 // this only keeps the UI from offering a value that would be rejected.

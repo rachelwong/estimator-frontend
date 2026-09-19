@@ -475,9 +475,16 @@ interpreted on the way in.
 | `session-ended` | `SESSION_ENDED` — payload dropped, `/ended` refetches over REST |
 | `error` | `ERROR_RECEIVED` |
 | `disconnect` | `DISCONNECTED` |
+| `connect_error` | `DISCONNECTED` |
 
 Listening for `disconnect` is what makes `reconnection: false` visible rather
-than merely silent.
+than merely silent. `connect_error` covers an unreachable backend: with
+`reconnection: false` a failed handshake never fires `disconnect`, so without it
+`whenSettled` would never resolve and `joinAction` would hang. Both are
+Socket.IO's own reserved events, named in `SocketLifecycleEvent`.
+
+The store sends `join` or `admin-auth` on receiving `session-info`, and only
+if that left the state in `connecting`. An ended Session never gets a join.
 
 ---
 

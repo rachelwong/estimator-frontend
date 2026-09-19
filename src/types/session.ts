@@ -52,3 +52,21 @@ export type SessionConnectionAction =
   | { type: typeof SessionAction.ERROR_DISMISSED }
   | { type: typeof SessionAction.DISCONNECTED }
   | { type: typeof SessionAction.SESSION_ENDED }
+
+// Who the socket identifies as once session-info arrives: a Participant by
+// name (`join`), or the Admin by stored token (`admin-auth`).
+export type SessionIdentity = { name: string } | { adminToken: string }
+
+// One live connection to one Session, kept in lib/sessionConnectionRegistry.ts
+// so it survives the /join → /start navigation.
+export interface SessionConnectionStore {
+  getSnapshot: () => SessionConnectionState
+  subscribe: (listener: () => void) => () => void
+  // Resolves once the state leaves CONNECTING.
+  whenSettled: () => Promise<SessionConnectionState>
+  select: (time: number, resource: number) => void
+  dismissError: () => void
+  // No-op for a Participant — only an Admin identity carries a token.
+  endSession: () => void
+  close: () => void
+}
