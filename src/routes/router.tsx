@@ -22,8 +22,8 @@ import { RootLayout } from '@/routes/RootLayout'
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,
-    errorElement: <AppError />,
-    // First load has no navigation to track, and is usually the cold start.
+    // First load has no navigation to track, and is usually the cold start. It
+    // replaces RootLayout, so it brings its own header.
     hydrateFallbackElement: (
       <>
         <AppHeader />
@@ -31,26 +31,33 @@ export const router = createBrowserRouter([
       </>
     ),
     children: [
-      { path: '/', element: <CreateSessionPage />, action: createSessionAction },
-      { path: '/not-found', element: <NotFoundPage /> },
-      // Redirect-only. element: null, not omitted — this route renders while
-      // /join's loader runs, and an undefined element warns.
       {
-        path: '/:sessionId',
-        element: null,
-        loader: ({ params }) => redirect(`/${params.sessionId}/join`),
+        // Pathless, so a failed page renders AppError inside RootLayout's
+        // Outlet and keeps the header. On the root route it would replace it.
+        errorElement: <AppError />,
+        children: [
+          { path: '/', element: <CreateSessionPage />, action: createSessionAction },
+          { path: '/not-found', element: <NotFoundPage /> },
+          // Redirect-only. element: null, not omitted — this route renders while
+          // /join's loader runs, and an undefined element warns.
+          {
+            path: '/:sessionId',
+            element: null,
+            loader: ({ params }) => redirect(`/${params.sessionId}/join`),
+          },
+          {
+            path: '/:sessionId/join',
+            element: <JoinSessionPage />,
+            loader: joinLoader,
+            action: joinAction,
+          },
+          { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
+          { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
+          // Temporary grid preview, dev builds only. Removed in Phase 12.
+          ...(import.meta.env.DEV ? [{ path: '/dev/grid', element: <GridPreviewPage /> }] : []),
+          { path: '*', element: null, loader: () => redirect('/not-found') },
+        ],
       },
-      {
-        path: '/:sessionId/join',
-        element: <JoinSessionPage />,
-        loader: joinLoader,
-        action: joinAction,
-      },
-      { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
-      { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
-      // Temporary grid preview, dev builds only. Removed in Phase 12.
-      ...(import.meta.env.DEV ? [{ path: '/dev/grid', element: <GridPreviewPage /> }] : []),
-      { path: '*', element: null, loader: () => redirect('/not-found') },
     ],
   },
 ])

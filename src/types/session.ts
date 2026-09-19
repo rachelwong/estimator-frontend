@@ -75,3 +75,12 @@ export interface SessionConnectionStore {
   endSession: () => void
   close: () => void
 }
+
+// What useSessionConnection hands a page: the live state, whether this browser
+// is the Admin, and the store's commands.
+export interface SessionConnection {
+  state: SessionConnectionState
+  isAdmin: boolean
+  select: SessionConnectionStore['select']
+  dismissError: SessionConnectionStore['dismissError']
+}

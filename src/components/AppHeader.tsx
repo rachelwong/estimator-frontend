@@ -1,4 +1,4 @@
-// Sits at the top of all four pages. The wireframe centres the title above a
+// Rendered once by RootLayout, above every page. The wireframe centres the title above a
 // centred grid, so the whole app shares one centred column.
 export function AppHeader() {
   return (

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Form, useActionData, useNavigation } from 'react-router'
-import { AppHeader } from '@/components/AppHeader'
 import { PointSystemPicker } from '@/components/PointSystemPicker'
 import { RangeSlider } from '@/components/RangeSlider'
 import { Button } from '@/components/ui/button'
@@ -32,49 +31,45 @@ export function CreateSessionPage() {
   }
 
   return (
-    <>
-      <AppHeader />
+    <main className="mx-auto max-w-md px-6 py-10">
+      <h2 className="mb-6 text-xl font-semibold">Create a new session</h2>
 
-      <main className="mx-auto max-w-md px-6 py-10">
-        <h2 className="mb-6 text-xl font-semibold">Create a new session</h2>
-
-        <Form method="post" className="grid gap-6">
-          <div className="grid gap-2">
-            <label htmlFor="adminName" className="text-sm">
-              Provide your name
-            </label>
-            <Input
-              id="adminName"
-              name="adminName"
-              value={adminName}
-              autoComplete="off"
-              onChange={(event) => setAdminName(event.target.value)}
-              onBlur={() => setTouched(true)}
-              aria-invalid={touched && validationError !== null}
-            />
-            {touched && validationError && (
-              <p className="text-sm text-destructive">{validationError}</p>
-            )}
-          </div>
-
-          <div className="grid gap-2">
-            <span className="text-sm">Select a point system</span>
-            <PointSystemPicker value={pointSystemType} onChange={handlePointSystemChange} />
-          </div>
-
-          <RangeSlider
-            pointSystemType={pointSystemType}
-            value={sliderMax}
-            onChange={setSliderMax}
+      <Form method="post" className="grid gap-6">
+        <div className="grid gap-2">
+          <label htmlFor="adminName" className="text-sm">
+            Provide your name
+          </label>
+          <Input
+            id="adminName"
+            name="adminName"
+            value={adminName}
+            autoComplete="off"
+            onChange={(event) => setAdminName(event.target.value)}
+            onBlur={() => setTouched(true)}
+            aria-invalid={touched && validationError !== null}
           />
+          {touched && validationError && (
+            <p className="text-sm text-destructive">{validationError}</p>
+          )}
+        </div>
 
-          {actionData?.error && <p className="text-sm text-destructive">{actionData.error}</p>}
+        <div className="grid gap-2">
+          <span className="text-sm">Select a point system</span>
+          <PointSystemPicker value={pointSystemType} onChange={handlePointSystemChange} />
+        </div>
 
-          <Button type="submit" disabled={isSubmitting || validationError !== null}>
-            {isSubmitting ? 'Starting…' : 'Start Session'}
-          </Button>
-        </Form>
-      </main>
-    </>
+        <RangeSlider
+          pointSystemType={pointSystemType}
+          value={sliderMax}
+          onChange={setSliderMax}
+        />
+
+        {actionData?.error && <p className="text-sm text-destructive">{actionData.error}</p>}
+
+        <Button type="submit" disabled={isSubmitting || validationError !== null}>
+          {isSubmitting ? 'Starting…' : 'Start Session'}
+        </Button>
+      </Form>
+    </main>
   )
 }
