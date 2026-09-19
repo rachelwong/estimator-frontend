@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { PointSystemType } from '@/constants'
 import { nameError } from '@/lib/validation'
 import type { CreateSessionActionData } from '@/routes/loaders'
-import type { PointSystemType as PointSystemTypeValue } from '@/types/constants'
+import type { PointSystemType as PointSystemTypeValue } from '@/types'
 
 export function CreateSessionPage() {
   const [adminName, setAdminName] = useState('')

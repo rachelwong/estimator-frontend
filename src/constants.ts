@@ -56,6 +56,25 @@ export const SLIDER_MAX_CEILING = {
   [PointSystemType.FIBONACCI]: 64,
 } as const
 
+// Two mutually exclusive options, so radios rather than the wireframe's
+// "dropdown list" — both are worth seeing at once.
+export const POINT_SYSTEM_OPTIONS = [
+  { value: PointSystemType.NUMERICAL, label: 'Numerical integers' },
+  { value: PointSystemType.FIBONACCI, label: 'Fibonacci sequence' },
+] as const
+
+// Below this, the wait is a warm server and needs no explanation. Showing
+// the notice anyway flashes it for a frame on every navigation.
+export const LOADING_NOTICE_DELAY_MS = 400
+
+// The wireframe's Square fits about three names.
+export const MAX_VISIBLE_NAMES = 3
+
+export const CELL_CLASS = {
+  [CellState.EMPTY]: 'bg-neutral-200',
+  [CellState.CHOSEN]: 'bg-green-500 text-white',
+} as const
+
 // A missing session is an expected answer from GET /sessions/:id, not a
 // failure, so lib/api.ts checks for this status by name.
 export const HTTP_NOT_FOUND = 404

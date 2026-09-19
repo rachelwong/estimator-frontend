@@ -7,8 +7,7 @@ import { redirect } from 'react-router'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
 import { getAdminToken, setAdminToken } from '@/lib/adminToken'
 import { ApiError, createSession, getSession } from '@/lib/api'
-import type { PointSystemType } from '@/types/constants'
-import type { GetSessionResponse } from '@/types/protocol'
+import type { GetSessionResponse, PointSystemType } from '@/types'
 
 const NOT_FOUND_PATH = '/not-found'
 

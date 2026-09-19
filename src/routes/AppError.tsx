@@ -2,26 +2,7 @@ import { useEffect } from 'react'
 import { useRevalidator, useRouteError } from 'react-router'
 import { AppHeader } from '@/components/AppHeader'
 import { Button } from '@/components/ui/button'
-import { ApiError, NetworkError } from '@/lib/api'
-
-interface ErrorCopy {
-  title: string
-  detail: string
-}
-
-// Words only — every error gets the same page and the same Retry.
-// Unreachable is the common case: a cold start or a stopped backend.
-function describe(error: unknown): ErrorCopy {
-  if (error instanceof NetworkError) {
-    return { title: 'Could not reach the server', detail: 'It may still be waking up.' }
-  }
-
-  if (error instanceof ApiError) {
-    return { title: 'The server hit an error', detail: error.message }
-  }
-
-  return { title: 'Something went wrong', detail: 'Try again, or reload the page.' }
-}
+import { describeError } from '@/utils'
 
 // Root errorElement. Retry re-runs the loaders rather than reloading the page.
 export function AppError() {
@@ -29,7 +10,7 @@ export function AppError() {
   const revalidator = useRevalidator()
 
   const isRetrying = revalidator.state !== 'idle'
-  const { title, detail } = describe(error)
+  const { title, detail } = describeError(error)
 
   // Once per error, not per render — retrying re-renders this page.
   useEffect(() => {

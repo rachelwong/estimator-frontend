@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-
-// Below this, the wait is a warm server and needs no explanation. Showing
-// the notice anyway flashes it for a frame on every navigation.
-const SHOW_AFTER_MS = 400;
+import { LOADING_NOTICE_DELAY_MS } from "@/constants";
 
 // Shown while a loader or action waits on the backend. A sleeping Render
 // instance takes 30–60s to wake, so the wait is explained, not just spun.
@@ -10,7 +7,7 @@ export function LoadingNotice() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), SHOW_AFTER_MS);
+    const timer = setTimeout(() => setIsVisible(true), LOADING_NOTICE_DELAY_MS);
     return () => clearTimeout(timer);
   }, []);
 

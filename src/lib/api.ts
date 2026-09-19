@@ -1,11 +1,11 @@
 import { HTTP_NOT_FOUND } from '@/constants'
-import type { ErrorCode } from '@/types/constants'
 import type {
   CreateSessionRequest,
   CreateSessionResponse,
+  ErrorCode,
   ErrorResponse,
   GetSessionResponse,
-} from '@/types/protocol'
+} from '@/types'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 

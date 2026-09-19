@@ -1,6 +1,6 @@
 import { Slider } from '@/components/ui/slider'
 import { SLIDER_MAX_CEILING } from '@/constants'
-import type { PointSystemType } from '@/types/constants'
+import type { PointSystemType } from '@/types'
 
 interface RangeSliderProps {
   pointSystemType: PointSystemType
