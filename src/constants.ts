@@ -48,6 +48,21 @@ export const ErrorCode = {
   INTERNAL_ERROR: 'INTERNAL_ERROR',
 } as const
 
+// Mirrors estimator-backend/src/ws/events.ts. Keys ALL_CAPS here; values are
+// what cross the wire.
+export const WebSocketEvent = {
+  JOIN: 'join',
+  ADMIN_AUTHENTICATE: 'admin-auth',
+  SELECT_SQUARE: 'select-square',
+  END_SESSION: 'end-session',
+  SESSION_INFO: 'session-info',
+  JOINED: 'joined',
+  ADMIN_ACKNOWLEDGED: 'admin-acknowledged',
+  SELECTION_ACKNOWLEDGED: 'selection-acknowledged',
+  SESSION_ENDED: 'session-ended',
+  ERROR: 'error',
+} as const
+
 // How far the admin's slider goes for each point system. Mirrors
 // estimator-backend/src/pointSystems.ts — the server re-validates anyway, so
 // this only keeps the UI from offering a value that would be rejected.

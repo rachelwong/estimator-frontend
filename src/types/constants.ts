@@ -12,6 +12,7 @@ import {
   PointSystemType,
   SessionAction,
   SessionConnectionStatus,
+  WebSocketEvent,
 } from '../constants'
 
 export type PointSystemType = (typeof PointSystemType)[keyof typeof PointSystemType]
@@ -26,3 +27,5 @@ export type SessionConnectionStatus =
 export type SessionAction = (typeof SessionAction)[keyof typeof SessionAction]
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode]
+
+export type WebSocketEvent = (typeof WebSocketEvent)[keyof typeof WebSocketEvent]

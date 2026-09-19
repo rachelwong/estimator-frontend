@@ -435,9 +435,9 @@ Click only. No keyboard navigation (decision #18).
 
 ```ts
 // src/lib/socket.ts — the only file importing socket.io-client
-export const WsEvent = {
+export const WebSocketEvent = {
   Join: "join",
-  AdminAuth: "admin-auth",
+  AdminAuthenticate: "admin-auth",
   SelectSquare: "select-square",
   EndSession: "end-session",
   SessionInfo: "session-info",
@@ -676,8 +676,9 @@ show it yet without live data. Removed in Phase 12.
 
 ### Phase 6 — Socket layer
 
-`src/lib/socket.ts` as above — `WsEvent`, typed event maps, `createSocket`. No
-React, no reducer.
+`src/lib/socket.ts` — `AppSocket` and `createSocket`. No React, no reducer.
+`WebSocketEvent` lives in `src/constants.ts` (ALL_CAPS keys), the event maps in
+`src/types/protocol.ts`, per `no-magic-strings` and `centralized-types`.
 
 **Done when**: a scratch call connects to a real Session and logs `session-info`.
 

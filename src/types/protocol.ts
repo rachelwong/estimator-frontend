@@ -1,6 +1,8 @@
 // Hand-mirrored from estimator-backend/src/types.ts and src/schemas.ts.
 // Keep the two in step by hand — about six shapes, so a shared package or a
 // submodule would cost more than it saves.
+// WebSocketEvent is a value import: computed keys below need the value binding.
+import { WebSocketEvent } from '../constants'
 import type { ErrorCode, PointSystemType } from './constants'
 
 export interface PointSystem {
@@ -54,4 +56,31 @@ export interface GetSessionResponse {
 export interface ErrorResponse {
   error: ErrorCode
   message: string
+}
+
+// Socket event maps, hand-mirrored from estimator-backend/src/ws/events.ts.
+// Keyed off WebSocketEvent so a typo'd event name fails to compile.
+export interface ClientToServerEvents {
+  [WebSocketEvent.JOIN]: (name: string) => void
+  [WebSocketEvent.ADMIN_AUTHENTICATE]: (adminToken: string) => void
+  [WebSocketEvent.SELECT_SQUARE]: (payload: Selection) => void
+  [WebSocketEvent.END_SESSION]: (adminToken: string) => void
+}
+
+// `error` is optional: the "not identified yet" case sends a message only.
+export interface ServerToClientEvents {
+  [WebSocketEvent.SESSION_INFO]: (payload: {
+    sessionId: string
+    pointSystem: PointSystem
+    ended: boolean
+  }) => void
+  [WebSocketEvent.JOINED]: (payload: { participantId: string; name: string }) => void
+  [WebSocketEvent.ADMIN_ACKNOWLEDGED]: (payload: {
+    participantId: string
+    name: string
+    selection: Selection | null
+  }) => void
+  [WebSocketEvent.SELECTION_ACKNOWLEDGED]: (payload: Selection) => void
+  [WebSocketEvent.SESSION_ENDED]: (payload: RevealPayload) => void
+  [WebSocketEvent.ERROR]: (payload: { error?: ErrorCode; message: string }) => void
 }
