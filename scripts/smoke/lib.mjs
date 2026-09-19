@@ -1,8 +1,10 @@
 // Shared helpers for the smoke scenarios. See run.mjs.
 import { io } from 'socket.io-client'
 
-export const APP = 'http://localhost:5173'
-export const API = 'http://localhost:3001'
+// Default to the dev servers; override both to run the same suite against
+// production: SMOKE_APP_URL=https://… SMOKE_API_URL=https://… npm run smoke
+export const APP = process.env.SMOKE_APP_URL ?? 'http://localhost:5173'
+export const API = process.env.SMOKE_API_URL ?? 'http://localhost:3001'
 export const SHOTS = new URL('./screenshots', import.meta.url).pathname
 
 const GREEN = 'bg-green-500'
