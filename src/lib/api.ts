@@ -23,6 +23,25 @@ export class ApiError extends Error {
   }
 }
 
+// The request never got an answer: backend down, asleep, or offline. Kept
+// apart from ApiError so callers can say "unreachable" only when it is true.
+export class NetworkError extends Error {
+  constructor(cause: unknown) {
+    super('Could not reach the server', { cause })
+    this.name = 'NetworkError'
+  }
+}
+
+// fetch rejects with a bare TypeError on network failure — the same type a
+// code bug throws. Rewrap it so the two can be told apart.
+async function send(url: string, init?: RequestInit): Promise<Response> {
+  try {
+    return await fetch(url, init)
+  } catch (cause) {
+    throw new NetworkError(cause)
+  }
+}
+
 // The backend always answers with { error, message }. A proxy or a sleeping
 // host might not, so fall back to the status text rather than throwing while
 // building the error.
@@ -38,7 +57,7 @@ async function toApiError(response: Response): Promise<ApiError> {
 export async function createSession(
   input: CreateSessionRequest,
 ): Promise<CreateSessionResponse> {
-  const response = await fetch(`${BASE_URL}/sessions`, {
+  const response = await send(`${BASE_URL}/sessions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
@@ -55,7 +74,7 @@ export async function createSession(
 // loaders turn into a redirect to /not-found, not a failure — so it comes back
 // in the type rather than as a throw.
 export async function getSession(sessionId: string): Promise<GetSessionResponse | null> {
-  const response = await fetch(`${BASE_URL}/sessions/${sessionId}`)
+  const response = await send(`${BASE_URL}/sessions/${sessionId}`)
 
   if (response.status === HTTP_NOT_FOUND) {
     return null

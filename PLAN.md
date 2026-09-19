@@ -27,6 +27,8 @@ That document is unchanged. Where this plan differs:
 | Plain grid cells | Grey when empty, green when chosen | Miro wireframe |
 | No app title | "Product Poker" header on every page | Miro shows a title on all three screens |
 | Vitest + React Testing Library | No tests | Scoped out |
+| — | One shared parent, `RootLayout`, wraps every route | Somewhere to show the loading notice on every page. It holds no Session state |
+| — | A first-load screen: header plus loading notice | The loading notice only covers moves between pages, not the first page load, which is where most cold starts happen |
 
 Renamed from the Miro wireframe's "Task estimator" to avoid confusion with the
 out-of-scope task-description feature.
@@ -83,7 +85,9 @@ linked. No component anywhere maps a status to a screen.
 | `/not-found` | `NotFoundPage` | — |
 | `*` | — | Redirects to `/not-found` |
 
-Flat, with no shared parent route.
+Flat: no route nests inside another. They share one parent, `RootLayout`, which
+only shows the loading notice. It holds no Session state, so a live connection
+still can't rely on it surviving a page change.
 
 **Every loader calls `getSession()` first**, unless a live store already exists
 for that Session. Checking the Admin token first would send an Admin holding a
@@ -109,8 +113,13 @@ Render's free tier sleeps after 15 minutes without HTTP traffic. Sporadic use
 means most Sessions start cold, so the first `getSession()` can take 30–60
 seconds. That is the normal path, not an edge case.
 
-- A root `errorElement` catches a failed loader and offers a retry.
-- `useNavigation()` drives a pending indicator, so the wait is never a blank page.
+- A root `errorElement` catches a failed loader and offers a retry. It says
+  "Could not reach the server" only when that is true. `lib/api.ts` throws a
+  `NetworkError` for that case, separate from a server error or a code bug.
+- `useNavigation()` drives a loading notice, so the wait is never a blank page.
+  It waits 400ms before showing, so a fast page change doesn't flash it.
+- The first page load shows the header and the same notice until the loader
+  finishes.
 - Submit buttons disable while a loader or action runs.
 
 ---
@@ -612,15 +621,17 @@ the URL changes. `/start` can still 404.
 ```tsx
 createBrowserRouter([
   {
+    element: <RootLayout />,
     errorElement: <AppError />,
+    hydrateFallbackElement: <><AppHeader /><LoadingNotice /></>,
     children: [
       { path: "/", element: <CreateSessionPage /> },
-      { path: "/:sessionId", loader: ({ params }) => redirect(`/${params.sessionId}/join`) },
+      { path: "/:sessionId", element: null, loader: ({ params }) => redirect(`/${params.sessionId}/join`) },
       { path: "/:sessionId/join", element: <JoinSessionPage />, loader: joinLoader },
       { path: "/:sessionId/start", element: <ActiveSessionPage />, loader: startLoader },
       { path: "/:sessionId/ended", element: <EndedPage />, loader: endedLoader },
       { path: "/not-found", element: <NotFoundPage /> },
-      { path: "*", loader: () => redirect("/not-found") },
+      { path: "*", element: null, loader: () => redirect("/not-found") },
     ],
   },
 ]);
@@ -630,7 +641,13 @@ createBrowserRouter([
 its own checks per the routes table and calling `redirect()` rather than
 rendering a wrong-status page. No socket touched yet.
 
-A pending indicator driven by `useNavigation()`. `AppError` offers a retry.
+"Can this browser skip the name form?" is answered in one place, `hasIdentity`.
+For now only an Admin token counts. Phase 9 adds the live-store check there.
+
+The two redirect-only routes set `element: null`. Leaving it out makes React
+Router warn while the next page's loader runs.
+
+A loading notice driven by `useNavigation()`. `AppError` offers a retry.
 
 The four pages render stubs. The point is the redirect logic, not the UI.
 
