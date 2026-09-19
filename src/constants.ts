@@ -24,6 +24,12 @@ export const AreaPreview = {
   INSIDE: 'inside',
 } as const
 
+// Which way an axis title reads. Resources runs bottom to top.
+export const AxisOrientation = {
+  HORIZONTAL: 'horizontal',
+  VERTICAL: 'vertical',
+} as const
+
 export const SessionConnectionStatus = {
   CONNECTING: 'connecting',
   ACTIVE: 'active',
@@ -111,6 +117,19 @@ export const CELL_CLASS = {
 
 // Ring, not fill, so it can sit on top of a Selection's Area.
 export const PREVIEW_CLASS = 'ring-2 ring-neutral-500'
+
+// No units: Time and Resources are labels, and the team decides (CONTEXT.md).
+export const AXIS_HINT = {
+  TIME: 'Duration, not effort. Go higher for dependencies or unknowns.',
+  RESOURCES: 'Anything the task needs, such as effort, people or dependencies. Your team decides.',
+} as const
+
+// Vertical: writing-mode turns the text but leaves the icon upright, so
+// rotate-180 flips it. The icon's own rotate-180 flips it back.
+export const AXIS_TITLE_CLASS = {
+  [AxisOrientation.HORIZONTAL]: { trigger: '', icon: '' },
+  [AxisOrientation.VERTICAL]: { trigger: 'rotate-180 [writing-mode:vertical-rl]', icon: 'rotate-180' },
+} as const
 
 // PointerEvent.pointerType for a mouse (Pointer Events spec). Touch and pen
 // get no hover preview — a tap would leave it stuck on.

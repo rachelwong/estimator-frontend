@@ -7,6 +7,7 @@
 // type of the same name apart, since values and types are separate namespaces.
 import {
   AreaPreview,
+  AxisOrientation,
   CellState,
   ErrorCode,
   GridMode,
@@ -24,6 +25,8 @@ export type GridMode = (typeof GridMode)[keyof typeof GridMode]
 export type CellState = (typeof CellState)[keyof typeof CellState]
 
 export type AreaPreview = (typeof AreaPreview)[keyof typeof AreaPreview]
+
+export type AxisOrientation = (typeof AxisOrientation)[keyof typeof AxisOrientation]
 
 export type SessionConnectionStatus =
   (typeof SessionConnectionStatus)[keyof typeof SessionConnectionStatus]

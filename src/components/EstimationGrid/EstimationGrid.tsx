@@ -1,8 +1,9 @@
 import { Fragment, useState } from 'react'
 import type { PointerEvent } from 'react'
-import { AreaPreview, GridMode, MOUSE_POINTER_TYPE } from '@/constants'
+import { AreaPreview, AXIS_HINT, AxisOrientation, GridMode, MOUSE_POINTER_TYPE } from '@/constants'
 import type { GridMode as GridModeValue, RevealPayload, Selection } from '@/types'
 import { cellState, groupNames, inArea, squareKey } from '@/utils'
+import { AxisTitle } from './AxisTitle'
 import { AxisValue } from './AxisValue'
 import { GridCell } from './GridCell'
 
@@ -56,9 +57,11 @@ export function EstimationGrid({
 
   return (
     <div className="flex items-center gap-3">
-      <span className="rotate-180 text-sm font-medium [writing-mode:vertical-rl]">
-        Resources
-      </span>
+      <AxisTitle
+        label="Resources"
+        hint={AXIS_HINT.RESOURCES}
+        orientation={AxisOrientation.VERTICAL}
+      />
 
       <div className="grid flex-1 gap-2">
         {/* Cleared on leaving the whole grid, not each cell, so the ring
@@ -99,7 +102,7 @@ export function EstimationGrid({
           ))}
         </div>
 
-        <span className="text-center text-sm font-medium">Time</span>
+        <AxisTitle label="Time" hint={AXIS_HINT.TIME} />
       </div>
     </div>
   )
