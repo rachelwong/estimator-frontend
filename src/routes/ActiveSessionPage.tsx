@@ -9,7 +9,7 @@ import { useSessionConnection } from '@/hooks'
 // effect — hence <Navigate> rather than navigate() in an effect.
 export function ActiveSessionPage() {
   const sessionId = useParams().sessionId!
-  const { state, isAdmin, select, dismissError } = useSessionConnection(sessionId)
+  const { state, isAdmin, select, dismissError, endSession } = useSessionConnection(sessionId)
 
   const isLost =
     state.status === SessionConnectionStatus.DISCONNECTED ||
@@ -35,9 +35,12 @@ export function ActiveSessionPage() {
 
   return (
     <ActiveSessionView
+      sessionId={sessionId}
       state={state}
       onSelect={({ time, resource }) => select(time, resource)}
       onDismissError={dismissError}
+      // The server's ack, not the token, decides who sees the controls.
+      onEndSession={state.isAdmin ? endSession : undefined}
     />
   )
 }

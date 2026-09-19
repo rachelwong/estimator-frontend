@@ -90,6 +90,9 @@ export const POINT_SYSTEM_OPTIONS = [
 // the notice anyway flashes it for a frame on every navigation.
 export const LOADING_NOTICE_DELAY_MS = 400
 
+// How long ShareLink's copy button shows its confirmation tick.
+export const COPIED_FEEDBACK_MS = 2000
+
 // The wireframe's Square fits about three names.
 export const MAX_VISIBLE_NAMES = 3
 

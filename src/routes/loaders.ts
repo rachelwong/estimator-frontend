@@ -79,6 +79,15 @@ export async function startLoader({ params }: LoaderFunctionArgs) {
     return redirect(`/${sessionId}/join`)
   }
 
+  // An Admin arriving from creation, a refresh or a second tab. admin-auth's
+  // ack carries their current Selection (decision #19), so the grid is never
+  // blank. A dead store from an earlier drop is replaced, not reused.
+  const adminToken = getAdminToken(sessionId)
+  if (adminToken !== null && !hasLiveSessionConnection(sessionId)) {
+    removeSessionConnection(sessionId)
+    getOrCreateSessionConnection(sessionId, { adminToken })
+  }
+
   return session
 }
 

@@ -83,4 +83,5 @@ export interface SessionConnection {
   isAdmin: boolean
   select: SessionConnectionStore['select']
   dismissError: SessionConnectionStore['dismissError']
+  endSession: SessionConnectionStore['endSession']
 }

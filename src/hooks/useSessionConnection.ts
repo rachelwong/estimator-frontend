@@ -16,5 +16,6 @@ export function useSessionConnection(sessionId: string): SessionConnection {
     isAdmin: getAdminToken(sessionId) !== null,
     select: store.select,
     dismissError: store.dismissError,
+    endSession: store.endSession,
   }
 }
