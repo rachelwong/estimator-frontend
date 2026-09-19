@@ -34,6 +34,10 @@ in case a name was taken.
 Why each value exists is in `estimator-plan.md` → "Deployment" and "Secrets &
 environment configuration". Not repeated here.
 
+**This file is mirrored in both repos** — `estimator-frontend/docs/plans/deployment.md`
+and `estimator-backend/DEPLOYMENT.md` — because a deploy touches both and
+neither repo owns the sequence. Edit both, or they drift.
+
 ---
 
 ## Backend checklist — Render
@@ -116,7 +120,7 @@ environment configuration". Not repeated here.
       same suite run against production.
 - [ ] F1d. `npm run build` and `npm run lint` pass, and the smoke suite passes
       against a local backend — it hasn't been run since the welcome-page commit
-      (`ui-refresh.md` verification step 2).
+      (`docs/plans/ui-refresh.md` verification step 2).
 - [ ] F1e. Push to `master`.
 
 **Dashboard, first pass** — do this before R5, it's where the Vercel URL comes from
@@ -262,7 +266,8 @@ URLs, not credentials. Nothing secret can ever go in a `VITE_*` variable.
   paused or failing job means Render is sleeping again.
 - **Rollback.** Vercel: Deployments → earlier build → Promote to Production.
   Render: Events → earlier deploy → Rollback (also wipes Sessions).
-- **Protocol changes.** `src/types/protocol.ts` mirrors the backend by hand.
+- **Protocol changes.** The frontend's `src/types/protocol.ts` mirrors the
+  backend's `src/types.ts` by hand.
   Deploy the backend first when the change is backward-compatible; otherwise
   deploy both together, when nobody is mid-Session.
 - **New frontend URL** (rename or custom domain) means updating `CORS_ORIGIN` on
