@@ -1,8 +1,8 @@
 import { AdminControls } from '@/components/AdminControls'
 import { ErrorBanner } from '@/components/ErrorBanner'
 import { EstimationGrid } from '@/components/EstimationGrid'
+import { SessionStatusHeader } from '@/components/SessionStatusHeader'
 import { ShareLink } from '@/components/ShareLink'
-import { Badge } from '@/components/ui/badge'
 import { GridMode } from '@/constants'
 import type { ActiveConnectionState, Selection } from '@/types'
 
@@ -26,9 +26,7 @@ export function ActiveSessionView({
 }: ActiveSessionViewProps) {
   return (
     <main className="mx-auto grid max-w-3xl gap-6 px-6 py-10">
-      <div className="flex justify-center">
-        <Badge variant="secondary">In Progress</Badge>
-      </div>
+      <SessionStatusHeader label="In Progress" />
 
       {onEndSession && (
         <div className="flex gap-4">

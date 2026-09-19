@@ -5,7 +5,6 @@ import { ActiveSessionPage } from '@/routes/ActiveSessionPage'
 import { AppError } from '@/routes/AppError'
 import { CreateSessionPage } from '@/routes/CreateSessionPage'
 import { EndedPage } from '@/routes/EndedPage'
-import { GridPreviewPage } from '@/routes/dev/GridPreviewPage'
 import { JoinSessionPage } from '@/routes/JoinSessionPage'
 import {
   createSessionAction,
@@ -53,8 +52,6 @@ export const router = createBrowserRouter([
           },
           { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
           { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
-          // Temporary grid preview, dev builds only. Removed in Phase 12.
-          ...(import.meta.env.DEV ? [{ path: '/dev/grid', element: <GridPreviewPage /> }] : []),
           { path: '*', element: null, loader: () => redirect('/not-found') },
         ],
       },

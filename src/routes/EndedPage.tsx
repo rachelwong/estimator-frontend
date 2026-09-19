@@ -1,4 +1,31 @@
-// Stub. Phase 12 adds the Reveal.
+import { Link, useLoaderData } from 'react-router'
+import { AbstainedList } from '@/components/AbstainedList'
+import { EstimationGrid } from '@/components/EstimationGrid'
+import { SessionStatusHeader } from '@/components/SessionStatusHeader'
+import { Button } from '@/components/ui/button'
+import { GridMode } from '@/constants'
+import type { GetSessionResponse } from '@/types'
+
+// The Reveal, straight from REST. No socket — endedLoader already has it all.
 export function EndedPage() {
-  return <main className="p-10 text-center">Session ended.</main>
+  const session = useLoaderData() as GetSessionResponse
+
+  return (
+    <main className="mx-auto grid max-w-3xl gap-6 px-6 py-10">
+      <SessionStatusHeader label="Ended" />
+
+      <EstimationGrid
+        axisValues={session.pointSystem.axisValues}
+        mode={GridMode.READONLY}
+        reveal={session.reveal}
+      />
+
+      <AbstainedList names={session.reveal?.abstained ?? []} />
+
+      {/* A plain link: the new session carries nothing over. */}
+      <Button asChild>
+        <Link to="/">Create new session</Link>
+      </Button>
+    </main>
+  )
 }
