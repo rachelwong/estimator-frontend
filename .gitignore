@@ -25,3 +25,6 @@ dist-ssr
 
 # Smoke script output
 scripts/smoke/screenshots
+
+# Compiled by cn/vite and by the build script's `cn build` step
+src/lib/cnTables.ts

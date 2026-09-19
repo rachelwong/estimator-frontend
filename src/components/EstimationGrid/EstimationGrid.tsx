@@ -1,5 +1,6 @@
 import { Fragment, useState } from 'react'
 import type { PointerEvent } from 'react'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { AreaPreview, AXIS_HINT, AxisOrientation, GridMode, MOUSE_POINTER_TYPE } from '@/constants'
 import type { GridMode as GridModeValue, RevealPayload, Selection } from '@/types'
 import { cellState, groupNames, inArea, squareKey } from '@/utils'
@@ -55,55 +56,63 @@ export function EstimationGrid({
     gridTemplateColumns: `auto repeat(${cols.length}, minmax(0, 1fr))`,
   }
 
+  // Tooltips are a grid feature: AxisTitle and GridCell are the only consumers,
+  // and both are this component's own sub-components, so the provider belongs at
+  // the root of that unit rather than at the app root. Keeping it out of the root
+  // also keeps Radix's tooltip and all of floating-ui out of the entry chunk,
+  // which Welcome and Join never need. Move it up to the views only if a tooltip
+  // ever appears outside the grid — Tooltip throws without a provider ancestor.
   return (
-    <div className="flex items-center gap-3">
-      <AxisTitle
-        label="Resources"
-        hint={AXIS_HINT.RESOURCES}
-        orientation={AxisOrientation.VERTICAL}
-      />
+    <TooltipProvider>
+      <div className="flex items-center gap-3">
+        <AxisTitle
+          label="Resources"
+          hint={AXIS_HINT.RESOURCES}
+          orientation={AxisOrientation.VERTICAL}
+        />
 
-      <div className="grid flex-1 gap-2">
-        {/* Cleared on leaving the whole grid, not each cell, so the ring
-            doesn't flicker across the gutters. */}
-        <div className="grid gap-1" style={gridStyle} onPointerLeave={() => setHovered(null)}>
-          {rows.map((resource) => (
-            <Fragment key={resource}>
-              <AxisValue value={resource} />
+        <div className="grid flex-1 gap-2">
+          {/* Cleared on leaving the whole grid, not each cell, so the ring
+              doesn't flicker across the gutters. */}
+          <div className="grid gap-1" style={gridStyle} onPointerLeave={() => setHovered(null)}>
+            {rows.map((resource) => (
+              <Fragment key={resource}>
+                <AxisValue value={resource} />
 
-              {cols.map((time) => {
-                const square = { time, resource }
-                const names = namesBySquare.get(squareKey(time, resource)) ?? []
-                const preview =
-                  isInteractive && hovered && inArea(square, hovered)
-                    ? AreaPreview.INSIDE
-                    : AreaPreview.OUTSIDE
+                {cols.map((time) => {
+                  const square = { time, resource }
+                  const names = namesBySquare.get(squareKey(time, resource)) ?? []
+                  const preview =
+                    isInteractive && hovered && inArea(square, hovered)
+                      ? AreaPreview.INSIDE
+                      : AreaPreview.OUTSIDE
 
-                return (
-                  <GridCell
-                    key={time}
-                    state={cellState(mode, square, selection, names)}
-                    names={names}
-                    preview={preview}
-                    onClick={isInteractive ? () => onSelect?.(square) : undefined}
-                    onPointerEnter={
-                      isInteractive ? (event) => handlePointerEnter(event, square) : undefined
-                    }
-                  />
-                )
-              })}
-            </Fragment>
-          ))}
+                  return (
+                    <GridCell
+                      key={time}
+                      state={cellState(mode, square, selection, names)}
+                      names={names}
+                      preview={preview}
+                      onClick={isInteractive ? () => onSelect?.(square) : undefined}
+                      onPointerEnter={
+                        isInteractive ? (event) => handlePointerEnter(event, square) : undefined
+                      }
+                    />
+                  )
+                })}
+              </Fragment>
+            ))}
 
-          {/* Bottom row: blank corner under the Resources values, then Time values. */}
-          <span />
-          {cols.map((time) => (
-            <AxisValue key={time} value={time} />
-          ))}
+            {/* Bottom row: blank corner under the Resources values, then Time values. */}
+            <span />
+            {cols.map((time) => (
+              <AxisValue key={time} value={time} />
+            ))}
+          </div>
+
+          <AxisTitle label="Time" hint={AXIS_HINT.TIME} />
         </div>
-
-        <AxisTitle label="Time" hint={AXIS_HINT.TIME} />
       </div>
-    </div>
+    </TooltipProvider>
   )
 }
