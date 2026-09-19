@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "smoke": "node scripts/smoke/session.mjs"
+    "smoke": "node scripts/smoke/run.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
