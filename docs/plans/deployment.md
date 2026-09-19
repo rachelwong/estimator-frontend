@@ -31,6 +31,15 @@ Both URLs follow the project name (`<project>.vercel.app`,
 `<service>.onrender.com`), so they're predictable — but confirm, don't assume,
 in case a name was taken.
 
+It was: `estimator-frontend.vercel.app` belongs to an unrelated project, so
+Vercel appended a suffix. The production frontend is
+
+```
+https://estimator-frontend-ashen.vercel.app
+```
+
+and that exact string, no trailing slash, is the `CORS_ORIGIN` Render needs.
+
 Why each value exists is in `estimator-plan.md` → "Deployment" and "Secrets &
 environment configuration". Not repeated here.
 
@@ -44,7 +53,7 @@ neither repo owns the sequence. Edit both, or they drift.
 
 **Code** (`estimator-backend/`)
 
-- [ ] R1. Add `render.yaml`:
+- [x] R1. Add `render.yaml`:
       ```yaml
       services:
         - type: web
@@ -63,8 +72,8 @@ neither repo owns the sequence. Edit both, or they drift.
       ```
       No other code change. `/healthz`, the single-port `http.Server`, the
       `PORT` binding and the production `CORS_ORIGIN` checks are already there.
-- [ ] R2. `npm run typecheck && npm run lint && npm test && npm run build` pass.
-- [ ] R3. `NODE_ENV=production CORS_ORIGIN=https://example.com npm start` boots
+- [x] R2. `npm run typecheck && npm run lint && npm test && npm run build` pass.
+- [x] R3. `NODE_ENV=production CORS_ORIGIN=https://example.com npm start` boots
       and answers `/healthz` — this runs the compiled ESM output, where an
       import problem would first show up. Then check the guard: the same command
       **without** `CORS_ORIGIN` refuses to start.
@@ -90,13 +99,13 @@ neither repo owns the sequence. Edit both, or they drift.
 
 **Code** (`estimator-frontend/`)
 
-- [ ] F1a. Add `vercel.json`:
+- [x] F1a. Add `vercel.json`:
       ```json
       { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
       ```
       Without it, a refresh or a pasted share link (`/:sessionId/join`) hits
       Vercel's 404 before React Router loads.
-- [ ] F1b. `vite.config.ts`: fail a production build when either URL is missing
+- [x] F1b. `vite.config.ts`: fail a production build when either URL is missing
       or isn't `https://`, so a misconfigured build can't ship
       `undefined/sessions`:
       ```ts
@@ -115,24 +124,26 @@ neither repo owns the sequence. Edit both, or they drift.
       ```
       The `VERCEL` check keeps a local `npm run build` against
       `http://localhost:3001` working.
-- [ ] F1c. `scripts/smoke/lib.mjs`: read `APP` and `API` from `SMOKE_APP_URL`
+- [x] F1c. `scripts/smoke/lib.mjs`: read `APP` and `API` from `SMOKE_APP_URL`
       and `SMOKE_API_URL`, falling back to today's localhost values. Lets the
       same suite run against production.
-- [ ] F1d. `npm run build` and `npm run lint` pass, and the smoke suite passes
+- [x] F1d. `npm run build` and `npm run lint` pass, and the smoke suite passes
       against a local backend — it hasn't been run since the welcome-page commit
       (`docs/plans/ui-refresh.md` verification step 2).
 - [ ] F1e. Push to `master`.
 
 **Dashboard, first pass** — do this before R5, it's where the Vercel URL comes from
 
-- [ ] F2a. Add New → Project → import `rachelwong/estimator-frontend`.
+- [x] F2a. Add New → Project → import `rachelwong/estimator-frontend`.
 - [ ] F2b. Settings → General → Node.js Version: **24.x**, to match the backend
       and local.
-- [ ] F2c. Settings → Deployment Protection → Vercel Authentication **off for
+- [x] F2c. Settings → Deployment Protection → Vercel Authentication **off for
       Production** (see Gotchas — this one is invisible to you and breaks every
       share link).
-- [ ] F2d. Note the production URL, e.g. `https://estimator-frontend.vercel.app`.
-      The first build **fails** on the env check. Expected — hand this URL to R5.
+- [x] F2d. Note the production URL — above. Done before F1b landed, so the first
+      build **succeeded** instead of failing the env check, shipping a bundle
+      with no API URL. Once F1e is pushed, builds fail on the check until F3
+      sets the vars. Hand the URL to R5.
 
 **Dashboard, second pass** — needs the Render URL from R6
 
