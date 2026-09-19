@@ -413,7 +413,8 @@ export const CellState = {
 
 Grey for `EMPTY`, green for `CHOSEN`, matching the wireframe. Names stack
 vertically inside the cell. Show at most 3, then `+N more` — the wireframe cell
-fits about three.
+fits about three. Hovering a readonly Square with names shows the full list in a
+shadcn `Tooltip`, since the cap and truncation hide some.
 
 ```ts
 // src/components/EstimationGrid.tsx — prop types stay local
@@ -665,6 +666,9 @@ shadcn primitive models a data-driven NxN grid. Tailwind utilities plus inline
 Hardcoded props, no live data. Both modes, reversed rows, axis labels "Time" and
 "Resources", axis values along the left and bottom edges, cell states, and the
 `+N more` cap.
+
+Rendered at `/dev/grid` (`GridPreviewPage`, dev builds only) — neither page can
+show it yet without live data. Removed in Phase 12.
 
 **Done when**: rendered side by side with the Miro screens, both modes match.
 
