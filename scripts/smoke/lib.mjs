@@ -7,6 +7,10 @@ export const SHOTS = new URL('./screenshots', import.meta.url).pathname
 
 const GREEN = 'bg-green-500'
 
+// Chrome logs every 404 as a console error. GET /sessions/:id answering 404
+// is expected — the loaders turn it into /not-found — so it isn't a failure.
+const EXPECTED_404 = 'Failed to load resource: the server responded with a status of 404'
+
 // One reporter per run. Scenarios record into it; run.mjs prints the total.
 export function createReporter() {
   const results = []
@@ -34,7 +38,11 @@ export function createReporter() {
       }
 
       page.on('pageerror', (error) => errors.push(error.message))
-      page.on('console', (message) => message.type() === 'error' && errors.push(message.text()))
+      page.on('console', (message) => {
+        if (message.type() === 'error' && !message.text().startsWith(EXPECTED_404)) {
+          errors.push(message.text())
+        }
+      })
       return page
     },
   }
