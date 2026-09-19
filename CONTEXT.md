@@ -49,6 +49,12 @@ The one Square a Participant is currently holding, or none. Picking a different
 Square moves it. Picking the same Square again clears it.
 _Avoid_: Vote, choice, estimate, guess, answer
 
+**Area**:
+Every Square from the origin up to and including a given Square — the Time ×
+Resources the Square stands for. Shown for the Selection and for the Square
+under the pointer, never in the Reveal.
+_Avoid_: Region, range, footprint, estimate
+
 ### The ending
 
 **Reveal**:
