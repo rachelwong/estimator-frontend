@@ -113,7 +113,8 @@ Render's free tier sleeps after 15 minutes without HTTP traffic. Sporadic use
 means most Sessions start cold, so the first `getSession()` can take 30–60
 seconds. That is the normal path, not an edge case.
 
-- A root `errorElement` catches a failed loader and offers a retry. It says
+- An `errorElement` just under the root catches a failed loader and offers a
+  retry, with the header still showing. It says
   "Could not reach the server" only when that is true. `lib/api.ts` throws a
   `NetworkError` for that case, separate from a server error or a code bug.
 - `useNavigation()` drives a loading notice, so the wait is never a blank page.
@@ -304,31 +305,39 @@ bounded by the tab's lifetime.
 
 ```ts
 // src/hooks/useSessionConnection.ts
-function useSessionConnection(sessionId: string): SessionConnectionState {
+function useSessionConnection(sessionId: string): SessionConnection {
   const store = peekSessionConnection(sessionId)!; // the loader guarantees this
-  const [state, setState] = useState(() => store.getSnapshot());
+  const state = useSyncExternalStore(store.subscribe, store.getSnapshot);
 
-  useEffect(() => {
-    setState(store.getSnapshot()); // catch anything missed between render and effect
-    return store.subscribe(() => setState(store.getSnapshot()));
-  }, [store]);
-
-  return state;
+  return {
+    state,
+    isAdmin: getAdminToken(sessionId) !== null,
+    select: store.select,
+    dismissError: store.dismissError,
+    endSession: store.endSession,
+  };
 }
 ```
 
 No fork inside the hook — the loader already created the store, so this only
-reads. `useState`/`useEffect` rather than `useSyncExternalStore`, accepting that
-concurrent rendering could show one stale frame. No concurrent features are used
-anywhere in this app.
+reads.
+
+**Changed from the first draft.** The plan originally used `useState` plus
+`useEffect` here. The build uses `useSyncExternalStore`, React's built-in way to
+read from something outside React. In plain terms: React asks the store for its
+current value on every render and re-renders when the store says it changed, so
+the page can never show an out-of-date value. It is also shorter. It is safe
+because the store's value only changes when something real happens.
+
+The hook also hands back `isAdmin` and the store's commands, not just the state,
+so a page gets everything it needs from one call.
 
 ### Navigating on a status change
 
 ```tsx
 function ActiveSessionPage() {
   const { sessionId } = useParams();
-  const state = useSessionConnection(sessionId!);
-  const isAdmin = getAdminToken(sessionId!) !== null;
+  const { state, isAdmin } = useSessionConnection(sessionId!);
 
   const lost =
     state.status === SessionConnectionStatus.DISCONNECTED ||
@@ -630,20 +639,30 @@ the URL changes. `/start` can still 404.
 createBrowserRouter([
   {
     element: <RootLayout />,
-    errorElement: <AppError />,
     hydrateFallbackElement: <><AppHeader /><LoadingNotice /></>,
     children: [
-      { path: "/", element: <CreateSessionPage /> },
-      { path: "/:sessionId", element: null, loader: ({ params }) => redirect(`/${params.sessionId}/join`) },
-      { path: "/:sessionId/join", element: <JoinSessionPage />, loader: joinLoader },
-      { path: "/:sessionId/start", element: <ActiveSessionPage />, loader: startLoader },
-      { path: "/:sessionId/ended", element: <EndedPage />, loader: endedLoader },
-      { path: "/not-found", element: <NotFoundPage /> },
-      { path: "*", element: null, loader: () => redirect("/not-found") },
+      {
+        errorElement: <AppError />,
+        children: [
+          { path: "/", element: <CreateSessionPage /> },
+          { path: "/:sessionId", element: null, loader: ({ params }) => redirect(`/${params.sessionId}/join`) },
+          { path: "/:sessionId/join", element: <JoinSessionPage />, loader: joinLoader },
+          { path: "/:sessionId/start", element: <ActiveSessionPage />, loader: startLoader },
+          { path: "/:sessionId/ended", element: <EndedPage />, loader: endedLoader },
+          { path: "/not-found", element: <NotFoundPage /> },
+          { path: "*", element: null, loader: () => redirect("/not-found") },
+        ],
+      },
     ],
   },
 ]);
 ```
+
+**Changed from the first draft.** `AppError` was first planned on the top-level
+route. It now sits one level down, on an extra route with no path. In plain terms:
+an error page replaces the route it belongs to. On the top level that would
+replace `RootLayout` too, and the "Product Poker" header would disappear. One
+level down, only the page area is swapped for the error, and the header stays.
 
 `src/routes/loaders.ts` — `joinLoader`, `startLoader`, `endedLoader`, each doing
 its own checks per the routes table and calling `redirect()` rather than
