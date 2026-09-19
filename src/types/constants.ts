@@ -6,6 +6,7 @@
 // binding to derive from. TypeScript keeps the imported value and the exported
 // type of the same name apart, since values and types are separate namespaces.
 import {
+  AreaPreview,
   CellState,
   ErrorCode,
   GridMode,
@@ -21,6 +22,8 @@ export type PointSystemType = (typeof PointSystemType)[keyof typeof PointSystemT
 export type GridMode = (typeof GridMode)[keyof typeof GridMode]
 
 export type CellState = (typeof CellState)[keyof typeof CellState]
+
+export type AreaPreview = (typeof AreaPreview)[keyof typeof AreaPreview]
 
 export type SessionConnectionStatus =
   (typeof SessionConnectionStatus)[keyof typeof SessionConnectionStatus]

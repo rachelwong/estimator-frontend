@@ -1,25 +1,40 @@
+import type { PointerEventHandler } from 'react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { CELL_CLASS } from '@/constants'
+import { AreaPreview, CELL_CLASS, PREVIEW_CLASS } from '@/constants'
 import { cn } from '@/lib/utils'
-import type { CellState } from '@/types'
+import type { AreaPreview as AreaPreviewValue, CellState } from '@/types'
 import { CellNames } from './CellNames'
 
 interface GridCellProps {
   state: CellState
   names: string[]
+  preview?: AreaPreviewValue
   onClick?: () => void
+  onPointerEnter?: PointerEventHandler<HTMLButtonElement>
 }
 
 // Clickable only in interactive mode. No keyboard navigation (decision #18).
-export function GridCell({ state, names, onClick }: GridCellProps) {
+export function GridCell({
+  state,
+  names,
+  preview = AreaPreview.OUTSIDE,
+  onClick,
+  onPointerEnter,
+}: GridCellProps) {
   const className = cn(
     'flex aspect-square items-center justify-center overflow-hidden rounded-sm p-1',
     CELL_CLASS[state],
+    preview === AreaPreview.INSIDE && PREVIEW_CLASS,
   )
 
   if (onClick) {
     return (
-      <button type="button" className={cn(className, 'cursor-pointer')} onClick={onClick}>
+      <button
+        type="button"
+        className={cn(className, 'cursor-pointer')}
+        onClick={onClick}
+        onPointerEnter={onPointerEnter}
+      >
         <CellNames names={names} />
       </button>
     )

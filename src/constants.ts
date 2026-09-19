@@ -14,7 +14,14 @@ export const GridMode = {
 
 export const CellState = {
   EMPTY: 'empty',
+  AREA: 'area',
   CHOSEN: 'chosen',
+} as const
+
+// Whether a Square sits inside the Area under the pointer.
+export const AreaPreview = {
+  OUTSIDE: 'outside',
+  INSIDE: 'inside',
 } as const
 
 export const SessionConnectionStatus = {
@@ -98,8 +105,16 @@ export const MAX_VISIBLE_NAMES = 3
 
 export const CELL_CLASS = {
   [CellState.EMPTY]: 'bg-neutral-200',
+  [CellState.AREA]: 'bg-neutral-400',
   [CellState.CHOSEN]: 'bg-green-500 text-white',
 } as const
+
+// Ring, not fill, so it can sit on top of a Selection's Area.
+export const PREVIEW_CLASS = 'ring-2 ring-neutral-500'
+
+// PointerEvent.pointerType for a mouse (Pointer Events spec). Touch and pen
+// get no hover preview — a tap would leave it stuck on.
+export const MOUSE_POINTER_TYPE = 'mouse'
 
 // A missing session is an expected answer from GET /sessions/:id, not a
 // failure, so lib/api.ts checks for this status by name.

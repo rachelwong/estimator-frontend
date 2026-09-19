@@ -1,7 +1,8 @@
-import { Fragment } from 'react'
-import { GridMode } from '@/constants'
+import { Fragment, useState } from 'react'
+import type { PointerEvent } from 'react'
+import { AreaPreview, GridMode, MOUSE_POINTER_TYPE } from '@/constants'
 import type { GridMode as GridModeValue, RevealPayload, Selection } from '@/types'
-import { cellState, groupNames, squareKey } from '@/utils'
+import { cellState, groupNames, inArea, squareKey } from '@/utils'
 import { AxisValue } from './AxisValue'
 import { GridCell } from './GridCell'
 
@@ -31,9 +32,22 @@ export function EstimationGrid({
   reveal,
   onSelect,
 }: EstimationGridProps) {
+  // The Square under a mouse pointer. Its Area is outlined as a preview.
+  const [hovered, setHovered] = useState<Selection | null>(null)
+
   const rows = [...axisValues].reverse()
   const cols = axisValues
   const namesBySquare = groupNames(reveal)
+  const isInteractive = mode === GridMode.INTERACTIVE
+
+  // Mouse only: a tap fires pointerenter too, and would leave a ring stuck on.
+  function handlePointerEnter(event: PointerEvent, square: Selection) {
+    if (event.pointerType !== MOUSE_POINTER_TYPE) {
+      return
+    }
+
+    setHovered(square)
+  }
 
   // Leading auto column holds the Resources values.
   const gridStyle = {
@@ -47,25 +61,31 @@ export function EstimationGrid({
       </span>
 
       <div className="grid flex-1 gap-2">
-        <div className="grid gap-1" style={gridStyle}>
+        {/* Cleared on leaving the whole grid, not each cell, so the ring
+            doesn't flicker across the gutters. */}
+        <div className="grid gap-1" style={gridStyle} onPointerLeave={() => setHovered(null)}>
           {rows.map((resource) => (
             <Fragment key={resource}>
               <AxisValue value={resource} />
 
               {cols.map((time) => {
+                const square = { time, resource }
                 const names = namesBySquare.get(squareKey(time, resource)) ?? []
-                const isMine = selection?.time === time && selection?.resource === resource
-                const handleClick =
-                  mode === GridMode.INTERACTIVE
-                    ? () => onSelect?.({ time, resource })
-                    : undefined
+                const preview =
+                  isInteractive && hovered && inArea(square, hovered)
+                    ? AreaPreview.INSIDE
+                    : AreaPreview.OUTSIDE
 
                 return (
                   <GridCell
                     key={time}
-                    state={cellState(mode, isMine, names)}
+                    state={cellState(mode, square, selection, names)}
                     names={names}
-                    onClick={handleClick}
+                    preview={preview}
+                    onClick={isInteractive ? () => onSelect?.(square) : undefined}
+                    onPointerEnter={
+                      isInteractive ? (event) => handlePointerEnter(event, square) : undefined
+                    }
                   />
                 )
               })}
