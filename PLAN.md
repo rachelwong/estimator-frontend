@@ -77,7 +77,9 @@ linked. No component anywhere maps a status to a screen.
 
 | Path | Page | Loader decides |
 | --- | --- | --- |
-| `/` | `CreateSessionPage` | — |
+| `/` | — | Always redirects to `/welcome` |
+| `/welcome` | `WelcomePage` | — |
+| `/new` | `CreateSessionPage` | — |
 | `/:sessionId` | — | Always redirects to `/join` |
 | `/:sessionId/join` | `JoinSessionPage` | Unknown → `/not-found`, ended → `/ended`, already connected → `/start` |
 | `/:sessionId/start` | `ActiveSessionPage` | Unknown → `/not-found`, ended → `/ended`, no identity → `/join` |
@@ -409,18 +411,22 @@ const cols = axisValues;                // Time, low at left
 // src/constants.ts
 export const CellState = {
   EMPTY: "empty",
+  AREA: "area",
   CHOSEN: "chosen",
 } as const;
 ```
 
 | Mode | Condition | State |
 | --- | --- | --- |
-| interactive | not your Selection | `EMPTY` |
 | interactive | your Selection | `CHOSEN` |
+| interactive | inside your Selection's Area | `AREA` |
+| interactive | otherwise | `EMPTY` |
 | readonly | no names | `EMPTY` |
 | readonly | has names | `CHOSEN` + names |
 
-Grey for `EMPTY`, green for `CHOSEN`, matching the wireframe. Names stack
+Grey for `EMPTY`, darker grey for `AREA`, green for `CHOSEN`. With a mouse, the
+Area under the pointer also gets a ring, on top of any state. See
+[grid-area.md](docs/features/grid-area.md). Names stack
 vertically inside the cell. Show at most 3, then `+N more` — the wireframe cell
 fits about three. Hovering a readonly Square with names shows the full list in a
 shadcn `Tooltip`, since the cap and truncation hide some.

@@ -19,7 +19,16 @@ export async function routing({ browser, reporter }) {
   check('Unmatched path → /not-found', await landsOn(page, /\/not-found$/))
   check('Not-found says so', await page.getByText('Session not found').isVisible())
   await page.getByRole('link', { name: 'Create new session' }).click()
-  check('Not-found links home', await landsOn(page, `${APP}/`))
+  check('Not-found links to /new', await landsOn(page, `${APP}/new`))
+
+  // --- Static routes and the header link --------------------------------------
+  for (const path of ['/welcome', '/new']) {
+    await page.goto(`${APP}${path}`)
+    check(`${path} is a known route`, !(await landsOn(page, /\/not-found$/, 1000)))
+  }
+
+  await page.getByRole('link', { name: 'Product Poker' }).click()
+  check('Header title → /welcome', await landsOn(page, `${APP}/welcome`))
 
   // --- An open Session, no identity ------------------------------------------
   const open = await createSessionByApi()
@@ -30,7 +39,7 @@ export async function routing({ browser, reporter }) {
 
   // --- An Admin token ---------------------------------------------------------
   const adminPage = await openPage(await browser.newContext())
-  await adminPage.goto(APP)
+  await adminPage.goto(`${APP}/new`)
   await adminPage.evaluate(
     ([key, token]) => localStorage.setItem(key, token),
     [TOKEN_KEY(open.sessionId), open.adminToken],

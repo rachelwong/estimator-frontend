@@ -1,5 +1,5 @@
 // The create form — PLAN.md Phase 3.
-import { API, APP, cells } from '../lib.mjs'
+import { API, APP, cells, landsOn } from '../lib.mjs'
 
 const NAME_RULE = 'Use 1-20 letters or numbers, with no spaces.'
 const FIBONACCI_AT_64 = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55']
@@ -11,7 +11,12 @@ export async function create({ browser, reporter }) {
   const start = page.getByRole('button', { name: 'Start Session' })
   const name = page.getByLabel('Provide your name')
 
+  // Home is the welcome page. Its button opens the form.
   await page.goto(APP)
+  check('/ → /welcome', await landsOn(page, `${APP}/welcome`))
+  await page.getByRole('link', { name: 'Create a new session' }).click()
+  check('Welcome button → /new', await landsOn(page, `${APP}/new`))
+
   check('Start disabled with no name', await start.isDisabled())
 
   // Validated on blur, before any request.
@@ -50,7 +55,7 @@ export async function create({ browser, reporter }) {
   // A sleeping backend fails in place, keeping the filled-in form.
   const offline = await openPage(context, { expectErrors: true })
   await offline.route(`${API}/sessions`, (route) => route.abort())
-  await offline.goto(APP)
+  await offline.goto(`${APP}/new`)
   await offline.getByLabel('Provide your name').fill('Ada')
   await offline.getByRole('button', { name: 'Start Session' }).click()
   const unreachable = offline.getByText('Could not reach the server. Try again.')

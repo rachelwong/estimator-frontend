@@ -3,7 +3,7 @@ import { AbstainedList } from '@/components/AbstainedList'
 import { EstimationGrid } from '@/components/EstimationGrid'
 import { SessionStatusHeader } from '@/components/SessionStatusHeader'
 import { Button } from '@/components/ui/button'
-import { GridMode } from '@/constants'
+import { GridMode, RoutePath } from '@/constants'
 import type { GetSessionResponse } from '@/types'
 
 // The Reveal, straight from REST. No socket — endedLoader already has it all.
@@ -24,7 +24,7 @@ export function EndedPage() {
 
       {/* A plain link: the new session carries nothing over. */}
       <Button asChild>
-        <Link to="/">Create new session</Link>
+        <Link to={RoutePath.NEW}>Create new session</Link>
       </Button>
     </main>
   )

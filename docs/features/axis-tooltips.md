@@ -31,7 +31,7 @@ contradict decision #18, which covers keyboard navigation of Squares only.
 
 ## Acceptance
 
-- [ ] Hovering or focusing "Time" or its ⓘ shows the Time copy. Same for Resources.
-- [ ] Works on `/:sessionId/start` and `/:sessionId/ended`.
-- [ ] The vertical Resources title still reads bottom-to-top, with the icon aligned.
-- [ ] No axis value has a tooltip.
+- [x] Hovering or focusing "Time" or its ⓘ shows the Time copy. Same for Resources.
+- [x] Works on `/:sessionId/start` and `/:sessionId/ended`.
+- [x] The vertical Resources title still reads bottom-to-top, with the icon aligned.
+- [x] No axis value has a tooltip.

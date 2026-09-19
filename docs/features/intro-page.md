@@ -66,9 +66,9 @@ connection across a navigation") cover leaving and returning.
 
 ## Acceptance
 
-- [ ] `/` lands on `/welcome`.
-- [ ] "Create a new session" opens the create form at `/new`. Creating still reaches `/:id/start`.
-- [ ] The share link opens `/:id/join` directly, with no welcome page.
-- [ ] The header title goes to `/welcome` from any page.
-- [ ] Ended and Not Found pages link to `/new`.
-- [ ] Smoke suite passes.
+- [x] `/` lands on `/welcome`.
+- [x] "Create a new session" opens the create form at `/new`. Creating still reaches `/:id/start`.
+- [x] The share link opens `/:id/join` directly, with no welcome page.
+- [x] The header title goes to `/welcome` from any page.
+- [x] Ended and Not Found pages link to `/new`.
+- [x] Smoke suite passes.

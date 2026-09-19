@@ -53,10 +53,10 @@ Selection's Area → `AREA`, else `EMPTY`. Readonly logic is untouched.
 
 ## Acceptance
 
-- [ ] Hover shows a ring on every Square with Time ≤ x and Resources ≤ y.
-- [ ] After a click is acked, the picked Square is green and its Area is `neutral-400`.
-- [ ] Hovering elsewhere shows both Areas, and the overlap has fill + ring.
-- [ ] Re-clicking the picked Square clears it and its Area.
-- [ ] Moving the pointer off the grid clears the ring.
-- [ ] Ended page: only Squares with names are green, and there are no fills or rings.
-- [ ] Works the same for the Admin and for Participants.
+- [x] Hover shows a ring on every Square with Time ≤ x and Resources ≤ y.
+- [x] After a click is acked, the picked Square is green and its Area is `neutral-400`.
+- [x] Hovering elsewhere shows both Areas, and the overlap has fill + ring.
+- [x] Re-clicking the picked Square clears it and its Area.
+- [x] Moving the pointer off the grid clears the ring.
+- [x] Ended page: only Squares with names are green, and there are no fills or rings.
+- [x] Works the same for the Admin and for Participants.

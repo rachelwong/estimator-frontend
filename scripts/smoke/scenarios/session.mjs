@@ -27,7 +27,7 @@ export async function session({ browser, reporter }) {
     permissions: ['clipboard-read', 'clipboard-write'],
   })
   const admin = await openPage(adminContext)
-  await admin.goto(APP)
+  await admin.goto(`${APP}/new`)
   await admin.getByLabel('Provide your name').fill('Ada')
   await admin.getByRole('slider').focus()
   await admin.keyboard.press('End')
@@ -152,7 +152,7 @@ export async function session({ browser, reporter }) {
   await fresh.screenshot({ path: `${SHOTS}/reveal.png`, fullPage: true })
 
   await fresh.getByRole('link', { name: 'Create new session' }).click()
-  await fresh.waitForURL(`${APP}/`)
-  check('Create new session goes to /', true)
+  await fresh.waitForURL(`${APP}/new`)
+  check('Create new session goes to /new', true)
   check('Create form starts empty', (await fresh.getByLabel('Provide your name').inputValue()) === '')
 }

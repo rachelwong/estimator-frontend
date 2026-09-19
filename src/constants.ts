@@ -2,6 +2,13 @@
 // handful of values that come from the spec. Values only — the type derived
 // from each lives in src/types/constants.ts.
 
+// Static paths. Session paths are built from the id where they're used.
+export const RoutePath = {
+  HOME: '/',
+  WELCOME: '/welcome',
+  NEW: '/new',
+} as const
+
 export const PointSystemType = {
   NUMERICAL: 'numerical',
   FIBONACCI: 'fibonacci',

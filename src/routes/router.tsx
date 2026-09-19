@@ -1,6 +1,7 @@
 import { createBrowserRouter, redirect } from 'react-router'
 import { AppHeader } from '@/components/AppHeader'
 import { LoadingNotice } from '@/components/LoadingNotice'
+import { RoutePath } from '@/constants'
 import { ActiveSessionPage } from '@/routes/ActiveSessionPage'
 import { AppError } from '@/routes/AppError'
 import { CreateSessionPage } from '@/routes/CreateSessionPage'
@@ -15,6 +16,7 @@ import {
 } from '@/routes/loaders'
 import { NotFoundPage } from '@/routes/NotFoundPage'
 import { RootLayout } from '@/routes/RootLayout'
+import { WelcomePage } from '@/routes/WelcomePage'
 
 // One route per session status. Loaders redirect a wrong-status visit, so no
 // page ever maps a status to a screen. See PLAN.md "Routes".
@@ -35,7 +37,9 @@ export const router = createBrowserRouter([
         // Outlet and keeps the header. On the root route it would replace it.
         errorElement: <AppError />,
         children: [
-          { path: '/', element: <CreateSessionPage />, action: createSessionAction },
+          { path: RoutePath.HOME, element: null, loader: () => redirect(RoutePath.WELCOME) },
+          { path: RoutePath.WELCOME, element: <WelcomePage /> },
+          { path: RoutePath.NEW, element: <CreateSessionPage />, action: createSessionAction },
           { path: '/not-found', element: <NotFoundPage /> },
           // Redirect-only. element: null, not omitted — this route renders while
           // /join's loader runs, and an undefined element warns.
