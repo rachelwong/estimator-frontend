@@ -1,120 +1,81 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
-@custom-variant dark (&:is(.dark *));
+/* Self-hosted, latin only. Bungee and Silkscreen ship one weight each;
+   Figtree's variable axis covers the 400–800 the design asks for (§3). */
+@import '@fontsource/bungee/latin-400.css';
+@import '@fontsource-variable/figtree/wght.css';
+@import '@fontsource/silkscreen/latin-400.css';
 
+/* The Fold and Flip palette (DESIGN.md §2). This block is the only place in
+   the repo a hex is authored — everything else, shadcn's role names included,
+   points at it through var(). `white` is Tailwind's own and is not restated. */
+@theme {
+    --color-ink: #1e1b2e;
+    --color-cream: #fff6e5;
+    --color-text-muted: #3e3852;
+    --color-text-subtle: #5b5570;
+    --color-accent: #6a4ff0;
+    --color-page-top: #dcd3fb;
+    --color-selection: #ffc53d;
+    --color-danger: #ff5a5f;
+    --color-copied: #d7f2e4;
+    --color-abstained: #b42318;
+    --color-on-ink-muted: #c9c3da;
+
+    /* Crowd ramp: how many people landed on a Square, never Time or Resources
+       (§2). Text flips to white at crowd-3. */
+    --color-crowd-0: #f2edff;
+    --color-crowd-1: #c9bcf7;
+    --color-crowd-2: #8e77f2;
+    --color-crowd-3: #5a3fd6;
+    --color-crowd-4: #2a1f5c;
+
+    /* Hard offset shadows, no blur, always ink (§4). The accent one carries
+       the dark notice and the Reveal popover. */
+    --shadow-px: 4px 4px 0 var(--color-ink);
+    --shadow-px-card: 6px 6px 0 var(--color-ink);
+    --shadow-px-window: 8px 8px 0 var(--color-ink);
+    --shadow-px-accent: 4px 4px 0 var(--color-accent);
+
+    --font-display: 'Bungee', sans-serif;
+    --font-body: 'Figtree Variable', system-ui, sans-serif;
+    --font-label: 'Silkscreen', monospace;
+
+    /* ≤767 mobile · 768–1199 tablet · ≥1200 desktop (§12). Tailwind's own
+       sm/md/lg/xl scale is cleared so there is one breakpoint vocabulary and
+       it is the design's three artboards — `lg:` at 1024px sits inside the
+       tablet range and would have read as desktop. */
+    --breakpoint-*: initial;
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1200px;
+}
+
+/* shadcn's role names aliased onto the palette above — var() only, no value of
+   their own. `bg-ink` and `bg-foreground` resolve to the same custom property,
+   so the primitives keep working while we author in the design's vocabulary.
+   These are the 14 role names src/ actually references: a primitive added
+   later that reads a fifteenth renders unstyled until its alias joins the
+   list, which is a visible failure rather than a silent drift. */
 @theme inline {
-    --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
-    --color-sidebar-ring: var(--sidebar-ring);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
-    --color-card: var(--card);
-    --color-foreground: var(--foreground);
-    --color-background: var(--background);
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
-}
+    --color-background: var(--color-cream);
+    --color-foreground: var(--color-ink);
+    --color-border: var(--color-ink);
+    --color-input: var(--color-ink);
+    --color-ring: var(--color-accent);
+    --color-primary: var(--color-selection);
+    --color-primary-foreground: var(--color-ink);
+    --color-secondary: var(--color-white);
+    --color-secondary-foreground: var(--color-ink);
+    --color-destructive: var(--color-danger);
+    --color-muted: var(--color-crowd-0);
+    --color-muted-foreground: var(--color-text-muted);
+    --color-popover: var(--color-ink);
+    --color-popover-foreground: var(--color-cream);
 
-:root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --font-sans: var(--font-body);
+    --font-heading: var(--font-display);
 }
 
 /* The rolling rainbow border on a crowded Square (src/constants.ts,
@@ -180,6 +141,6 @@
     @apply bg-background text-foreground;
     }
   html {
-    @apply font-sans;
+    @apply font-body;
     }
 }

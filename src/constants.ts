@@ -130,8 +130,33 @@ export const POINT_SYSTEM_OPTIONS = [
 // the notice anyway flashes it for a frame on every navigation.
 export const LOADING_NOTICE_DELAY_MS = 400;
 
-// How long ShareLink's copy button shows its confirmation tick.
-export const COPIED_FEEDBACK_MS = 2000;
+// How long the copy button wears its `copied` fill and reads "Copied!"
+// (DESIGN.md §7).
+export const COPIED_FEEDBACK_MS = 1600
+
+// The three artboards the design is drawn at, and the widths where each takes
+// over: ≤767 mobile · 768–1199 tablet · ≥1200 desktop (DESIGN.md §12). These
+// mirror the `tablet` and `desktop` breakpoints in src/index.css — the CSS is
+// what lays out the page; these are for code that has to measure.
+export const BREAKPOINT_PX = {
+  TABLET: 768,
+  DESKTOP: 1200,
+} as const
+
+// The crowd ramp: how many people landed on a Square, never Time or Resources
+// (DESIGN.md §2). Index by headcount, capped at the last entry — 0 is the idle
+// Square, 4 covers four or more. Text flips to white at crowd-3, where the
+// fill finally goes dark enough to need it.
+//
+// Whole literal class strings, like PARTICIPANT_COLOUR_CLASS below: Tailwind's
+// scanner and `cn build` only see classes that appear in the source.
+export const CROWD_CLASS = [
+  'bg-crowd-0 text-ink',
+  'bg-crowd-1 text-ink',
+  'bg-crowd-2 text-ink',
+  'bg-crowd-3 text-white',
+  'bg-crowd-4 text-white',
+] as const;
 
 // REVEALED's entry is only a fallback. A revealed Square is filled by
 // utils/grid.ts: one person's own colour, or a grey that deepens with the

@@ -216,6 +216,27 @@ palette, the crowd ramp and the type scale at all three sizes; the ramp's
 contrast holds at every step; and `grep -r "dark:\|--radius\|sidebar\|chart-" src/`
 comes back empty.
 
+**Done.** The sheet is `src/routes/dev/TokensPage/`, served at `/dev/tokens` in
+dev builds only and tree-shaken out of the production bundle. It reads contrast
+and font size back off the painted nodes rather than off a second copy of the
+hex, so a token that never reached the stylesheet reads as a failure. Every pair
+in §2 clears WCAG AA at normal size — the ramp's tightest step is crowd-2 on ink
+at 4.85:1. The grep gate is empty and `npm run smoke` is 102/102.
+
+Five choices the stage above did not spell out:
+
+| Choice | Why |
+| --- | --- |
+| Tailwind's `sm`/`md`/`lg`/`xl` scale cleared; `tablet` (768px) and `desktop` (1200px) are the only breakpoint variants | One breakpoint vocabulary, and it is the design's three artboards. `lg:` at 1024px sits inside the tablet range and would have read as desktop. The seven `sm:`/`md:` uses in `alert-dialog.tsx` and `input.tsx` became `tablet:` |
+| `on-ink-muted` (`#C9C3DA`) authored as a 15th palette token | `DESIGN.md` §2 names it; only §11's abbreviated block omits it. Without it the dark notice and the Reveal popover would hardcode the hex in Stage 6 |
+| Shadow scale lives in `@theme` as `shadow-px*` utilities, not in `src/constants.ts` | Nothing computes a shadow at runtime, so there is no lookup to feed. The literal-class constraint doesn't bite |
+| Motion timings land with their consumers, stage by stage | A const with no caller is dead code today, and each stage adds its own to the same file under the same convention. The one exception is `COPIED_FEEDBACK_MS`, retuned 2000 → 1600 to match §7 |
+| `rounded-[min(var(--radius-md),Npx)]` stripped from `button.tsx` alongside `--radius` | Deleting the token without the references would have left an invalid `min()` on four button sizes. The remaining `rounded-*` classes resolve to Tailwind's own scale and are squared in Stage 3 |
+
+The decorative colours in §2 — the two chrome dots and the card tints that
+aren't already tokens — were left out. They belong to the one component each
+and arrive with it.
+
 ### Stage 2 — Sprites and the logo
 
 - 30 SVGs in `public/sprites/` become React components in
