@@ -24,7 +24,7 @@ That document is unchanged. Where this plan differs:
 | `useAdminToken` hook | `lib/adminToken.ts`, plain functions | Loaders cannot call hooks |
 | `useSessionSocket` owns the socket | `lib/socket.ts` → store → `useSessionConnection` | Keeps `socket.io-client` in one file |
 | Grid rows ascending | Rows reversed — highest Resources at top | Miro wireframe, both screens |
-| Plain grid cells | Grey when empty, green when chosen | Miro wireframe |
+| Plain grid cells | Grey when empty, green for your own Selection, a colour per person on the Reveal | Miro wireframe, then [reveal-colours-and-create-gating.md](docs/features/reveal-colours-and-create-gating.md) |
 | No app title | "Product Poker" header on every page | Miro shows a title on all three screens |
 | Vitest + React Testing Library | No tests | Scoped out |
 | — | One shared parent, `RootLayout`, wraps every route | Somewhere to show the loading notice on every page. It holds no Session state |
@@ -213,7 +213,8 @@ goes straight to `ended` through the same branch as any other ended Session.
 `connecting` has nowhere to put an error, and moving to `active` would claim a
 join worked when it did not. Both triggers are ordinary:
 
-- `INVALID_NAME` fires on anything failing `/^[A-Za-z0-9]{1,20}$/` — "Jim Bob".
+- `INVALID_NAME` fires on anything failing `/^[A-Za-z0-9]+( [A-Za-z0-9]+)*$/` at up
+  to 20 characters — "Jim@Bob". Spaces are fine; other symbols are not.
 - `UNKNOWN_SESSION` fires when the backend restarts between the loader's
   `getSession()` and the user pressing submit.
 
@@ -413,6 +414,7 @@ export const CellState = {
   EMPTY: "empty",
   AREA: "area",
   CHOSEN: "chosen",
+  REVEALED: "revealed",
 } as const;
 ```
 
@@ -422,14 +424,17 @@ export const CellState = {
 | interactive | inside your Selection's Area | `AREA` |
 | interactive | otherwise | `EMPTY` |
 | readonly | no names | `EMPTY` |
-| readonly | has names | `CHOSEN` + names |
+| readonly | has names | `REVEALED` + names |
 
-Grey for `EMPTY`, darker grey for `AREA`, green for `CHOSEN`. With a mouse, the
-Area under the pointer also gets a ring, on top of any state. See
-[grid-area.md](docs/features/grid-area.md). Names stack
-vertically inside the cell. Show at most 3, then `+N more` — the wireframe cell
-fits about three. Hovering a readonly Square with names shows the full list in a
-shadcn `Tooltip`, since the cap and truncation hide some.
+Grey for `EMPTY`, darker grey for `AREA`, green for `CHOSEN`. A `REVEALED`
+Square is filled by who is in it: one person's own colour when they picked it
+alone, and otherwise a grey that deepens with the crowd, under a rolling
+rainbow border. A Square with one name shows that name and is inert; a
+crowded one shows `N votes`, and clicking it opens every name as a coloured
+badge in a shadcn `Tooltip`. Nothing on the Reveal responds to hover. See
+[reveal-colours-and-create-gating.md](docs/features/reveal-colours-and-create-gating.md).
+With a mouse, the Area under the pointer also gets a ring, on top of any state.
+See [grid-area.md](docs/features/grid-area.md).
 
 ```ts
 // src/components/EstimationGrid.tsx — prop types stay local
@@ -563,7 +568,7 @@ only, no types.
 ```ts
 export const PointSystemType = { NUMERICAL: "numerical", FIBONACCI: "fibonacci" } as const;
 export const GridMode = { INTERACTIVE: "interactive", READONLY: "readonly" } as const;
-export const CellState = { EMPTY: "empty", CHOSEN: "chosen" } as const;
+export const CellState = { EMPTY: "empty", AREA: "area", CHOSEN: "chosen", REVEALED: "revealed" } as const;
 export const SessionConnectionStatus = { /* as above */ } as const;
 export const SessionAction = { /* as above */ } as const;
 export const ErrorCode = {
@@ -769,7 +774,7 @@ export async function joinAction({ params, request }) {
 `lib/validation.ts`, and the action's error from `useActionData()`. Pending and
 disabled states come from `useNavigation()`.
 
-Validating locally means the common rejection — a space in the name — never
+Validating locally means the common rejection — a symbol in the name — never
 reaches the wire. The server's `INVALID_NAME` stays the backstop.
 
 `joinLoader` gains the live-store check that makes the Back button safe.
