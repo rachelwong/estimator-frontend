@@ -19,6 +19,8 @@ npm run dev // runs on localhost:5173
 
 ```
 
+You will also need to run the [backend component](https://github.com/rachelwong/estimator-backend) as well.
+
 ## Description
 
 This is the front-end React component to a full stack application that allows users to create sessions (stored on server side) to contribute to point-sizing a piece of work in a "blind-poker" style. This project was Claude Code assisted to explore the potential and functionalities it can offer, and how I can integrate it into my own thinking and workflows. Worth exploring would be
@@ -29,8 +31,8 @@ This is the front-end React component to a full stack application that allows us
 
 I used spec-driven development with Claude Code. The resources that I used included:
 
-- (Matt Pocock grilling skills)[https://github.com/mattpocock/skills]
-- adapted `agent.md` from (Fabien Saglard's version)[https://fabiensanglard.net/agent.md/]
+- [Matt Pocock grilling skills](https://github.com/mattpocock/skills)
+- adapted `agent.md` from [Fabien Saglard's version](https://fabiensanglard.net/agent.md/)
 - Claude design skills
 - impeccable and intent skills for design exploration
 
@@ -118,7 +120,7 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
 
 - [ ] adding a notes feature to allow participants to share more details beyond just their points selection
 - [ ] allowing participants to be anonymous. They can provide a name still, but their names could be hidden from other participants, and only the session creator (admin) can see all the names in full.
-- [ ] add a theme provider to toggle between fun and work visual modes for different team environments. A bit like [OpenJev](https://openjev.com/) but less obviously AI-slop.
+- [ ] add a theme provider to toggle between fun and corporate visual modes for different team environments. A bit like [OpenJev](https://openjev.com/) but less obviously AI-slop.
 
 ### AI
 
