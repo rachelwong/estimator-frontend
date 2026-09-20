@@ -187,7 +187,7 @@ export const PARTICIPANT_COLOUR_CLASS = [
 
 // No units: Time and Resources are labels, and the team decides (CONTEXT.md).
 export const AXIS_HINT = {
-  TIME: "Duration, not effort. ",
+  TIME: "Duration, not effort.",
   RESOURCES: "Anything the task needs, such as effort, people or dependencies.",
 } as const;
 
