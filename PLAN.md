@@ -631,7 +631,8 @@ Backend must be running from here on.
 and two components:
 
 - `PointSystemPicker` — `RadioGroup`, numerical or fibonacci.
-- `RangeSlider` — `Slider`, range swaps 0–20 / 0–64 with the point system, and
+- `RangeSlider` — `Slider`, range swaps 0–20 / 0–55 with the point system and
+  rests only on values that system uses (Fibonacci snaps to the sequence), and
   the value **resets to 0** on every switch. Deliberate — forces a conscious
   re-pick instead of inheriting the old maximum.
 

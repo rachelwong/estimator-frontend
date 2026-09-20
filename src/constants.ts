@@ -94,12 +94,29 @@ export const SocketLifecycleEvent = {
   CONNECT_ERROR: "connect_error",
 } as const;
 
-// How far the admin's slider goes for each point system. Mirrors
+// The values the admin's slider can rest on, per point system. Mirrors
 // estimator-backend/src/pointSystems.ts — the server re-validates anyway, so
-// this only keeps the UI from offering a value that would be rejected.
-export const SLIDER_MAX_CEILING = {
-  [PointSystemType.NUMERICAL]: 20,
-  [PointSystemType.FIBONACCI]: 64,
+// these only keep the UI from offering a value that would be rejected, or one
+// that would build the same grid as its neighbour.
+export const FIBONACCI_SEQUENCE = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55] as const;
+
+export const NUMERICAL_MAX = 20;
+
+// The Page keys ask for a bigger move than an arrow (WAI-ARIA slider pattern),
+// and three values crosses either scale in a few presses.
+const SLIDER_PAGE_STEP = 3;
+
+// KeyboardEvent.key values that move the slider, and by how many values.
+// RangeSlider takes these keys itself: the Slider's own steps are in points,
+// not values, so they land between Fibonacci values — from 34 neither an arrow
+// nor a Page key would ever reach 55.
+export const SLIDER_STEP_DIRECTION = {
+  ArrowRight: 1,
+  ArrowUp: 1,
+  ArrowLeft: -1,
+  ArrowDown: -1,
+  PageUp: SLIDER_PAGE_STEP,
+  PageDown: -SLIDER_PAGE_STEP,
 } as const;
 
 // Two mutually exclusive options, so radios rather than the wireframe's

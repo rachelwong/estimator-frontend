@@ -2,7 +2,8 @@
 import { API, APP, cells, landsOn } from '../lib.mjs'
 
 const NAME_RULE = 'Use 1-20 letters, numbers or spaces, with no symbols.'
-const FIBONACCI_AT_64 = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55']
+const FIBONACCI_AT_55 = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55']
+const DRAG_MOVES = 60
 
 export async function create({ browser, reporter }) {
   const { check, openPage } = reporter
@@ -46,8 +47,25 @@ export async function create({ browser, reporter }) {
 
   await page.getByRole('slider').focus()
   await page.keyboard.press('End')
-  check('Fibonacci slider tops out at 64', (await sliderValue(page)) === '64')
+  check('Fibonacci slider tops out at 55', (await sliderValue(page)) === '55')
 
+  // Every stop is a Fibonacci number, so arrowing up from 0 walks the sequence
+  // rather than counting 1, 2, 3, 4.
+  await page.keyboard.press('Home')
+  const stops = []
+  for (let press = 0; press < 4; press += 1) {
+    await page.keyboard.press('ArrowRight')
+    stops.push(await sliderValue(page))
+  }
+  check('Fibonacci slider steps 1 2 3 5', stops.join() === '1,2,3,5', stops.join())
+
+  // A drag rests on every value in turn and never doubles back — snapping that
+  // looks at the direction of travel flaps between two values around every
+  // midpoint, and only a drag shows it.
+  const dragged = await dragAcross(page)
+  check('Dragging walks the sequence', dragged.join() === FIBONACCI_AT_55.join(), dragged.join())
+
+  await page.keyboard.press('End')
   await start.click()
   await page.waitForURL(/\/start$/)
   await cells(page).first().waitFor()
@@ -57,7 +75,7 @@ export async function create({ browser, reporter }) {
   const timeValues = await page
     .locator('main .grid.gap-1 > span')
     .evaluateAll((spans) => spans.slice(-10).map((s) => s.textContent.trim()))
-  check('Fibonacci axis stops at 55', timeValues.join() === FIBONACCI_AT_64.join(), timeValues.join())
+  check('Fibonacci axis stops at 55', timeValues.join() === FIBONACCI_AT_55.join(), timeValues.join())
 
   // A sleeping backend fails in place, keeping the filled-in form.
   const offline = await openPage(context, { expectErrors: true })
@@ -75,4 +93,28 @@ export async function create({ browser, reporter }) {
 
 async function sliderValue(page) {
   return (await page.getByRole('slider').getAttribute('aria-valuenow')) ?? ''
+}
+
+// Holds the thumb and crosses the whole track in small moves, collecting each
+// value it comes to rest on. Enough moves that no value can be stepped over.
+async function dragAcross(page) {
+  const track = await page.locator('[data-slot="slider-track"]').boundingBox()
+  const middle = track.y + track.height / 2
+  const seen = []
+
+  await page.mouse.move(track.x, middle)
+  await page.mouse.down()
+
+  for (let step = 0; step <= DRAG_MOVES; step += 1) {
+    await page.mouse.move(track.x + (track.width * step) / DRAG_MOVES, middle)
+    const value = await sliderValue(page)
+
+    if (seen.at(-1) !== value) {
+      seen.push(value)
+    }
+  }
+
+  await page.mouse.up()
+
+  return seen
 }
