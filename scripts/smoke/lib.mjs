@@ -7,7 +7,15 @@ export const APP = process.env.SMOKE_APP_URL ?? 'http://localhost:5173'
 export const API = process.env.SMOKE_API_URL ?? 'http://localhost:3001'
 export const SHOTS = new URL('./screenshots', import.meta.url).pathname
 
+// The backend's socket endpoint, for Playwright route patterns and traffic
+// filters. Derived from API, or those checks silently stop matching when the
+// suite runs anywhere but localhost — an interceptor that never fires looks
+// exactly like a passing check.
+export const SOCKET_HOST = new URL(API).host
+export const SOCKET_IO = new RegExp(`${SOCKET_HOST.replaceAll('.', '\\.')}/socket\\.io`)
+
 const GREEN = 'bg-green-500'
+
 
 // Chrome logs every 404 as a console error. GET /sessions/:id answering 404
 // is expected — the loaders turn it into /not-found — so it isn't a failure.
@@ -114,15 +122,75 @@ export async function clickCell(page, time, resource) {
   await (await cell(page, time, resource)).click()
 }
 
-// Green Squares as [time, resource] index pairs.
+// Green Squares as [time, resource] index pairs. The live grid's own marker.
 export async function chosen(page) {
+  return squaresClassed(page, GREEN)
+}
+
+// The same, for the ended screen, where nobody's Square is green and every
+// fill is a different colour. What a revealed Square has in common is that it
+// says something — a name, or a count of votes. An empty one says nothing.
+export async function revealed(page) {
   const length = await axisLength(page)
-  const indexes = await cells(page).evaluateAll(
-    (elements, green) => elements.flatMap((el, i) => (el.className.includes(green) ? [i] : [])),
-    GREEN,
+  const indexes = await cells(page).evaluateAll((elements) =>
+    elements.flatMap((el, i) => (el.textContent.trim() === '' ? [] : [i])),
   )
 
   return indexes.map((i) => [i % length, length - 1 - Math.floor(i / length)])
+}
+
+// The class list a Square is wearing — on the Reveal, its fill is its owner's
+// colour, or the grey of a crowd.
+export async function squareClasses(page, time, resource) {
+  return (await cell(page, time, resource)).evaluate((el) => el.className)
+}
+
+async function squaresClassed(page, marker) {
+  const length = await axisLength(page)
+  const indexes = await cells(page).evaluateAll(
+    (elements, className) =>
+      elements.flatMap((el, i) => (el.className.includes(className) ? [i] : [])),
+    marker,
+  )
+
+  return indexes.map((i) => [i % length, length - 1 - Math.floor(i / length)])
+}
+
+// Opens a revealed Square and returns the badges inside it: one name and one
+// class list per person. Clicking again would close it, so each call opens,
+// reads and closes.
+export async function openSquareBadges(page, time, resource) {
+  const square = await cell(page, time, resource)
+
+  // Radix mounts a hidden copy of the content for screen readers, so match the
+  // shadcn content element itself rather than the tooltip role.
+  const tooltip = page.locator('[data-slot="tooltip-content"]')
+
+  await square.click()
+  await waitForTooltips(tooltip, 1)
+  // span.rounded-sm is the badge itself — Radix puts a bare span of its own in
+  // there for screen readers.
+  const badges = await tooltip
+    .locator('span.rounded-sm')
+    .evaluateAll((spans) => spans.map((s) => ({ name: s.textContent, className: s.className })))
+
+  // Closed before returning, and waited out: the exit animation keeps the old
+  // content in the DOM long enough to collide with the next Square's.
+  await square.click()
+  await waitForTooltips(tooltip, 0)
+
+  return badges
+}
+
+async function waitForTooltips(tooltip, expected) {
+  for (let attempt = 0; attempt < 50; attempt++) {
+    if ((await tooltip.count()) === expected) {
+      return
+    }
+    await tooltip.page().waitForTimeout(100)
+  }
+
+  throw new Error(`Expected ${expected} open tooltip(s), got ${await tooltip.count()}`)
 }
 
 export function sameSquares(actual, expected) {

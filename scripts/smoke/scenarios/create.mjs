@@ -1,7 +1,7 @@
 // The create form — PLAN.md Phase 3.
 import { API, APP, cells, landsOn } from '../lib.mjs'
 
-const NAME_RULE = 'Use 1-20 letters or numbers, with no spaces.'
+const NAME_RULE = 'Use 1-20 letters, numbers or spaces, with no symbols.'
 const FIBONACCI_AT_64 = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55']
 
 export async function create({ browser, reporter }) {
@@ -20,22 +20,29 @@ export async function create({ browser, reporter }) {
   check('Start disabled with no name', await start.isDisabled())
 
   // Validated on blur, before any request.
+  await name.fill('Jim@Bob')
+  await name.blur()
+  check('Symbol in name shows rule', await page.getByText(NAME_RULE).isVisible())
+  check('Start disabled for bad name', await start.isDisabled())
+
+  // A space is a name, not a symbol.
   await name.fill('Jim Bob')
   await name.blur()
-  check('Space in name shows rule', await page.getByText(NAME_RULE).isVisible())
-  check('Start disabled for bad name', await start.isDisabled())
+  check('Rule clears for a spaced name', (await page.getByText(NAME_RULE).count()) === 0)
 
   await name.fill('Ada')
   check('Rule clears for good name', (await page.getByText(NAME_RULE).count()) === 0)
-  check('Start enabled for good name', await start.isEnabled())
+  check('Start disabled while max is 0', await start.isDisabled())
 
   // Numerical ceiling is 20. Switching system resets the max to 0.
   await page.getByRole('slider').focus()
   await page.keyboard.press('End')
   check('Numerical slider tops out at 20', (await sliderValue(page)) === '20')
+  check('Start enabled with a name and a max', await start.isEnabled())
 
   await page.getByLabel('Fibonacci sequence').click()
   check('Switching system resets max to 0', (await sliderValue(page)) === '0')
+  check('Start disabled again after the reset', await start.isDisabled())
 
   await page.getByRole('slider').focus()
   await page.keyboard.press('End')
@@ -57,6 +64,8 @@ export async function create({ browser, reporter }) {
   await offline.route(`${API}/sessions`, (route) => route.abort())
   await offline.goto(`${APP}/new`)
   await offline.getByLabel('Provide your name').fill('Ada')
+  await offline.getByRole('slider').focus()
+  await offline.keyboard.press('End')
   await offline.getByRole('button', { name: 'Start Session' }).click()
   const unreachable = offline.getByText('Could not reach the server. Try again.')
   await unreachable.waitFor({ timeout: 5000 }).catch(() => {})

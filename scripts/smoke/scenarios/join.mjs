@@ -1,6 +1,7 @@
 // Joining and choosing Squares as a Participant — PLAN.md Phases 9 and 10.
 import {
   APP,
+  SOCKET_IO,
   cellText,
   chosen,
   clickCell,
@@ -8,12 +9,13 @@ import {
   createSocketPool,
   joinInBrowser,
   landsOn,
+  openSquareBadges,
   sameSquares,
   selectSquare,
   waitForChosen,
 } from '../lib.mjs'
 
-const NAME_RULE = 'Use 1-20 letters or numbers, with no spaces.'
+const NAME_RULE = 'Use 1-20 letters, numbers or spaces, with no symbols.'
 
 export async function join({ browser, reporter }) {
   const { check, openPage } = reporter
@@ -26,11 +28,16 @@ export async function join({ browser, reporter }) {
 
   await page.goto(`${APP}/${sessionId}/join`)
   const name = page.locator('input[name="name"]')
-  await name.fill('Jim Bob')
+  await name.fill('Jim@Bob')
   await name.blur()
-  check('Space in name shows rule', await page.getByText(NAME_RULE).isVisible())
+  check('Symbol in name shows rule', await page.getByText(NAME_RULE).isVisible())
   check('Enter disabled for bad name', await page.getByRole('button', { name: 'Enter Session' }).isDisabled())
   check('Bad name opens no socket', socketTraffic.length === 0)
+
+  // A space is a name, not a symbol.
+  await name.fill('Jim Bob')
+  await name.blur()
+  check('Space in name clears the rule', (await page.getByText(NAME_RULE).count()) === 0)
 
   // --- Join, then Back must not create a second Participant ------------------
   await forgeNextSelection(page)
@@ -79,7 +86,8 @@ export async function join({ browser, reporter }) {
 
   await page.getByText('Ended', { exact: true }).waitFor()
   await page.mouse.move(0, 0)
-  const names = (await cellText(page, 1, 1)).split('\n').sort()
+  check('Crowded Square counts the votes', (await cellText(page, 1, 1)) === '3 votes')
+  const names = (await openSquareBadges(page, 1, 1)).map((badge) => badge.name).sort()
   check('Three "Jim" joins → Jim, Jim-1, Jim-2', names.join() === 'Jim,Jim-1,Jim-2', names.join())
   check('Back created no extra Participant', !(await page.locator('main').innerText()).includes('Jim-3'))
 }
@@ -97,12 +105,12 @@ async function forgeNextSelection(page) {
     return text.replace(/\{"time":\d+,"resource":\d+\}/, '{"time":999,"resource":999}')
   }
 
-  await page.routeWebSocket(/localhost:3001\/socket\.io/, (ws) => {
+  await page.routeWebSocket(SOCKET_IO, (ws) => {
     const server = ws.connectToServer()
     ws.onMessage((message) => server.send(typeof message === 'string' ? forge(message) : message))
   })
 
-  await page.route(/localhost:3001\/socket\.io/, (route) => {
+  await page.route(SOCKET_IO, (route) => {
     const body = route.request().postData()
     if (route.request().method() !== 'POST' || !body) {
       return route.continue()

@@ -7,6 +7,7 @@
 import {
   APP,
   SHOTS,
+  SOCKET_HOST,
   cellText,
   cells,
   chosen,
@@ -14,6 +15,9 @@ import {
   createSocketPool,
   hoverCell,
   landsOn,
+  openSquareBadges,
+  revealed,
+  squareClasses,
   sameSquares,
   selectSquare,
   waitForChosen,
@@ -114,8 +118,9 @@ export async function session({ browser, reporter }) {
   // --- A brand-new visitor to the ended Session ------------------------------
   const fresh = await openPage(await browser.newContext())
   const socketTraffic = []
-  // Backend only — Vite's HMR socket on :5173 is dev noise.
-  fresh.on('websocket', (ws) => ws.url().startsWith('ws://localhost:3001') && socketTraffic.push(ws.url()))
+  // Backend only — Vite's HMR socket on :5173 is dev noise. Matching on the
+  // host covers ws:// locally and wss:// in production.
+  fresh.on('websocket', (ws) => ws.url().includes(SOCKET_HOST) && socketTraffic.push(ws.url()))
   fresh.on('request', (request) => request.url().includes('/socket.io') && socketTraffic.push(request.url()))
 
   await fresh.goto(`${APP}/${sessionId}`)
@@ -127,20 +132,44 @@ export async function session({ browser, reporter }) {
   check('No name prompt', (await fresh.locator('input[name="name"]').count()) === 0)
   check('No socket opened', socketTraffic.length === 0, socketTraffic.join(', '))
   check('Status badge reads Ended', await fresh.getByText('Ended', { exact: true }).isVisible())
-  check('Grid is readonly', (await fresh.locator('main button.aspect-square').count()) === 0)
+  // Only a crowded Square opens: a Square one person picked already names them.
+  check('Only the crowded Square is a button',
+    (await fresh.locator('main .grid.gap-1 button.aspect-square').count()) === 1)
 
-  const crowded = await cellText(fresh, 2, 3)
-  check('Crowded Square shows first three', ['Bob', 'Cat', 'Dan'].every((n) => crowded.includes(n)))
-  check('Crowded Square caps with +1 more', crowded.includes('+1 more') && !crowded.includes('Eli'))
-  check('Fay in her Square', (await cellText(fresh, 4, 1)).includes('Fay'))
+  check('Crowded Square counts the votes', (await cellText(fresh, 2, 3)) === '4 votes')
+  check('Fay in her Square', (await cellText(fresh, 4, 1)) === 'Fay')
   check('Cleared Squares are empty', (await cellText(fresh, 0, 0)) + (await cellText(fresh, 1, 0)) === '')
-  check('Only chosen Squares are green', sameSquares(await chosen(fresh), [[2, 3], [4, 1]]))
+  check('Only chosen Squares are revealed', sameSquares(await revealed(fresh), [[2, 3], [4, 1]]))
+  check('No Square is green on the Reveal', (await chosen(fresh)).length === 0)
+  check('Crowded Square wears the rainbow border',
+    (await fresh.locator('main .grid.gap-1 .rainbow-border').count()) === 1)
 
+  // Hover does nothing now: the badges are behind a click.
   await hoverCell(fresh, 2, 3)
-  const tooltip = fresh.getByRole('tooltip')
-  await tooltip.waitFor({ timeout: 3000 }).catch(() => {})
-  const tooltipText = (await tooltip.count()) ? await tooltip.innerText() : ''
-  check('Tooltip lists all four', ['Bob', 'Cat', 'Dan', 'Eli'].every((n) => tooltipText.includes(n)))
+  await fresh.waitForTimeout(400)
+  check('Hover opens nothing', (await fresh.getByRole('tooltip').count()) === 0)
+
+  // Fay's own Square opens nothing either — her name is already on it.
+  await clickCell(fresh, 4, 1)
+  await fresh.waitForTimeout(400)
+  check('A one-person Square opens nothing', (await fresh.getByRole('tooltip').count()) === 0)
+
+  // Every person wears their own colour, and nobody in one Square shares one.
+  const crowdedBadges = await openSquareBadges(fresh, 2, 3)
+  const bgOf = (classes) => classes.split(' ').find((c) => c.startsWith('bg-')) ?? ''
+  const bg = (badge) => bgOf(badge.className)
+  const faysSquare = bgOf(await squareClasses(fresh, 4, 1))
+  check('Click lists all four', ['Bob', 'Cat', 'Dan', 'Eli']
+    .every((n) => crowdedBadges.some((badge) => badge.name === n)),
+    crowdedBadges.map((badge) => badge.name).join())
+  check('Crowded Square colours each name differently',
+    new Set(crowdedBadges.map(bg)).size === crowdedBadges.length, crowdedBadges.map(bg).join())
+  check("Fay's Square is filled with her own colour",
+    faysSquare !== '' && !crowdedBadges.map(bg).includes(faysSquare), faysSquare)
+
+  const legend = await fresh.locator('section', { hasText: 'Who is who' }).innerText()
+  check('Legend lists everyone', ['Ada', 'Bob', 'Cat', 'Dan', 'Eli', 'Fay', 'Zed']
+    .every((n) => legend.includes(n)), legend.replace(/\n/g, ' '))
 
   // Ada cleared hers, Zed never picked.
   const abstained = await fresh.locator('section', { hasText: 'Abstained' }).innerText()
