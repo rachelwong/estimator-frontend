@@ -2,9 +2,9 @@
 
 [https://estimator-frontend-ashen.vercel.app](https://estimator-frontend-ashen.vercel.app)
 
-This is a blind-poker application for software developers or SaaS teams to discuss tee-sizing any given feature, Jira ticket based on time and resources/complexity. This project was inspired by discussions during sprint planning sessions at work and how different team members contribute differently. I had deliberately not referred to any existing sprint planning tools or tee-shirt sizing tools on the market as this project is a personal response to a work experience. I chose the blind-poker style specifically as an unobstrusive conversation starter and platform to allow all members of the team to visibly and meaningfully contribute towards a sizing activity. Different levels of experience, personality style, involvement with a particular task can impact how sprint planning discussions proceed.
+This is a blind-poker application for software developers or SaaS teams to discuss tee-sizing any given feature, Jira ticket based on time and resources/complexity. This project was inspired by discussions during sprint planning at work and how different team members contribute differently. Spring planning is an opportunity to gain alignment across understanding the requirements of a task and gaining a "finger in the air" sense of how large/small it is. I have observed different experience, communication style, level of subject matter ownership can impact how sprint planning discussions pan out. I chose the blind-poker style specifically as an unobstrusive conversation starter to allow all members of the team to visibly and meaningfully contribute towards a sizing activity. I had deliberately not referred to any existing sprint planning tools or tee-shirt sizing tools on the market as this project is a personal response to what I have experienced.
 
-This tool is intended to be a way to be a level conversation starter. Feedback welcomed.
+Feedback welcomed.
 
 ## Installation
 
@@ -31,6 +31,7 @@ This is the front-end React component to a full stack application that allows us
 
 - PLAN.md
 - CONTEXT.md
+- DESIGN.md, and its build sequence in `docs/plans/fold-and-flip.md`
 - under `/docs`, Architecture Decision Records, feature documentation, deployment plans
 
 I used spec-driven development with Claude Code. The resources that I used included:
@@ -118,6 +119,7 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
   - lean towards plain english naming convention, don't abbreviate (i.e. why `Ws` when you can `Websocket`)
   - separation of concerns wherever possible
   - picking up on Claude over-engineering solutions (i.e complex hash-sort method to randomise picking colours for participant names is overkill)
+- if I could, I would still reach for a human designer
 
 ## Roadmap
 

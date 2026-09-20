@@ -6,6 +6,12 @@ you know a phase is finished.
 
 Terms used here are defined in [`CONTEXT.md`](./CONTEXT.md).
 
+**The visual layer is a separate document.** This plan built the app's structure
+and behaviour; [`DESIGN.md`](./DESIGN.md) is the Fold and Flip design, and
+[`docs/plans/fold-and-flip.md`](./docs/plans/fold-and-flip.md) sequences its
+build in Stages 0–10. That document counts *Stages* so its numbering never
+collides with the Phases below.
+
 **Out of scope**: deployment config (`vercel.json`, env vars, CORS bootstrap).
 That is a separate pass once both apps ship together, the same way the backend
 kept `render.yaml` out of its own plan.
@@ -32,6 +38,21 @@ That document is unchanged. Where this plan differs:
 
 Renamed from the Miro wireframe's "Task estimator" to avoid confusion with the
 out-of-scope task-description feature.
+
+### Reversed by the Fold and Flip design
+
+The visual redesign in [`DESIGN.md`](./DESIGN.md), sequenced in
+[`docs/plans/fold-and-flip.md`](./docs/plans/fold-and-flip.md), reverses two of
+`estimator-plan.md`'s resolved decisions outright:
+
+| # | It says | The design does | Where |
+| --- | --- | --- | --- |
+| 16 | Mobile/responsive out of scope, desktop-only, no breakpoints | Three breakpoints; every screen drawn at 390 / 834 / 1440 | `DESIGN.md` §5 |
+| 18 | Grid is click/tap only — no `tabIndex`, arrow keys or ARIA roles | Roving `tabIndex`, arrow keys, Enter/Space, an `aria-label` per Square | `DESIGN.md` §6 |
+
+Also note: the "a colour per person on the Reveal" row above is superseded. A
+revealed Square is now filled from the crowd ramp by headcount, with names in a
+popover.
 
 ---
 

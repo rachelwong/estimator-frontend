@@ -1,5 +1,14 @@
 # Feature — Reveal colours, names with spaces, create gating
 
+> **Change 3 only is superseded by [`DESIGN.md`](../../DESIGN.md) §2.** The
+> Reveal no longer gives each person their own colour. A revealed Square is
+> filled from the crowd ramp (`crowd-0` … `crowd-4`) by how many people landed
+> on it, and the names live in the popover.
+>
+> **Changes 1 and 2 still hold.** Create gating is live behaviour, and the name
+> rule is mirrored in `estimator-backend`, so neither is affected by the
+> redesign.
+
 Three UI changes shipped as one round. The first two are frontend only; the
 name rule is mirrored in `estimator-backend`, which enforces it.
 

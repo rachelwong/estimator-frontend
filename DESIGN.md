@@ -1,7 +1,8 @@
 # Fold and Flip — Design
 
-The visual design for estimator-frontend. Read alongside `PRODUCT.md` (what the
-product is and its constraints) and `CONTEXT.md` (the binding language).
+The visual design for estimator-frontend. Read alongside `estimator-plan.md`
+(what the product is and its resolved decisions) and `CONTEXT.md` (the binding
+language).
 
 Source of truth for layouts: the "Round 6 · Fold and Flip" page of the design
 canvas — https://claude.ai/artifact/B8xUuTAY1pmHCQcMD5FKRc
@@ -14,7 +15,10 @@ hard offset shadows, square corners, pixel-art characters, and a purple
 
 ## 1. Brand
 
-**Name:** Fold and Flip (replaces "Product Poker" / "Estimator" in the UI).
+**Name:** Fold and Flip. This is the display name — the one the UI, `<title>`,
+meta tags and favicon carry. "Product Poker", "Jira Poker" and "Estimator" were
+working titles during development and appear nowhere in the shipped product.
+The repos keep their `estimator-*` names.
 
 **Logo mark:** a blank playing card with a single pixel spade and a 1-cell ink
 offset shadow (canvas: Spec · Logo marks, option B). No "A", no corner pips.
@@ -488,26 +492,35 @@ Tokens as CSS custom properties (map into `@theme` on Tailwind v4, or
 
 ## 12. Open before implementing
 
-- **Session name.** The designs show a session name ("Checkout redesign") in
-  window titles and on Join, but Create has no name field. Either add one, or
-  show something that exists (e.g. the session ID from the link).
+The build sequence is [`docs/plans/fold-and-flip.md`](docs/plans/fold-and-flip.md).
+
+### Still open
+
 - **Copy.** Welcome copy is placeholder until supplied (only
   `docs/features/intro-page.md` is sanctioned). "Why I made this" text and the
   GitHub handle for both repo links are still needed.
-- **Large Numerical grids on mobile.** Highest value 20 makes a 21×21 grid,
-  about 12px Squares at 390px. Decide: minimum Square size + horizontal scroll,
-  a lower cap on mobile, or accept it.
-- **Duplicate names** (Jim-1, Jim-2) — confirm the backend does this; it isn't
-  in `CONTEXT.md`.
-- **Breakpoint ranges** — designs are at 390 / 834 / 1440; suggested ≤767 /
-  768–1199 / ≥1200.
-- **Docs to update:** retire or rewrite the Area-highlighting and Reveal-colour
-  feature specs, and remove the "two visual modes" requirement from
-  `PRODUCT.md` (dropped).
-- **Rename everywhere:** "Fold and Flip" in the header, `<title>`, meta tags and
-  favicon (the pixel card works well as one).
-- **Smoke tests:** check `scripts/smoke/` for assertions on changed text
-  ("End session & reveal", "The Reveal", "Join session", the product name).
-- **Assets:** the pixel sprites exist only in the design canvas so far; export
-  them as SVG files or React components. Consider self-hosting the three fonts
-  to avoid a flash of fallback text.
+
+That is the only one.
+
+### Settled
+
+| Question | Answer |
+| --- | --- |
+| Session name | Dropped from window titles — they read `live`, `revealed`, `join`, `new-session`. The backend has no name field and gains none |
+| Large Numerical grids on mobile | Minimum Square size plus horizontal scroll. No per-device cap, so the grid never depends on the device |
+| Duplicate names | Already handled — `estimator-backend/src/sessionStore.ts:35` does `Jim-1`, `Jim-2` |
+| Breakpoint ranges | `≤767` mobile · `768–1199` tablet · `≥1200` desktop |
+| "Two visual modes" | Dropped |
+| Fonts | Self-hosted via Fontsource, matching the existing package pattern |
+| Sprites | In `public/sprites/` as SVG; they become React components in Phase 2 |
+
+### Scheduled, not open
+
+- **Rename everywhere** — header, `<title>`, meta tags, favicon. Plan Stage 2,
+  which lists the exact four places.
+- **Smoke tests** — `scripts/smoke/` asserts on text this design changes. Plan
+  Phase 10 lists the exact files and lines.
+- **Feature specs** — [`grid-area.md`](docs/features/grid-area.md) and
+  [`reveal-colours-and-create-gating.md`](docs/features/reveal-colours-and-create-gating.md)
+  are superseded on colour only; both carry a note saying so. Their behaviour
+  rules still hold.

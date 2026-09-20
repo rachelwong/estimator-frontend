@@ -1,5 +1,15 @@
 # Feature — Grid Area
 
+> **Colours superseded by [`DESIGN.md`](../../DESIGN.md) §6.** The behaviour
+> below still holds in full — Area is Active-only, never shown in the Reveal,
+> and is the filled rectangle from the origin. Only the fills changed:
+>
+> | Here | Now |
+> | --- | --- |
+> | hovered Area — `ring-2 ring-neutral-500` | `accent` 15% overlay (`#6A4FF026`), mouse only |
+> | Selection's Area — `neutral-400` fill | `crowd-1` (`#C9BCF7`) |
+> | picked Square — `green-500` | `selection` (`#FFC53D`) with the label "You" |
+
 Show the **Area** of a Square: every Square from the origin up to and including
 it. Makes the Time × Resources of a Selection visible at a glance.
 
