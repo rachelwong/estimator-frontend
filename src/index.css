@@ -117,6 +117,61 @@
     --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* The rolling rainbow border on a crowded Square (src/constants.ts,
+   CROWDED_SQUARE_BORDER_CLASS). A conic gradient fills the whole Square, then
+   a mask cuts out everything inside the 2px edge, leaving the gradient as a
+   ring over whatever grey the Square is wearing. Rolling it means animating
+   the gradient's own angle, which needs @property to register the angle as an
+   animatable type — without it the ring still renders, just still. */
+@property --rainbow-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes rainbow-roll {
+    to {
+        --rainbow-angle: 360deg;
+    }
+}
+
+@utility rainbow-border {
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 2px;
+        background: conic-gradient(
+            from var(--rainbow-angle),
+            oklch(0.65 0.23 25),
+            oklch(0.8 0.17 80),
+            oklch(0.87 0.19 110),
+            oklch(0.75 0.19 150),
+            oklch(0.7 0.15 200),
+            oklch(0.6 0.22 265),
+            oklch(0.65 0.28 320),
+            oklch(0.65 0.23 25)
+        );
+        mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        -webkit-mask-composite: xor;
+        animation: rainbow-roll 4s linear infinite;
+        pointer-events: none;
+    }
+
+    /* A border that never stops moving is exactly what this setting is for. */
+    @media (prefers-reduced-motion: reduce) {
+        &::after {
+            animation: none;
+        }
+    }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

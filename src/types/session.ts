@@ -6,6 +6,10 @@ import { SessionAction, SessionConnectionStatus } from '../constants'
 import type { ErrorCode } from './constants'
 import type { PointSystem, Selection } from './protocol'
 
+// Each revealed participant's name mapped to the chip class that is theirs for
+// the whole ended screen. Built once per Reveal by utils/participantColours.ts.
+export type ParticipantColours = ReadonlyMap<string, string>
+
 // `code` is optional: the server's "not identified yet" error carries none.
 export interface SessionError {
   code?: ErrorCode

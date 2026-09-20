@@ -2,7 +2,12 @@ import { Fragment, useState } from 'react'
 import type { PointerEvent } from 'react'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { AreaPreview, AXIS_HINT, AxisOrientation, GridMode, MOUSE_POINTER_TYPE } from '@/constants'
-import type { GridMode as GridModeValue, RevealPayload, Selection } from '@/types'
+import type {
+  GridMode as GridModeValue,
+  ParticipantColours,
+  RevealPayload,
+  Selection,
+} from '@/types'
 import { cellState, groupNames, inArea, squareKey } from '@/utils'
 import { AxisTitle } from './AxisTitle'
 import { AxisValue } from './AxisValue'
@@ -13,6 +18,8 @@ interface EstimationGridProps {
   mode: GridModeValue
   selection?: Selection | null
   reveal?: RevealPayload
+  // Only the ended screen passes these; the live grid has no roster to colour.
+  colours?: ParticipantColours
   onSelect?: (selection: Selection) => void
 }
 
@@ -32,6 +39,7 @@ export function EstimationGrid({
   mode,
   selection = null,
   reveal,
+  colours,
   onSelect,
 }: EstimationGridProps) {
   // The Square under a mouse pointer. Its Area is outlined as a preview.
@@ -92,6 +100,7 @@ export function EstimationGrid({
                       key={time}
                       state={cellState(mode, square, selection, names)}
                       names={names}
+                      colours={colours}
                       preview={preview}
                       onClick={isInteractive ? () => onSelect?.(square) : undefined}
                       onPointerEnter={

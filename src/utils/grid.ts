@@ -1,13 +1,21 @@
-import { CellState, GridMode } from '@/constants'
+import {
+  CellState,
+  CROWDED_SQUARE_BORDER_CLASS,
+  CROWDED_SQUARE_CLASS,
+  CROWDED_SQUARE_MINIMUM,
+  GridMode,
+} from '@/constants'
 import type {
   CellState as CellStateValue,
   GridMode as GridModeValue,
+  ParticipantColours,
   RevealPayload,
   Selection,
 } from '@/types'
 
 // Interactive: green for your own Selection, grey fill across its Area.
-// Readonly: green wherever anyone landed, no Areas.
+// Readonly: a revealed Square wherever anyone landed, no Areas. Who landed
+// there is carried by the Square's own colour.
 export function cellState(
   mode: GridModeValue,
   square: Selection,
@@ -15,7 +23,7 @@ export function cellState(
   names: string[],
 ): CellStateValue {
   if (mode === GridMode.READONLY) {
-    return names.length > 0 ? CellState.CHOSEN : CellState.EMPTY
+    return names.length > 0 ? CellState.REVEALED : CellState.EMPTY
   }
 
   if (!selection) {
@@ -27,6 +35,26 @@ export function cellState(
   }
 
   return inArea(square, selection) ? CellState.AREA : CellState.EMPTY
+}
+
+// How a revealed Square is filled: one person's Square is theirs entirely, in
+// their own colour; a crowded one goes grey — deeper the more people chose it
+// — and picks up the rolling rainbow border. Readonly only; nothing fills a
+// Square while the Session runs.
+export function revealedSquareClass(
+  names: string[],
+  colours: ParticipantColours,
+): string | undefined {
+  if (names.length < CROWDED_SQUARE_MINIMUM) {
+    return colours.get(names[0])
+  }
+
+  const grey =
+    CROWDED_SQUARE_CLASS[
+      Math.min(names.length - CROWDED_SQUARE_MINIMUM, CROWDED_SQUARE_CLASS.length - 1)
+    ]
+
+  return `${grey} ${CROWDED_SQUARE_BORDER_CLASS}`
 }
 
 // Everything from the origin up to and including the corner. Axis values,

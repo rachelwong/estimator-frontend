@@ -5,7 +5,7 @@ import { RangeSlider } from '@/components/RangeSlider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PointSystemType } from '@/constants'
-import { nameError } from '@/lib/validation'
+import { isPointSystemType, nameError } from '@/lib/validation'
 import type { CreateSessionActionData } from '@/routes/loaders'
 import type { PointSystemType as PointSystemTypeValue } from '@/types'
 
@@ -23,6 +23,11 @@ export default function CreateSessionPage() {
 
   const validationError = nameError(adminName)
   const isSubmitting = navigation.state === 'submitting'
+
+  // A max of 0 is the slider's starting point, and a grid of one Square is no
+  // grid at all — so the form waits for all three answers before it will go.
+  const canSubmit =
+    validationError === null && isPointSystemType(pointSystemType) && sliderMax > 0
 
   // Switching point system clears the max, so the admin consciously re-picks
   // instead of inheriting a full-size grid from the previous choice.
@@ -67,7 +72,7 @@ export default function CreateSessionPage() {
 
         {actionData?.error && <p className="text-sm text-destructive">{actionData.error}</p>}
 
-        <Button type="submit" disabled={isSubmitting || validationError !== null}>
+        <Button type="submit" disabled={isSubmitting || !canSubmit}>
           {isSubmitting ? 'Starting…' : 'Start Session'}
         </Button>
       </Form>
