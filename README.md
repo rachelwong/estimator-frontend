@@ -25,12 +25,12 @@ This is the front-end React component to a full stack application that allows us
 
 - PLAN.md
 - CONTEXT.md
-- under /docs, Architecture Decision Records, feature documentation, deployment plans
+- under `/docs`, Architecture Decision Records, feature documentation, deployment plans
 
 I used spec-driven development with Claude Code. The resources that I used included:
 
-- Matt Pocock grilling skills
-- adapted `agent.md` from Fabien Saglard's version[https://fabiensanglard.net/agent.md/]
+- (Matt Pocock grilling skills)[https://github.com/mattpocock/skills]
+- adapted `agent.md` from (Fabien Saglard's version)[https://fabiensanglard.net/agent.md/]
 - Claude design skills
 - impeccable and intent skills for design exploration
 
@@ -96,9 +96,9 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
 
 - managing documentation drift: monorepo approach would be better to house both front and backend
 - managing usage limits: I'm currently on the lowest Claude Code Pro plan. So this [reddit advice](https://www.reddit.com/r/ClaudeAI/comments/1u7i5ow/pro_tip_reset_your_usage_limits_on_your_schedule/) is relevant: create a Claude Code Routine that runs daily, use Haiku, and just say something like "Hello, just respond with "hello"", 5 hours before you want your usage to reset
-- Plan mode x grilling skills x human code review
+- Current process is Plan mode x grilling skills x human code review
 - configuring memory.md and agents.md brings better quality and _succinct_ responses. I have found wading through paragraphs of text describing code to be a productivity tax to using something that's meant to accelerate it :shrug:.
-- having front-end experience means I can provide better directions to Claude
+- having front-end experience means I can provide better prompts
 - Plan mode and break out the work into phases. Manually review each phase and manually commit is my preferred way to go at the moment, until I can find a way to confidently gatekeep quality.
 - This is a fairly lightweight app with no global context, redux store and yet upon first completing all the implementation phases, the bundling size went over the 500kb Vite alert. I resolved this by lazy-loading in specific pages, and pulling down the `TooltipProvider` and `cv` from shadcn further down the component tree to only when it is being used (i.e. EstimationGrid). This was a manual call-out which Claude did not pick up at all.
 - Burned a lot of time discussing best state management techniques. We cycled through global context, reducers, state machine, local providers before we landed on current arrangement. Prompting for 'best practice' is not the strongest guarantee.
@@ -116,15 +116,11 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
 
 ### Features
 
-From feature perspective, this has been a great sandbox to try out Claude Code without constraints. Other ideas include:
-
 - [ ] adding a notes feature to allow participants to share more details beyond just their points selection
 - [ ] allowing participants to be anonymous. They can provide a name still, but their names could be hidden from other participants, and only the session creator (admin) can see all the names in full.
 - [ ] add a theme provider to toggle between fun and work visual modes for different team environments. A bit like [OpenJev](https://openjev.com/) but less obviously AI-slop.
 
 ### AI
-
-For AI, the next things I want to try out more is
 
 - [ ] start with [impeccable](https://impeccable.style/) or intent-driven development first to generate a product document
 - [ ] AI-assisted Automated testing tools to capture all the edge cases with sessions
