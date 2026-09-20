@@ -277,3 +277,56 @@ export const SPRITE_SCATTER_CLASS = {
   HIDDEN_BELOW_TABLET: "hidden tablet:block",
   HIDDEN_BELOW_DESKTOP: "hidden desktop:block",
 } as const;
+
+// The three dots on the right of a Window's title bar, in the order they sit
+// (DESIGN.md §2). Decorative: they are not buttons and nothing reads them.
+export const WINDOW_CHROME_DOT_CLASS = ["bg-selection", "bg-chrome-green", "bg-danger"] as const;
+
+// A Chip's border treatment. Abstained is the dashed one — the design gives it
+// a dashed `text-subtle` edge rather than the solid ink every other chip wears
+// (§4), so a Participant who held no Selection reads as an absence.
+export const ChipVariant = {
+  SOLID: "solid",
+  DASHED: "dashed",
+} as const;
+
+// Two heights, because chips do two jobs: a Silkscreen label inside a Window's
+// title bar, and a person's name in the Reveal's "who landed where" row.
+export const ChipSize = {
+  LABEL: "label",
+  NAME: "name",
+} as const;
+
+export const CHIP_VARIANT_CLASS = {
+  [ChipVariant.SOLID]: "border-ink bg-white",
+  [ChipVariant.DASHED]: "border-dashed border-text-subtle",
+} as const;
+
+export const CHIP_SIZE_CLASS = {
+  [ChipSize.LABEL]: "px-[7px] py-0.5 font-label text-[11px]",
+  [ChipSize.NAME]: "h-9 gap-2 px-2.5 font-body text-[14px] font-bold",
+} as const;
+
+// The loader at its two sizes (DESIGN.md §7): 220×18 in eight blocks centred in
+// a window, and 40×6 in five inside a button or before a line of text.
+export const PixelBarSize = {
+  LARGE: "large",
+  INLINE: "inline",
+} as const;
+
+// Whole literal class strings, as everywhere else — Tailwind's scanner and
+// `cn build` only see classes written in source. `blocks` is the white gap
+// overlay; its utility is in src/index.css, where the repeating gradient can be
+// written out.
+export const PIXEL_BAR_CLASS = {
+  [PixelBarSize.LARGE]: {
+    track: "h-[18px] w-[220px]",
+    fill: "animate-pixel-bar-large",
+    blocks: "pixel-bar-blocks-large",
+  },
+  [PixelBarSize.INLINE]: {
+    track: "h-[6px] w-[40px]",
+    fill: "animate-pixel-bar-inline",
+    blocks: "pixel-bar-blocks-inline",
+  },
+} as const;

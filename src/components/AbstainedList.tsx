@@ -1,10 +1,12 @@
-import { Badge } from '@/components/ui/badge'
+import { Chip } from '@/components/Chip'
+import { ChipSize, ChipVariant } from '@/constants'
 
 interface AbstainedListProps {
   names: string[]
 }
 
-// Joined but held no Selection at the end — left early or chose nothing.
+// Joined but held no Selection at the end — left early or chose nothing. The
+// dashed chip is the design's word for that absence (DESIGN.md §4).
 export function AbstainedList({ names }: AbstainedListProps) {
   return (
     <section className="grid gap-2">
@@ -14,9 +16,9 @@ export function AbstainedList({ names }: AbstainedListProps) {
 
       <div className="flex flex-wrap gap-2">
         {names.map((name) => (
-          <Badge key={name} variant="outline">
+          <Chip key={name} variant={ChipVariant.DASHED} size={ChipSize.NAME}>
             {name}
-          </Badge>
+          </Chip>
         ))}
       </div>
     </section>

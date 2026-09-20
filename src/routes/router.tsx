@@ -1,9 +1,10 @@
 import { lazy } from 'react'
 import { createBrowserRouter, redirect } from 'react-router'
 import { AppHeader } from '@/components/AppHeader'
-import { LoadingNotice } from '@/components/LoadingNotice'
+import { LoadingWindow } from '@/components/LoadingWindow'
 import { RoutePath } from '@/constants'
 import { AppError } from '@/routes/AppError'
+import { PrimitivesPage } from '@/routes/dev/PrimitivesPage'
 import { SpritesPage } from '@/routes/dev/SpritesPage'
 import { TokensPage } from '@/routes/dev/TokensPage'
 import { JoinSessionPage } from '@/routes/JoinSessionPage'
@@ -44,7 +45,7 @@ export const router = createBrowserRouter([
     hydrateFallbackElement: (
       <>
         <AppHeader />
-        <LoadingNotice />
+        <LoadingWindow />
       </>
     ),
     children: [
@@ -72,12 +73,13 @@ export const router = createBrowserRouter([
           },
           { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
           { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
-          // Stage 1's token sheet and Stage 2's sprite sheet, dev builds only.
+          // The stage sheets — tokens, sprites, primitives — dev builds only.
           // Removed once the screens they stand in for exist.
           ...(import.meta.env.DEV
             ? [
                 { path: '/dev/tokens', element: <TokensPage /> },
                 { path: '/dev/sprites', element: <SpritesPage /> },
+                { path: '/dev/primitives', element: <PrimitivesPage /> },
               ]
             : []),
           { path: '*', element: null, loader: () => redirect('/not-found') },

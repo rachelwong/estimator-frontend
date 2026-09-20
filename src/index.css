@@ -24,6 +24,11 @@
     --color-abstained: #b42318;
     --color-on-ink-muted: #c9c3da;
 
+    /* The one decorative colour with no other home: the middle dot in a
+       Window's chrome (§2). Its neighbours are `selection` and `danger`, which
+       the palette already carries. */
+    --color-chrome-green: #4cc38a;
+
     /* Crowd ramp: how many people landed on a Square, never Time or Resources
        (§2). Text flips to white at crowd-3. */
     --color-crowd-0: #f2edff;
@@ -55,6 +60,14 @@
        the flip landing inside the shake rather than drifting against it. */
     --animate-logo-shake: ffShake 7s ease-in-out infinite;
     --animate-logo-flip: ffFlip 7s ease-in-out infinite;
+
+    /* The loader's accent fill, stepping across its track in whole blocks (§7).
+       The step count is the block count, so the fill can only ever rest on a
+       block edge — eight blocks across the large bar, five across the inline
+       one. Under reduced motion the global rule below collapses the duration,
+       which leaves the bar full and still rather than mid-step. */
+    --animate-pixel-bar-large: ffBar 1.6s steps(8) infinite;
+    --animate-pixel-bar-inline: ffBar 1.6s steps(5) infinite;
 }
 
 /* The logo cycle (DESIGN.md §8). The outer element shakes, the inner one
@@ -95,10 +108,39 @@
     }
 }
 
+/* The loader (§7). The fill grows; `steps()` on the animation is what turns a
+   smooth width into whole blocks. */
+@keyframes ffBar {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+/* The white gaps between the loader's blocks, laid over the fill rather than
+   cut into it — the fill is one growing element, so it has no block edges of
+   its own to separate. Each stripe repeats on the block pitch (track width ÷
+   block count) with a 3px gap, which is why the two sizes need two utilities:
+   220/8 gives 27.5px, 40/5 gives 8px. */
+@utility pixel-bar-blocks-large {
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 24.5px,
+        var(--color-white) 24.5px 27.5px
+    );
+}
+
+@utility pixel-bar-blocks-inline {
+    background: repeating-linear-gradient(90deg, transparent 0 5px, var(--color-white) 5px 8px);
+}
+
 /* shadcn's role names aliased onto the palette above — var() only, no value of
    their own. `bg-ink` and `bg-foreground` resolve to the same custom property,
    so the primitives keep working while we author in the design's vocabulary.
-   These are the 14 role names src/ actually references: a primitive added
+   These are the 12 role names src/ actually references (Stage 3's button
+   restyle retired `secondary` and its foreground): a primitive added
    later that reads a fifteenth renders unstyled until its alias joins the
    list, which is a visible failure rather than a silent drift. */
 @theme inline {
@@ -109,8 +151,6 @@
     --color-ring: var(--color-accent);
     --color-primary: var(--color-selection);
     --color-primary-foreground: var(--color-ink);
-    --color-secondary: var(--color-white);
-    --color-secondary-foreground: var(--color-ink);
     --color-destructive: var(--color-danger);
     --color-muted: var(--color-crowd-0);
     --color-muted-foreground: var(--color-text-muted);

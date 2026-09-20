@@ -9,8 +9,11 @@ import {
   AreaPreview,
   AxisOrientation,
   CellState,
+  ChipSize,
+  ChipVariant,
   ErrorCode,
   GridMode,
+  PixelBarSize,
   PointSystemType,
   SessionAction,
   SessionConnectionStatus,
@@ -39,3 +42,9 @@ export type WebSocketEvent = (typeof WebSocketEvent)[keyof typeof WebSocketEvent
 
 export type SocketLifecycleEvent =
   (typeof SocketLifecycleEvent)[keyof typeof SocketLifecycleEvent]
+
+export type ChipVariant = (typeof ChipVariant)[keyof typeof ChipVariant]
+
+export type ChipSize = (typeof ChipSize)[keyof typeof ChipSize]
+
+export type PixelBarSize = (typeof PixelBarSize)[keyof typeof PixelBarSize]

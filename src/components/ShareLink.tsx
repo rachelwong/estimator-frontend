@@ -29,7 +29,13 @@ export function ShareLink({ sessionId }: ShareLinkProps) {
         onFocus={(event) => event.target.select()}
       />
 
-      <Button type="button" variant="outline" size="icon" aria-label="Copy link" onClick={handleCopy}>
+      <Button
+        type="button"
+        variant="secondary"
+        size="icon"
+        aria-label="Copy link"
+        onClick={handleCopy}
+      >
         {isCopied ? <CheckIcon /> : <CopyIcon />}
       </Button>
     </div>

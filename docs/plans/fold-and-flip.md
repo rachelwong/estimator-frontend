@@ -327,6 +327,27 @@ What every screen is built out of.
 *Done when:* each primitive renders in the dev fixture at all three sizes, and
 the existing screens still work wearing the restyled primitives.
 
+**Done.** The sheet is `src/routes/dev/PrimitivesPage/`, served at
+`/dev/primitives` in dev builds only. It carries the four §5 window widths,
+every chip shape, the cards, buttons, inputs and both loader sizes, with no
+horizontal overflow at 390 / 834 / 1440. Under reduced motion the bar holds
+full and still (220px over 1s, unchanged). `npm run smoke` is 102/102.
+
+Where this stage went past or against the letter above:
+
+| Choice | Why |
+| --- | --- |
+| **Badge deleted, not restyled.** `SessionStatusHeader` and `AbstainedList` wear `Chip` | §4 has one small-label shape, the chip. Restyling Badge as well would have left two components for one design element |
+| Button keeps three variants (`default` / `secondary` / `destructive`) and three sizes (`default` 44px, `lg` 56px Bungee, `icon`) | `ghost`, `link`, `outline` and the other five sizes had no caller. `ShareLink` and `AlertDialogCancel` moved from `outline` to `secondary`, which is the same white button |
+| `--color-secondary` and its foreground removed from the alias block | The button restyle was their last reference. Stage 1's rule keeps only role names `src/` uses; the count is now 12 |
+| `--color-chrome-green` authored as a palette token | The middle window dot. Its neighbours are `selection` and `danger`; keeping the hex in `index.css` keeps Stage 1's one-place-for-hexes rule |
+| One body padding for every Window | The artboards differ by a few pixels per screen (28/36/36 Active, 32/40/36 Join) with nothing in §5 to reconcile them. The wider set wins. A per-screen override lands with the first screen that needs it — likely Active's tighter mobile padding in Stage 5 |
+| Two loaders: `LoadingWindow` (large, full page) and `LoadingNotice` (inline, a strip at the bottom) | First load, a chunk loading and a session connecting have no page to show, so they get the window. A navigation still has the old page on screen, so it gets the strip. Both share the 400ms delay through `useDelayedVisibility` |
+| The loader's fill rests at `w-full` | The global reduced-motion rule collapses the animation rather than pausing it, so the fill falls back to its resting width. Without one it rested at 0 — an empty track, which reads as nothing happening |
+
+`Card` has no production caller yet. It is four classes and the plan lists it
+here; Welcome (Stage 9) is its first real consumer.
+
 ### Stage 4 — The grid
 
 The centrepiece, and shared by Active and Reveal — so it lands before either.

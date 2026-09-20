@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge'
+import { Chip } from '@/components/Chip'
 
 interface SessionStatusHeaderProps {
   label: string
@@ -8,7 +8,7 @@ interface SessionStatusHeaderProps {
 export function SessionStatusHeader({ label }: SessionStatusHeaderProps) {
   return (
     <div className="flex justify-center">
-      <Badge variant="secondary">{label}</Badge>
+      <Chip>{label}</Chip>
     </div>
   )
 }

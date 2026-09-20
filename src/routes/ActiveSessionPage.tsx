@@ -1,7 +1,7 @@
 import { Navigate, useParams } from 'react-router'
 import { ActiveSessionView } from '@/components/ActiveSessionView'
 import { ConnectionLost } from '@/components/ConnectionLost'
-import { LoadingNotice } from '@/components/LoadingNotice'
+import { LoadingWindow } from '@/components/LoadingWindow'
 import { SessionConnectionStatus } from '@/constants'
 import { useSessionConnection } from '@/hooks'
 
@@ -27,7 +27,7 @@ export default function ActiveSessionPage() {
   }
 
   if (state.status === SessionConnectionStatus.CONNECTING) {
-    return <LoadingNotice />
+    return <LoadingWindow />
   }
 
   if (isLost) {

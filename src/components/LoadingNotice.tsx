@@ -1,26 +1,28 @@
-import { useEffect, useState } from "react";
-import { LOADING_NOTICE_DELAY_MS } from "@/constants";
+import { PixelProgressBar } from '@/components/PixelProgressBar'
+import { LOADING_NOTICE_DELAY_MS, PixelBarSize } from '@/constants'
+import { useDelayedVisibility } from '@/hooks'
 
-// Shown while a loader or action waits on the backend. A sleeping Render
-// instance takes 30–60s to wake, so the wait is explained, not just spun.
+// The inline loader (DESIGN.md §7): the small bar before a line of text, in a
+// framed box pinned to the bottom of the page.
+//
+// This is the one that shows over a page already on screen, while a loader runs
+// for the next one. The page under it stays readable, which is why it is a
+// strip rather than the full-window loader.
 export function LoadingNotice() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), LOADING_NOTICE_DELAY_MS);
-    return () => clearTimeout(timer);
-  }, []);
+  const isVisible = useDelayedVisibility(LOADING_NOTICE_DELAY_MS)
 
   if (!isVisible) {
-    return null;
+    return null
   }
 
   return (
     <div
       role="status"
-      className="fixed inset-x-0 bottom-6 mx-auto w-fit rounded-full border border-border bg-background px-4 py-2 text-sm text-muted-foreground shadow-sm"
+      className="fixed inset-x-0 bottom-6 mx-auto flex w-fit items-center gap-2.5 border-[3px] border-ink bg-white px-4 py-2.5 shadow-px"
     >
-      Loading…
+      <PixelProgressBar size={PixelBarSize.INLINE} />
+
+      <span className="font-label text-[11px] text-ink">loading…</span>
     </div>
-  );
+  )
 }
