@@ -1,6 +1,6 @@
 # Jira Poker frontend
 
-[![Vercel Deploy](https://shields.io)](https://estimator-frontend-ashen.vercel.app/)
+[https://estimator-frontend-ashen.vercel.app](https://estimator-frontend-ashen.vercel.app)
 
 ## Installation
 
@@ -75,6 +75,14 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
 
 ### Features
 
+- two types of users: admin and participants
+- admin-user heads to `/` to create a new session. They must provide their name, a point system (whole base-10 integers or fibonacci numbers), and maximum number of squares on the grid.
+- a grid of squares with x axis for time (duration) and y axis for resources (effort, resources, people, external dependencies, complexity, amount of unknowns)
+- a share link allows admin-user to give to other users (participants) to join in the session
+- both admin and participant users can select a square on the grid that best represent the time and resource sizing for a given task/feature
+- participants can abstain from selecting
+- admin user can end the session, upon which no more voting is allowed. All users are redirected to the end session screen where everyone can see everyone's selections.
+
 ### Tech stack
 
 - Vercel deployment for one-click ease and free tier
@@ -89,7 +97,7 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
 - managing documentation drift: monorepo approach would be better to house both front and backend
 - managing usage limits: I'm currently on the lowest Claude Code Pro plan. So this [reddit advice](https://www.reddit.com/r/ClaudeAI/comments/1u7i5ow/pro_tip_reset_your_usage_limits_on_your_schedule/) is relevant: create a Claude Code Routine that runs daily, use Haiku, and just say something like "Hello, just respond with "hello"", 5 hours before you want your usage to reset
 - Plan mode x grilling skills x human code review
-- configuring memory.md and agents.md brings better quality and _succinct_ responses. I have found wading through paragraphs of text describing code to be a productivity tax to using something that's meant to accelerate it :shrug.
+- configuring memory.md and agents.md brings better quality and _succinct_ responses. I have found wading through paragraphs of text describing code to be a productivity tax to using something that's meant to accelerate it :shrug:.
 - having front-end experience means I can provide better directions to Claude
 - Plan mode and break out the work into phases. Manually review each phase and manually commit is my preferred way to go at the moment, until I can find a way to confidently gatekeep quality.
 - This is a fairly lightweight app with no global context, redux store and yet upon first completing all the implementation phases, the bundling size went over the 500kb Vite alert. I resolved this by lazy-loading in specific pages, and pulling down the `TooltipProvider` and `cv` from shadcn further down the component tree to only when it is being used (i.e. EstimationGrid). This was a manual call-out which Claude did not pick up at all.
@@ -110,13 +118,13 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
 
 From feature perspective, this has been a great sandbox to try out Claude Code without constraints. Other ideas include:
 
-[ ] adding a notes feature to allow participants to share more details beyond just their points selection
-[ ] allowing participants to be anonymous. They can provide a name still, but their names could be hidden from other participants, and only the session creator (admin) can see all the names in full.
-[ ] add a theme provider to toggle between fun and work visual modes for different team environments. A bit like [OpenJev](https://openjev.com/) but less obviously AI-slop.
+- [ ] adding a notes feature to allow participants to share more details beyond just their points selection
+- [ ] allowing participants to be anonymous. They can provide a name still, but their names could be hidden from other participants, and only the session creator (admin) can see all the names in full.
+- [ ] add a theme provider to toggle between fun and work visual modes for different team environments. A bit like [OpenJev](https://openjev.com/) but less obviously AI-slop.
 
 ### AI
 
 For AI, the next things I want to try out more is
 
-- start with [impeccable](https://impeccable.style/) or intent-driven development first to generate a product document
-- AI-assisted Automated testing tools to capture all the edge cases with sessions
+- [ ] start with [impeccable](https://impeccable.style/) or intent-driven development first to generate a product document
+- [ ] AI-assisted Automated testing tools to capture all the edge cases with sessions
