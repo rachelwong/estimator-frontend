@@ -1,5 +1,9 @@
 # Feature — Axis Tooltips
 
+> **Superseded by [`DESIGN.md`](../../DESIGN.md) §6** (Fold and Flip, Stage 4).
+> The axis titles are plain Silkscreen labels, "resources ↑" and "time →", with
+> no ⓘ and no hint. Kept for the record.
+
 Explain the axis titles so Participants pick with the same meaning in mind.
 
 ## Behaviour

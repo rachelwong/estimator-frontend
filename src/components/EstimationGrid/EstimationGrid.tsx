@@ -1,25 +1,43 @@
-import { Fragment, useState } from 'react'
-import type { PointerEvent } from 'react'
-import { TooltipProvider } from '@/components/ui/tooltip'
-import { AreaPreview, AXIS_HINT, AxisOrientation, GridMode, MOUSE_POINTER_TYPE } from '@/constants'
-import type {
-  GridMode as GridModeValue,
-  ParticipantColours,
-  RevealPayload,
-  Selection,
-} from '@/types'
-import { cellState, groupNames, inArea, squareKey } from '@/utils'
-import { AxisTitle } from './AxisTitle'
+import { Fragment, useReducer, useRef, useState } from 'react'
+import type { FocusEvent, KeyboardEvent, PointerEvent } from 'react'
+import {
+  AXIS_LABEL,
+  FOCUS_VISIBLE_SELECTOR,
+  GRID_ARROW_STEP,
+  GridMode,
+  HoverSource,
+  MOUSE_POINTER_TYPE,
+  SQUARE_GAP_PX,
+} from '@/constants'
+import { useBreakpoint, useEscapeKey } from '@/hooks'
+import type { GridMode as GridModeValue, HoveredSquare, RevealPayload, Selection } from '@/types'
+import {
+  axisEmphasis,
+  groupNames,
+  isSameSquare,
+  labelSize,
+  nextPinned,
+  popoverTitle,
+  squareAriaLabel,
+  squareFillClass,
+  squareHighlight,
+  squareKey,
+  squareLabel,
+  squareSelector,
+  squareSize,
+  stepSquare,
+  tooltipText,
+} from '@/utils'
 import { AxisValue } from './AxisValue'
 import { GridCell } from './GridCell'
+import { SquarePopover } from './SquarePopover'
+import { SquareTooltip } from './SquareTooltip'
 
 interface EstimationGridProps {
   axisValues: number[]
   mode: GridModeValue
   selection?: Selection | null
   reveal?: RevealPayload
-  // Only the ended screen passes these; the live grid has no roster to colour.
-  colours?: ParticipantColours
   onSelect?: (selection: Selection) => void
 }
 
@@ -34,94 +52,196 @@ interface EstimationGridProps {
 //
 // axisValues stays ascending, as on the wire. Only the rows reverse, and only
 // here. A Selection's resource is always an axis value, never a row index.
+//
+// One Tab stop for the whole grid (roving tabIndex); arrows move between
+// Squares, Enter/Space presses the focused one (§6).
 export function EstimationGrid({
   axisValues,
   mode,
   selection = null,
   reveal,
-  colours,
   onSelect,
 }: EstimationGridProps) {
-  // The Square under a mouse pointer. Its Area is outlined as a preview.
-  const [hovered, setHovered] = useState<Selection | null>(null)
+  // Mouse over or keyboard focus: lifts the Square, shows its tooltip.
+  const [hovered, setHovered] = useState<HoveredSquare | null>(null)
+  // The Square that holds the Tab stop. Until one is touched, the Selection.
+  const [cursor, setCursor] = useState<Selection | null>(null)
+  // Reveal only: the Square whose popover is open.
+  const [pinned, setPinned] = useState<Selection | null>(null)
+  // The tooltip and popover follow their Square as the grid scrolls sideways.
+  const [, rerender] = useReducer((tick: number) => tick + 1, 0)
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const breakpoint = useBreakpoint()
 
   const rows = [...axisValues].reverse()
   const cols = axisValues
   const namesBySquare = groupNames(reveal)
   const isInteractive = mode === GridMode.INTERACTIVE
+  const size = squareSize(axisValues.length, breakpoint)
+  const faceSize = labelSize(size)
+  const tabStop = cursor ?? selection ?? { time: axisValues[0], resource: axisValues[0] }
+  const tooltipSquare = hovered && !(pinned && isSameSquare(pinned, hovered.square)) ? hovered.square : null
 
-  // Mouse only: a tap fires pointerenter too, and would leave a ring stuck on.
+  const template = `repeat(${axisValues.length}, ${size}px)`
+
+  function namesAt(square: Selection): string[] {
+    return namesBySquare.get(squareKey(square.time, square.resource)) ?? []
+  }
+
+  useEscapeKey(pinned ? () => setPinned(null) : null)
+
+  // Running: choose it. Revealed: toggle its popover.
+  function handleClick(square: Selection) {
+    setCursor(square)
+
+    if (isInteractive) {
+      onSelect?.(square)
+      return
+    }
+
+    setPinned(nextPinned(pinned, square, namesAt(square)))
+  }
+
+  // Mouse only: a tap fires pointerenter too, and would leave a lift stuck on.
   function handlePointerEnter(event: PointerEvent, square: Selection) {
     if (event.pointerType !== MOUSE_POINTER_TYPE) {
       return
     }
 
-    setHovered(square)
+    setHovered({ square, source: HoverSource.POINTER })
   }
 
-  // Leading auto column holds the Resources values.
-  const gridStyle = {
-    gridTemplateColumns: `auto repeat(${cols.length}, minmax(0, 1fr))`,
+  function handleFocus(event: FocusEvent<HTMLButtonElement>, square: Selection) {
+    setCursor(square)
+
+    if (event.currentTarget.matches(FOCUS_VISIBLE_SELECTOR)) {
+      setHovered({ square, source: HoverSource.KEYBOARD })
+    }
   }
 
-  // Tooltips are a grid feature: AxisTitle and GridCell are the only consumers,
-  // and both are this component's own sub-components, so the provider belongs at
-  // the root of that unit rather than at the app root. Keeping it out of the root
-  // also keeps Radix's tooltip and all of floating-ui out of the entry chunk,
-  // which Welcome and Join never need. Move it up to the views only if a tooltip
-  // ever appears outside the grid — Tooltip throws without a provider ancestor.
+  function handleBlur() {
+    setHovered((current) => (current?.source === HoverSource.KEYBOARD ? null : current))
+  }
+
+  // Arrows move focus to the neighbouring Square, held at the edges.
+  function handleArrowKey(event: KeyboardEvent, square: Selection) {
+    const step = GRID_ARROW_STEP[event.key as keyof typeof GRID_ARROW_STEP]
+
+    if (!step) {
+      return
+    }
+
+    event.preventDefault()
+    const next = stepSquare(axisValues, square, step)
+    scrollerRef.current?.querySelector<HTMLButtonElement>(squareSelector(next))?.focus()
+  }
+
   return (
-    <TooltipProvider>
-      <div className="flex items-center gap-3">
-        <AxisTitle
-          label="Resources"
-          hint={AXIS_HINT.RESOURCES}
-          orientation={AxisOrientation.VERTICAL}
-        />
+    // min-w-0: as a grid or flex item it would otherwise refuse to shrink below
+    // its Squares, and push the page sideways instead of scrolling itself.
+    <div className="relative flex min-w-0 flex-col gap-2">
+      <span className="font-label text-[11px] tablet:hidden">{AXIS_LABEL.RESOURCES}</span>
 
-        <div className="grid flex-1 gap-2">
-          {/* Cleared on leaving the whole grid, not each cell, so the ring
-              doesn't flicker across the gutters. */}
-          <div className="grid gap-1" style={gridStyle} onPointerLeave={() => setHovered(null)}>
-            {rows.map((resource) => (
-              <Fragment key={resource}>
-                <AxisValue value={resource} />
+      <div className="flex justify-center gap-2">
+        <div className="hidden w-[18px] shrink-0 items-center tablet:flex">
+          <span className="rotate-180 font-label text-[11px] [writing-mode:vertical-rl]">
+            {AXIS_LABEL.RESOURCES}
+          </span>
+        </div>
 
-                {cols.map((time) => {
-                  const square = { time, resource }
-                  const names = namesBySquare.get(squareKey(time, resource)) ?? []
-                  const preview =
-                    isInteractive && hovered && inArea(square, hovered)
-                      ? AreaPreview.INSIDE
-                      : AreaPreview.OUTSIDE
+        {/* pt-1 matches the scroller's padding, so each value sits on its row. */}
+        <div
+          className="grid w-[22px] shrink-0 justify-items-end pt-1"
+          style={{ gridTemplateRows: template, gap: SQUARE_GAP_PX }}
+        >
+          {rows.map((resource) => (
+            <AxisValue
+              key={resource}
+              value={resource}
+              emphasis={axisEmphasis(resource, hovered?.square.resource)}
+            />
+          ))}
+        </div>
 
-                  return (
-                    <GridCell
-                      key={time}
-                      state={cellState(mode, square, selection, names)}
-                      names={names}
-                      colours={colours}
-                      preview={preview}
-                      onClick={isInteractive ? () => onSelect?.(square) : undefined}
-                      onPointerEnter={
-                        isInteractive ? (event) => handlePointerEnter(event, square) : undefined
-                      }
-                    />
-                  )
-                })}
-              </Fragment>
-            ))}
+        <div className="flex min-w-0 flex-col gap-1.5">
+          {/* Scrolls sideways once the Squares hit SQUARE_MIN_PX. The padding
+              keeps a lifted Square's offset and shadow inside the clip. */}
+          <div
+            ref={scrollerRef}
+            className="overflow-x-auto p-1"
+            onScroll={hovered || pinned ? rerender : undefined}
+          >
+            {/* Cleared on leaving the whole grid, not each Square, so the
+                preview doesn't flicker across the gutters. */}
+            <div
+              className="grid"
+              style={{ gridTemplateColumns: template, gap: SQUARE_GAP_PX }}
+              onPointerLeave={() =>
+                setHovered((current) => (current?.source === HoverSource.POINTER ? null : current))
+              }
+            >
+              {rows.map((resource) => (
+                <Fragment key={resource}>
+                  {cols.map((time) => {
+                    const square = { time, resource }
+                    const names = namesAt(square)
+                    const isPinned = Boolean(pinned && isSameSquare(pinned, square))
 
-            {/* Bottom row: blank corner under the Resources values, then Time values. */}
-            <span />
-            {cols.map((time) => (
-              <AxisValue key={time} value={time} />
-            ))}
+                    return (
+                      <GridCell
+                        key={time}
+                        squareKey={squareKey(time, resource)}
+                        size={size}
+                        label={squareLabel(mode, square, selection, names, faceSize)}
+                        labelSize={faceSize}
+                        fillClass={squareFillClass(mode, square, selection, names)}
+                        highlight={squareHighlight(mode, square, hovered, pinned)}
+                        ariaLabel={squareAriaLabel(mode, square, selection, names)}
+                        pressed={isInteractive ? Boolean(selection && isSameSquare(selection, square)) : undefined}
+                        expanded={!isInteractive && names.length > 0 ? isPinned : undefined}
+                        tabIndex={isSameSquare(tabStop, square) ? 0 : -1}
+                        onClick={() => handleClick(square)}
+                        onPointerEnter={(event) => handlePointerEnter(event, square)}
+                        onFocus={(event) => handleFocus(event, square)}
+                        onBlur={handleBlur}
+                        onKeyDown={(event) => handleArrowKey(event, square)}
+                      />
+                    )
+                  })}
+                </Fragment>
+              ))}
+            </div>
+
+            <div
+              className="mt-1.5 grid justify-items-center"
+              style={{ gridTemplateColumns: template, gap: SQUARE_GAP_PX }}
+            >
+              {cols.map((time) => (
+                <AxisValue key={time} value={time} emphasis={axisEmphasis(time, hovered?.square.time)} />
+              ))}
+            </div>
           </div>
 
-          <AxisTitle label="Time" hint={AXIS_HINT.TIME} />
+          <span className="self-end font-label text-[11px]">{AXIS_LABEL.TIME}</span>
         </div>
       </div>
-    </TooltipProvider>
+
+      {tooltipSquare && (
+        <SquareTooltip
+          anchorKey={squareKey(tooltipSquare.time, tooltipSquare.resource)}
+          boundsRef={scrollerRef}
+          text={tooltipText(mode, tooltipSquare, namesAt(tooltipSquare))}
+        />
+      )}
+
+      {pinned && (
+        <SquarePopover
+          anchorKey={squareKey(pinned.time, pinned.resource)}
+          boundsRef={scrollerRef}
+          title={popoverTitle(pinned)}
+          names={namesAt(pinned)}
+        />
+      )}
+    </div>
   )
 }

@@ -26,7 +26,7 @@ import { WelcomePage } from '@/routes/WelcomePage'
 
 // Code-split: each of these is a chunk the entry no longer carries. Create
 // pulls in the Radix slider and radio-group; Active and Ended share the
-// estimation grid, and through it the Radix tooltip and floating-ui.
+// estimation grid.
 // RootLayout's Suspense boundary covers them all while a chunk loads.
 //
 // Welcome, Join and NotFound stay eager above — all three are cold-start

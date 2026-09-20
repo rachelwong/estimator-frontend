@@ -427,35 +427,23 @@ const cols = axisValues;                // Time, low at left
 
 `selection.resource` is always an axis value, never a row index. Never flip it.
 
-### Cell states
+### Square states
 
-```ts
-// src/constants.ts
-export const CellState = {
-  EMPTY: "empty",
-  AREA: "area",
-  CHOSEN: "chosen",
-  REVEALED: "revealed",
-} as const;
-```
+`DESIGN.md` §6 is the reference; `utils/grid.ts` implements it.
 
-| Mode | Condition | State |
-| --- | --- | --- |
-| interactive | your Selection | `CHOSEN` |
-| interactive | inside your Selection's Area | `AREA` |
-| interactive | otherwise | `EMPTY` |
-| readonly | no names | `EMPTY` |
-| readonly | has names | `REVEALED` + names |
+| Mode | Condition | Fill | Face |
+| --- | --- | --- | --- |
+| interactive | your Selection | `selection` | "You" / ★ |
+| interactive | inside your Selection's Area | `crowd-1` | — |
+| interactive | otherwise | `crowd-0` | — |
+| readonly | by headcount, capped at 4 | `crowd-0`…`crowd-4` | name, or "N people" / "×N" |
 
-Grey for `EMPTY`, darker grey for `AREA`, green for `CHOSEN`. A `REVEALED`
-Square is filled by who is in it: one person's own colour when they picked it
-alone, and otherwise a grey that deepens with the crowd, under a rolling
-rainbow border. A Square with one name shows that name and is inert; a
-crowded one shows `N votes`, and clicking it opens every name as a coloured
-badge in a shadcn `Tooltip`. Nothing on the Reveal responds to hover. See
-[reveal-colours-and-create-gating.md](docs/features/reveal-colours-and-create-gating.md).
-With a mouse, the Area under the pointer also gets a ring, on top of any state.
-See [grid-area.md](docs/features/grid-area.md).
+Hover (mouse) and keyboard focus lift the Square and show a one-line
+tooltip. With a mouse on the running grid, the hovered Area gets an `accent`
+overlay. On the Reveal, clicking a Square someone landed on pins a popover
+listing every name; the same Square or Esc closes it. Touch gets no hover.
+Squares are sized by breakpoint (§5), floored at `SQUARE_MIN_PX`, and a grid
+too wide for that scrolls sideways. See [grid-area.md](docs/features/grid-area.md).
 
 ```ts
 // src/components/EstimationGrid.tsx — prop types stay local
@@ -468,7 +456,8 @@ interface EstimationGridProps {
 }
 ```
 
-Click only. No keyboard navigation (decision #18).
+Roving `tabIndex`: one Tab stop, arrows move, Enter/Space presses. Decision #18
+is reversed — see "Reversed by the Fold and Flip design".
 
 ---
 

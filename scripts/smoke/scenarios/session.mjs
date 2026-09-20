@@ -15,8 +15,9 @@ import {
   createSocketPool,
   hoverCell,
   landsOn,
-  openSquareBadges,
+  openSquarePopover,
   revealed,
+  squareAriaLabel,
   squareClasses,
   sameSquares,
   selectSquare,
@@ -73,6 +74,18 @@ export async function session({ browser, reporter }) {
   await waitForChosen(admin, [])
   check('Same Square clears Selection', true)
 
+  // --- Keyboard: one Tab stop, arrows move, Enter selects ---------------------
+  check('Grid is one Tab stop', (await admin.locator('main [data-square][tabindex="0"]').count()) === 1)
+  await admin.locator('[data-square="1:0"]').focus()
+  await admin.keyboard.press('ArrowLeft')
+  const focused = await admin.evaluate(() => document.activeElement?.getAttribute('aria-label'))
+  check('ArrowLeft moves focus', focused === 'Time 0, resources 0', focused)
+  await admin.keyboard.press('Enter')
+  await waitForChosen(admin, [[0, 0]])
+  await admin.keyboard.press('Enter')
+  await waitForChosen(admin, [])
+  check('Enter selects and clears', true)
+
   // --- Participants ----------------------------------------------------------
   const fay = await openPage(await browser.newContext())
   await fay.goto(shareUrl)
@@ -111,7 +124,7 @@ export async function session({ browser, reporter }) {
   }
   check('No error banner after ending', (await admin.getByRole('alert').count()) === 0)
   await fay.getByText('Ended', { exact: true }).waitFor()
-  check('Live Participant sees own name in Reveal', (await cellText(fay, 4, 1)).includes('Fay'))
+  check('Live Participant sees own name in Reveal', (await squareAriaLabel(fay, 4, 1)).includes('Fay'))
 
   sockets.close()
 
@@ -132,44 +145,43 @@ export async function session({ browser, reporter }) {
   check('No name prompt', (await fresh.locator('input[name="name"]').count()) === 0)
   check('No socket opened', socketTraffic.length === 0, socketTraffic.join(', '))
   check('Status badge reads Ended', await fresh.getByText('Ended', { exact: true }).isVisible())
-  // Only a crowded Square opens: a Square one person picked already names them.
-  check('Only the crowded Square is a button',
-    (await fresh.locator('main .grid.gap-1 button.aspect-square').count()) === 1)
-
-  check('Crowded Square counts the votes', (await cellText(fresh, 2, 3)) === '4 votes')
-  check('Fay in her Square', (await cellText(fresh, 4, 1)) === 'Fay')
+  // 21×21 at desktop width floors every Square at SQUARE_MIN_PX, so faces
+  // are compact: initials and "×N". The aria-label carries the full story.
+  check('Crowded Square counts the people', (await cellText(fresh, 2, 3)) === '×4')
+  check('Fay in her Square', (await cellText(fresh, 4, 1)) === 'Fa')
+  check('Crowded Square names everyone to a screen reader',
+    (await squareAriaLabel(fresh, 2, 3)) === 'Time 2, resources 3, Bob, Cat, Dan, Eli')
+  check('Empty Square says nobody', (await squareAriaLabel(fresh, 0, 0)) === 'Time 0, resources 0, nobody')
   check('Cleared Squares are empty', (await cellText(fresh, 0, 0)) + (await cellText(fresh, 1, 0)) === '')
   check('Only chosen Squares are revealed', sameSquares(await revealed(fresh), [[2, 3], [4, 1]]))
-  check('No Square is green on the Reveal', (await chosen(fresh)).length === 0)
-  check('Crowded Square wears the rainbow border',
-    (await fresh.locator('main .grid.gap-1 .rainbow-border').count()) === 1)
+  check('No Square is pressed on the Reveal', (await chosen(fresh)).length === 0)
 
-  // Hover does nothing now: the badges are behind a click.
+  // The crowd ramp: headcount, not who.
+  const fill = async (time, resource) =>
+    (await squareClasses(fresh, time, resource)).split(' ').find((c) => c.startsWith('bg-'))
+  const fills = [await fill(0, 0), await fill(4, 1), await fill(2, 3)]
+  check('Fill follows headcount', fills.join() === 'bg-crowd-0,bg-crowd-1,bg-crowd-4', fills.join())
+
   await hoverCell(fresh, 2, 3)
-  await fresh.waitForTimeout(400)
-  check('Hover opens nothing', (await fresh.getByRole('tooltip').count()) === 0)
+  const tooltip = await fresh.getByRole('tooltip').innerText()
+  check('Hover tooltip counts and points at the popover',
+    tooltip === 'T2 · R3 · 4 people · click for names', tooltip)
 
-  // Fay's own Square opens nothing either — her name is already on it.
-  await clickCell(fresh, 4, 1)
-  await fresh.waitForTimeout(400)
-  check('A one-person Square opens nothing', (await fresh.getByRole('tooltip').count()) === 0)
+  const crowd = await openSquarePopover(fresh, 2, 3)
+  check('Popover lists all four', crowd.sort().join() === 'Bob,Cat,Dan,Eli', crowd.join())
 
-  // Every person wears their own colour, and nobody in one Square shares one.
-  const crowdedBadges = await openSquareBadges(fresh, 2, 3)
-  const bgOf = (classes) => classes.split(' ').find((c) => c.startsWith('bg-')) ?? ''
-  const bg = (badge) => bgOf(badge.className)
-  const faysSquare = bgOf(await squareClasses(fresh, 4, 1))
-  check('Click lists all four', ['Bob', 'Cat', 'Dan', 'Eli']
-    .every((n) => crowdedBadges.some((badge) => badge.name === n)),
-    crowdedBadges.map((badge) => badge.name).join())
-  check('Crowded Square colours each name differently',
-    new Set(crowdedBadges.map(bg)).size === crowdedBadges.length, crowdedBadges.map(bg).join())
-  check("Fay's Square is filled with her own colour",
-    faysSquare !== '' && !crowdedBadges.map(bg).includes(faysSquare), faysSquare)
+  const alone = await openSquarePopover(fresh, 4, 1)
+  check('A one-person Square opens too', alone.join() === 'Fay', alone.join())
 
-  const legend = await fresh.locator('section', { hasText: 'Who is who' }).innerText()
-  check('Legend lists everyone', ['Ada', 'Bob', 'Cat', 'Dan', 'Eli', 'Fay', 'Zed']
-    .every((n) => legend.includes(n)), legend.replace(/\n/g, ' '))
+  await clickCell(fresh, 2, 3)
+  await fresh.getByRole('dialog').waitFor()
+  await fresh.keyboard.press('Escape')
+  await fresh.getByRole('dialog').waitFor({ state: 'detached' })
+  check('Esc closes the popover', true)
+
+  await clickCell(fresh, 0, 0)
+  await fresh.waitForTimeout(200)
+  check('An empty Square opens nothing', (await fresh.getByRole('dialog').count()) === 0)
 
   // Ada cleared hers, Zed never picked.
   const abstained = await fresh.locator('section', { hasText: 'Abstained' }).innerText()

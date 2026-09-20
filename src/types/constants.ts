@@ -6,18 +6,20 @@
 // binding to derive from. TypeScript keeps the imported value and the exported
 // type of the same name apart, since values and types are separate namespaces.
 import {
-  AreaPreview,
-  AxisOrientation,
-  CellState,
+  AxisValueEmphasis,
+  Breakpoint,
   ChipSize,
   ChipVariant,
   ErrorCode,
   GridMode,
+  HoverSource,
   PixelBarSize,
   PointSystemType,
   SessionAction,
   SessionConnectionStatus,
   SocketLifecycleEvent,
+  SquareHighlight,
+  SquareLabelSize,
   WebSocketEvent,
 } from '../constants'
 
@@ -25,11 +27,15 @@ export type PointSystemType = (typeof PointSystemType)[keyof typeof PointSystemT
 
 export type GridMode = (typeof GridMode)[keyof typeof GridMode]
 
-export type CellState = (typeof CellState)[keyof typeof CellState]
+export type Breakpoint = (typeof Breakpoint)[keyof typeof Breakpoint]
 
-export type AreaPreview = (typeof AreaPreview)[keyof typeof AreaPreview]
+export type SquareLabelSize = (typeof SquareLabelSize)[keyof typeof SquareLabelSize]
 
-export type AxisOrientation = (typeof AxisOrientation)[keyof typeof AxisOrientation]
+export type SquareHighlight = (typeof SquareHighlight)[keyof typeof SquareHighlight]
+
+export type HoverSource = (typeof HoverSource)[keyof typeof HoverSource]
+
+export type AxisValueEmphasis = (typeof AxisValueEmphasis)[keyof typeof AxisValueEmphasis]
 
 export type SessionConnectionStatus =
   (typeof SessionConnectionStatus)[keyof typeof SessionConnectionStatus]

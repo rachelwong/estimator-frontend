@@ -9,7 +9,7 @@ import {
   createSocketPool,
   joinInBrowser,
   landsOn,
-  openSquareBadges,
+  openSquarePopover,
   sameSquares,
   selectSquare,
   waitForChosen,
@@ -86,8 +86,8 @@ export async function join({ browser, reporter }) {
 
   await page.getByText('Ended', { exact: true }).waitFor()
   await page.mouse.move(0, 0)
-  check('Crowded Square counts the votes', (await cellText(page, 1, 1)) === '3 votes')
-  const names = (await openSquareBadges(page, 1, 1)).map((badge) => badge.name).sort()
+  check('Crowded Square counts the people', ['3\npeople', '×3'].includes(await cellText(page, 1, 1)))
+  const names = (await openSquarePopover(page, 1, 1)).sort()
   check('Three "Jim" joins → Jim, Jim-1, Jim-2', names.join() === 'Jim,Jim-1,Jim-2', names.join())
   check('Back created no extra Participant', !(await page.locator('main').innerText()).includes('Jim-3'))
 }

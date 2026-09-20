@@ -1,117 +1,74 @@
-import { useRef, useState } from 'react'
-import type { PointerEventHandler } from 'react'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import {
-  AreaPreview,
-  CELL_CLASS,
-  CellState,
-  CROWDED_SQUARE_MINIMUM,
-  PREVIEW_CLASS,
-} from '@/constants'
+import type { FocusEventHandler, KeyboardEventHandler, PointerEventHandler } from 'react'
+import { SQUARE_HIGHLIGHT_CLASS, SQUARE_LABEL_SIZE_CLASS } from '@/constants'
 import { cn } from '@/lib/utils'
 import type {
-  AreaPreview as AreaPreviewValue,
-  CellState as CellStateValue,
-  ParticipantColours,
+  SquareHighlight as SquareHighlightValue,
+  SquareLabelSize as SquareLabelSizeValue,
 } from '@/types'
-import { revealedSquareClass } from '@/utils'
-import { SquareLabel } from './SquareLabel'
 
 interface GridCellProps {
-  state: CellStateValue
-  names: string[]
-  colours?: ParticipantColours
-  preview?: AreaPreviewValue
-  onClick?: () => void
-  onPointerEnter?: PointerEventHandler<HTMLButtonElement>
+  squareKey: string
+  size: number
+  label: string
+  labelSize: SquareLabelSizeValue
+  fillClass: string
+  highlight: SquareHighlightValue
+  ariaLabel: string
+  // Running grid only: whether this is your Selection.
+  pressed?: boolean
+  // Reveal only, on a Square someone landed on: whether its popover is open.
+  expanded?: boolean
+  // Roving: 0 on the one Square Tab lands on, −1 on the rest.
+  tabIndex: number
+  onClick: () => void
+  onPointerEnter: PointerEventHandler<HTMLButtonElement>
+  onFocus: FocusEventHandler<HTMLButtonElement>
+  onBlur: FocusEventHandler<HTMLButtonElement>
+  onKeyDown: KeyboardEventHandler<HTMLButtonElement>
 }
 
-// Clickable in two unrelated ways, never both: to choose a Square while the
-// Session runs, or — once it has ended, and only where a crowd hides the
-// names behind a count — to see who is in it. No keyboard navigation of the
-// grid itself (decision #18).
+// One Square. Every decision about it is made by EstimationGrid; this only
+// draws it. `data-square` is how the grid finds it again to move focus and to
+// anchor the tooltip and popover.
 export function GridCell({
-  state,
-  names,
-  colours,
-  preview = AreaPreview.OUTSIDE,
+  squareKey,
+  size,
+  label,
+  labelSize,
+  fillClass,
+  highlight,
+  ariaLabel,
+  pressed,
+  expanded,
+  tabIndex,
   onClick,
   onPointerEnter,
+  onFocus,
+  onBlur,
+  onKeyDown,
 }: GridCellProps) {
-  // The Reveal's tooltip is opened by a click and nothing else: no hover
-  // anywhere on the ended screen, so touch and mouse behave the same.
-  const [showNames, setShowNames] = useState(false)
-  const triggerRef = useRef<HTMLButtonElement>(null)
-
-  const isRevealed = state === CellState.REVEALED
-
-  const className = cn(
-    'flex aspect-square items-center justify-center overflow-hidden rounded-sm p-0.5',
-    CELL_CLASS[state],
-    isRevealed && colours && revealedSquareClass(names, colours),
-    preview === AreaPreview.INSIDE && PREVIEW_CLASS,
-  )
-
-  if (onClick) {
-    return (
-      <button
-        type="button"
-        className={cn(className, 'cursor-pointer')}
-        onClick={onClick}
-        onPointerEnter={onPointerEnter}
-      >
-        <SquareLabel names={names} />
-      </button>
-    )
-  }
-
-  // Only a crowded Square opens. A Square one person picked already says who
-  // they are, on their own colour — there is nothing behind it to reveal.
-  if (!isRevealed || names.length < CROWDED_SQUARE_MINIMUM) {
-    return (
-      <div className={className}>
-        <SquareLabel names={names} />
-      </div>
-    )
-  }
-
-  // The badges are the only place a crowded Square's names appear: its face
-  // carries the count.
   return (
-    <Tooltip open={showNames}>
-      <TooltipTrigger asChild>
-        <button
-          ref={triggerRef}
-          type="button"
-          className={cn(className, 'cursor-pointer')}
-          aria-label={`Who picked this Square: ${names.join(', ')}`}
-          onClick={() => setShowNames((open) => !open)}
-        >
-          <SquareLabel names={names} />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent
-        className="flex-col items-start gap-1 p-2"
-        onEscapeKeyDown={() => setShowNames(false)}
-        onPointerDownOutside={(event) => {
-          // This Square's own button counts as "outside" to Radix. Closing on
-          // it here would race the click that toggles it, and the Square would
-          // never shut — so leave its own button to the toggle.
-          const target = event.detail.originalEvent.target as Node | null
-
-          if (target && triggerRef.current?.contains(target)) {
-            return
-          }
-
-          setShowNames(false)
-        }}
-      >
-        {names.map((name) => (
-          <span key={name} className={cn('rounded-sm px-1.5 py-0.5', colours?.get(name))}>
-            {name}
-          </span>
-        ))}
-      </TooltipContent>
-    </Tooltip>
+    <button
+      type="button"
+      data-square={squareKey}
+      tabIndex={tabIndex}
+      aria-label={ariaLabel}
+      aria-pressed={pressed}
+      aria-expanded={expanded}
+      className={cn(
+        'relative flex cursor-pointer items-center justify-center overflow-hidden border-2 border-ink p-0.5 text-center font-label leading-tight whitespace-pre-line outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
+        fillClass,
+        SQUARE_LABEL_SIZE_CLASS[labelSize],
+        SQUARE_HIGHLIGHT_CLASS[highlight],
+      )}
+      style={{ width: size, height: size }}
+      onClick={onClick}
+      onPointerEnter={onPointerEnter}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      onKeyDown={onKeyDown}
+    >
+      {label}
+    </button>
   )
 }

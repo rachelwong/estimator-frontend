@@ -71,10 +71,10 @@ export async function create({ browser, reporter }) {
   await cells(page).first().waitFor()
   check('Fibonacci grid is 10×10', (await cells(page).count()) === 100)
 
-  // The bottom row holds the Time values, left to right.
+  // The row under the Squares, inside the scroller, holds the Time values.
   const timeValues = await page
-    .locator('main .grid.gap-1 > span')
-    .evaluateAll((spans) => spans.slice(-10).map((s) => s.textContent.trim()))
+    .locator('main .overflow-x-auto > div:last-child > span')
+    .evaluateAll((spans) => spans.map((s) => s.textContent.trim()))
   check('Fibonacci axis stops at 55', timeValues.join() === FIBONACCI_AT_55.join(), timeValues.join())
 
   // A sleeping backend fails in place, keeping the filled-in form.

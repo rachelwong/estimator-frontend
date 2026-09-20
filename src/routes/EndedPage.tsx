@@ -1,21 +1,15 @@
 import { Link, useLoaderData } from 'react-router'
 import { AbstainedList } from '@/components/AbstainedList'
 import { EstimationGrid } from '@/components/EstimationGrid'
-import { ParticipantLegend } from '@/components/ParticipantLegend'
 import { SessionStatusHeader } from '@/components/SessionStatusHeader'
 import { Button } from '@/components/ui/button'
 import { GridMode, RoutePath } from '@/constants'
 import type { GetSessionResponse } from '@/types'
-import { participantColours } from '@/utils'
 
 // The Reveal, straight from REST. No socket — endedLoader already has it all.
 // Default export so router.tsx can lazy() it directly.
 export default function EndedPage() {
   const session = useLoaderData() as GetSessionResponse
-
-  // Worked out once, so the grid, its tooltips and the legend agree. Seeded
-  // with the Session id: shuffled, but the same shuffle on every screen.
-  const colours = participantColours(session.reveal, session.sessionId)
 
   return (
     <main className="mx-auto grid max-w-3xl gap-6 px-6 py-10">
@@ -25,10 +19,7 @@ export default function EndedPage() {
         axisValues={session.pointSystem.axisValues}
         mode={GridMode.READONLY}
         reveal={session.reveal}
-        colours={colours}
       />
-
-      <ParticipantLegend colours={colours} />
 
       <AbstainedList names={session.reveal?.abstained ?? []} />
 

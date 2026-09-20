@@ -363,6 +363,29 @@ The centrepiece, and shared by Active and Reveal — so it lands before either.
 *Done when:* an 11×11 Numerical grid is usable at 390px, the grid is fully
 keyboard-operable, and touch gets no hover-dependent affordance.
 
+**Done.** Squares measure 70 / 64 / 39 for Fibonacci 7×7. An 11×11 Numerical
+grid at 390px floors at 28px and scrolls inside itself, with no page overflow.
+Arrows move a single Tab stop, Enter selects, and Tab leaves the grid. After a
+tap there is no lift, tooltip or preview. `npm run smoke` is 105/105.
+
+Where this stage went past or against the letter above:
+
+| Choice | Why |
+| --- | --- |
+| **Popover pulled forward from Stage 6** | The crowd ramp removes per-person colours, which left the old click-badges meaningless, and the new tooltip says "click for names". The popover uses the tooltip's positioning. Keeping a restyled Radix box for two stages would have meant throwaway work and repairing the smoke tests twice |
+| Participant colours, the "Who is who" legend and the rainbow border deleted | The ramp replaces them, and §7 says "No legend" |
+| **Axis ⓘ hints dropped** — plain "resources ↑" / "time →" | §6 anatomy has no hints. Radix Tooltip and `ui/tooltip.tsx` go with them. [`axis-tooltips.md`](../features/axis-tooltips.md) is marked superseded |
+| `SQUARE_MIN_PX` = 28 | §5's formula shrinks 21×21 to 10px on a phone. At 28 a Square is still a fingertip target, and the grid scrolls sideways past that |
+| Only keyboard focus counts as hover (`:focus-visible`) | A tap focuses the button too, so otherwise touch would get a stuck lift and tooltip |
+| Keyboard focus lifts and shows the tooltip, but gives no Area preview | §6 limits the preview to the mouse |
+| The tooltip never says "tap for names" | Touch never shows a tooltip, so that variant had nowhere to appear |
+| Tooltip and popover sit outside the scroller and are measured after layout | `overflow-x: auto` also clips vertically, which would cut off a popover above the top row |
+
+**Not built: "Your Square" in the Reveal** (§6, 3px `selection` outline). The
+ended page is REST-only and doesn't know who is viewing. The connection state
+goes to `ENDED` without the Selection. It belongs to Stage 6, which also has to
+work out where that identity comes from.
+
 ### Stage 5 — Active screen
 
 Window `live`, role chip, heading that changes once there's a Selection, the
@@ -371,12 +394,14 @@ in `danger` — full width under the grid on mobile.
 
 ### Stage 6 — Reveal screen
 
-Window `revealed`, the dark notice, the pinning popover, "who landed where"
-chips, the Abstained list, and the `ffRevealIn` diagonal wave — declared so that
-hover and popover re-renders don't replay it (§8).
+Window `revealed`, the dark notice, "who landed where" chips, the Abstained
+list, and the `ffRevealIn` diagonal wave — declared so that hover and popover
+re-renders don't replay it (§8). The popover itself landed in Stage 4; this
+stage lifts `hovered`/`pinned` out of the grid so chips can preview and pin a
+Square, and adds "Your Square" (see Stage 4).
 
-*Done when:* the wave plays once on entry, names are complete in the popover with
-no truncation to a count, and Area never appears here.
+*Done when:* the wave plays once on entry, a chip previews and pins its
+Square, and Area never appears here.
 
 ### Stage 7 — Create and Join
 
@@ -426,7 +451,7 @@ than thirty do. A smaller bundle number there would mean more bytes on the wire.
   | --- | --- | --- |
   | `scenarios/routing.mjs:30,78,89` | `Product Poker` → `Fold and Flip` | **Done in Stage 2**, with the rename that broke it |
   | `scenarios/session.mjs:44,84,99,106,107` | `End session` → `End session & reveal` | Stage 5 renames the button; repair it there |
-  | `lib.mjs:142,175` | Square fill is now the crowd ramp, not a per-person colour | Stage 4 changes the fill; repair it there |
+  | `lib.mjs`, `session.mjs`, `join.mjs`, `create.mjs` | Crowd ramp fill, popover, new grid DOM | **Done in Stage 4** |
 
   The rule the first row establishes: repair a smoke assertion in the stage that
   breaks it, not here. A suite left red across stages makes every intervening

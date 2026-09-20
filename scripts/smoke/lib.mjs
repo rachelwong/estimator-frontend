@@ -14,8 +14,6 @@ export const SHOTS = new URL('./screenshots', import.meta.url).pathname
 export const SOCKET_HOST = new URL(API).host
 export const SOCKET_IO = new RegExp(`${SOCKET_HOST.replaceAll('.', '\\.')}/socket\\.io`)
 
-const GREEN = 'bg-green-500'
-
 
 // Chrome logs every 404 as a console error. GET /sessions/:id answering 404
 // is expected — the loaders turn it into /not-found — so it isn't a failure.
@@ -94,11 +92,10 @@ export function createSocketPool(sessionId) {
 // Squares are addressed by axis index, not value. Rows are reversed on screen
 // (highest Resources on top), so these map an index pair to DOM order.
 
-// Scoped to the grid itself. The point-system radio dots are .aspect-square
-// too, and the pages are code-split now, so the create page is still in the DOM
-// for a frame after the URL turns into /start.
+// Every Square carries data-square. Scoped to main: the pages are code-split,
+// so the previous page can still be in the DOM for a frame after navigation.
 export function cells(page) {
-  return page.locator('main .grid.gap-1 .aspect-square')
+  return page.locator('main [data-square]')
 }
 
 async function axisLength(page) {
@@ -122,14 +119,19 @@ export async function clickCell(page, time, resource) {
   await (await cell(page, time, resource)).click()
 }
 
-// Green Squares as [time, resource] index pairs. The live grid's own marker.
+// Pressed Squares as [time, resource] index pairs: your Selection on the live
+// grid. The Reveal's Squares are never pressed.
 export async function chosen(page) {
-  return squaresClassed(page, GREEN)
+  const length = await axisLength(page)
+  const indexes = await cells(page).evaluateAll((elements) =>
+    elements.flatMap((el, i) => (el.getAttribute('aria-pressed') === 'true' ? [i] : [])),
+  )
+
+  return indexes.map((i) => [i % length, length - 1 - Math.floor(i / length)])
 }
 
-// The same, for the ended screen, where nobody's Square is green and every
-// fill is a different colour. What a revealed Square has in common is that it
-// says something — a name, or a count of votes. An empty one says nothing.
+// The same, for the ended screen. What a revealed Square has in common is that
+// it says something — a name, or a headcount. An empty one says nothing.
 export async function revealed(page) {
   const length = await axisLength(page)
   const indexes = await cells(page).evaluateAll((elements) =>
@@ -139,58 +141,29 @@ export async function revealed(page) {
   return indexes.map((i) => [i % length, length - 1 - Math.floor(i / length)])
 }
 
-// The class list a Square is wearing — on the Reveal, its fill is its owner's
-// colour, or the grey of a crowd.
+// The class list a Square is wearing — on the Reveal, its crowd-ramp step.
 export async function squareClasses(page, time, resource) {
   return (await cell(page, time, resource)).evaluate((el) => el.className)
 }
 
-async function squaresClassed(page, marker) {
-  const length = await axisLength(page)
-  const indexes = await cells(page).evaluateAll(
-    (elements, className) =>
-      elements.flatMap((el, i) => (el.className.includes(className) ? [i] : [])),
-    marker,
-  )
-
-  return indexes.map((i) => [i % length, length - 1 - Math.floor(i / length)])
+export async function squareAriaLabel(page, time, resource) {
+  return (await cell(page, time, resource)).getAttribute('aria-label')
 }
 
-// Opens a revealed Square and returns the badges inside it: one name and one
-// class list per person. Clicking again would close it, so each call opens,
-// reads and closes.
-export async function openSquareBadges(page, time, resource) {
+// Opens a revealed Square's popover and returns the names listed in it.
+// Clicking again closes it, so each call opens, reads and closes.
+export async function openSquarePopover(page, time, resource) {
   const square = await cell(page, time, resource)
-
-  // Radix mounts a hidden copy of the content for screen readers, so match the
-  // shadcn content element itself rather than the tooltip role.
-  const tooltip = page.locator('[data-slot="tooltip-content"]')
+  const popover = page.getByRole('dialog')
 
   await square.click()
-  await waitForTooltips(tooltip, 1)
-  // span.rounded-sm is the badge itself — Radix puts a bare span of its own in
-  // there for screen readers.
-  const badges = await tooltip
-    .locator('span.rounded-sm')
-    .evaluateAll((spans) => spans.map((s) => ({ name: s.textContent, className: s.className })))
+  await popover.waitFor()
+  const names = await popover.locator('li').allInnerTexts()
 
-  // Closed before returning, and waited out: the exit animation keeps the old
-  // content in the DOM long enough to collide with the next Square's.
   await square.click()
-  await waitForTooltips(tooltip, 0)
+  await popover.waitFor({ state: 'detached' })
 
-  return badges
-}
-
-async function waitForTooltips(tooltip, expected) {
-  for (let attempt = 0; attempt < 50; attempt++) {
-    if ((await tooltip.count()) === expected) {
-      return
-    }
-    await tooltip.page().waitForTimeout(100)
-  }
-
-  throw new Error(`Expected ${expected} open tooltip(s), got ${await tooltip.count()}`)
+  return names
 }
 
 export function sameSquares(actual, expected) {

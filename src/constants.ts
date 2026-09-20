@@ -19,27 +19,6 @@ export const GridMode = {
   READONLY: "readonly",
 } as const;
 
-// CHOSEN is your own Selection while the session runs; REVEALED is a Square
-// somebody landed on, which only the ended screen ever shows.
-export const CellState = {
-  EMPTY: "empty",
-  AREA: "area",
-  CHOSEN: "chosen",
-  REVEALED: "revealed",
-} as const;
-
-// Whether a Square sits inside the Area under the pointer.
-export const AreaPreview = {
-  OUTSIDE: "outside",
-  INSIDE: "inside",
-} as const;
-
-// Which way an axis title reads. Resources runs bottom to top.
-export const AxisOrientation = {
-  HORIZONTAL: "horizontal",
-  VERTICAL: "vertical",
-} as const;
-
 export const SessionConnectionStatus = {
   CONNECTING: "connecting",
   ACTIVE: "active",
@@ -148,8 +127,8 @@ export const BREAKPOINT_PX = {
 // Square, 4 covers four or more. Text flips to white at crowd-3, where the
 // fill finally goes dark enough to need it.
 //
-// Whole literal class strings, like PARTICIPANT_COLOUR_CLASS below: Tailwind's
-// scanner and `cn build` only see classes that appear in the source.
+// Whole literal class strings: Tailwind's scanner and `cn build` only see
+// classes that appear in the source.
 export const CROWD_CLASS = [
   'bg-crowd-0 text-ink',
   'bg-crowd-1 text-ink',
@@ -158,90 +137,126 @@ export const CROWD_CLASS = [
   'bg-crowd-4 text-white',
 ] as const;
 
-// REVEALED's entry is only a fallback. A revealed Square is filled by
-// utils/grid.ts: one person's own colour, or a grey that deepens with the
-// crowd.
-export const CELL_CLASS = {
-  [CellState.EMPTY]: "bg-neutral-200",
-  [CellState.AREA]: "bg-neutral-400",
-  [CellState.CHOSEN]: "bg-green-500 text-white",
-  [CellState.REVEALED]: "bg-neutral-50",
-} as const;
+// The ramp step a Square inside the Selection's Area wears while the Session
+// runs (§6). The same lavender as one person in the Reveal.
+export const SELECTION_AREA_CROWD_STEP = 1;
 
-// Ring, not fill, so it can sit on top of a Selection's Area.
-export const PREVIEW_CLASS = "ring-2 ring-neutral-500";
+// Your own Selection while the Session runs.
+export const SELECTION_SQUARE_CLASS = 'bg-selection text-ink';
 
 // The headcount at which a Square stops being one person's and becomes a
-// crowd. Everything about a revealed Square turns on this: whether it wears
-// someone's colour or a grey, whether its face says a name or a count, and
-// whether clicking it opens the badges. It is also where CROWDED_SQUARE_CLASS
-// below starts counting — a crowd of exactly this many takes its first entry.
+// crowd: its face says a count instead of a name.
 export const CROWDED_SQUARE_MINIMUM = 2;
 
-// A Square more than one person picked, by how many: two, three, four, then
-// five or more. No one colour could stand for a crowd, so the Square goes grey
-// and darkens as it fills — agreement reads as weight from across the room,
-// and the names live in the badges a click away. Starts well below the empty
-// Square's neutral-200 so even a pair of votes is unmistakable.
-export const CROWDED_SQUARE_CLASS = [
-  "bg-neutral-400 text-neutral-900",
-  "bg-neutral-500 text-white",
-  "bg-neutral-600 text-white",
-  "bg-neutral-700 text-white",
-] as const;
-
-// On top of that grey: a rainbow that rolls around the Square's edge, so the
-// Squares a team converged on are the ones that move. The utility itself is
-// in src/index.css — it needs a masked pseudo-element and an @property angle,
-// neither of which a utility class can express.
-export const CROWDED_SQUARE_BORDER_CLASS = "rainbow-border";
-
-// One colour per person on the ended screen: it fills their Square when they
-// picked it alone, and badges their name in a crowded Square's tooltip.
-// Sixteen Tailwind hues, none of them grey — grey belongs to the crowd — over
-// the 300 and 400 shades, each paired with its own hue at 950 for text, which
-// keeps a name legible without the washed-out look of grey on colour.
-//
-// The order here is the order people get them, starting from a per-Session
-// point in the list: utils/participantColours.ts rotates it before handing it
-// out. Past sixteen people it cycles.
-//
-// Whole literal class strings: Tailwind's scanner and `cn build` only see
-// classes that appear in the source, so these can never be assembled at runtime.
-export const PARTICIPANT_COLOUR_CLASS = [
-  "bg-rose-400 text-rose-950",
-  "bg-sky-400 text-sky-950",
-  "bg-amber-400 text-amber-950",
-  "bg-violet-300 text-violet-950",
-  "bg-lime-400 text-lime-950",
-  "bg-fuchsia-300 text-fuchsia-950",
-  "bg-teal-400 text-teal-950",
-  "bg-orange-300 text-orange-950",
-  "bg-blue-300 text-blue-950",
-  "bg-yellow-300 text-yellow-950",
-  "bg-pink-400 text-pink-950",
-  "bg-emerald-300 text-emerald-950",
-  "bg-red-300 text-red-950",
-  "bg-indigo-400 text-indigo-950",
-  "bg-cyan-300 text-cyan-950",
-  "bg-purple-400 text-purple-950",
-] as const;
-
-// No units: Time and Resources are labels, and the team decides (CONTEXT.md).
-export const AXIS_HINT = {
-  TIME: "Duration, not effort.",
-  RESOURCES: "Anything the task needs, such as effort, people or dependencies.",
+// Which artboard a viewport falls in (§5). Read from BREAKPOINT_PX by
+// hooks/useBreakpoint.ts.
+export const Breakpoint = {
+  MOBILE: 'mobile',
+  TABLET: 'tablet',
+  DESKTOP: 'desktop',
 } as const;
 
-// Vertical: writing-mode turns the text but leaves the icon upright, so
-// rotate-180 flips it. The icon's own rotate-180 flips it back.
-export const AXIS_TITLE_CLASS = {
-  [AxisOrientation.HORIZONTAL]: { trigger: "", icon: "" },
-  [AxisOrientation.VERTICAL]: {
-    trigger: "rotate-180 [writing-mode:vertical-rl]",
-    icon: "rotate-180",
-  },
+// Square size per artboard (§5): min(max, floor((available − (n − 1) × gap) / n)).
+// `available` is the grid's width budget inside the window.
+export const SQUARE_FIT = {
+  [Breakpoint.MOBILE]: { available: 298, max: 39 },
+  [Breakpoint.TABLET]: { available: 580, max: 64 },
+  [Breakpoint.DESKTOP]: { available: 630, max: 70 },
 } as const;
+
+export const SQUARE_GAP_PX = 4;
+
+// The floor under the §5 formula. Numerical to 20 is a 21×21 grid, which the
+// formula would shrink to 10px on a phone. Below this the grid scrolls
+// sideways instead, so a Square stays a fingertip target on every device.
+export const SQUARE_MIN_PX = 28;
+
+// From this size a Square's face spells a name out; below it, initials (§6).
+export const SQUARE_FULL_LABEL_MIN_PX = 56;
+
+// How much of a face a Square has room for (§6 "Labels in the Reveal").
+export const SquareLabelSize = {
+  FULL: 'full',
+  COMPACT: 'compact',
+} as const;
+
+export const SQUARE_LABEL_SIZE_CLASS = {
+  [SquareLabelSize.FULL]: 'text-[11px]',
+  [SquareLabelSize.COMPACT]: 'text-[10px]',
+} as const;
+
+// What your own Selection says on its face.
+export const SELECTION_LABEL = {
+  [SquareLabelSize.FULL]: 'You',
+  [SquareLabelSize.COMPACT]: '★',
+} as const;
+
+// Name lengths, ellipsis included (§6): a full Square face, and the tooltip.
+export const SQUARE_NAME_MAX_CHARS = 8;
+export const TOOLTIP_NAME_MAX_CHARS = 14;
+
+// A small Square shows a lone name as its first letters: "Mia" → "Mi".
+export const SQUARE_INITIALS_LENGTH = 2;
+
+// What a Square is doing beyond its fill. LIFTED is hover, keyboard focus or
+// a pinned popover; AREA_PREVIEW is inside the Area under the mouse.
+export const SquareHighlight = {
+  NONE: 'none',
+  AREA_PREVIEW: 'areaPreview',
+  LIFTED: 'lifted',
+} as const;
+
+// `translate` rather than `transform`: Tailwind v4's translate utilities set
+// the standalone property, so that is the one to transition (§8: 90ms lift,
+// 120ms fill).
+export const SQUARE_HIGHLIGHT_CLASS = {
+  [SquareHighlight.NONE]: 'z-0',
+  [SquareHighlight.AREA_PREVIEW]: 'z-0 shadow-area-preview',
+  [SquareHighlight.LIFTED]: 'z-10 -translate-x-[3px] -translate-y-[3px] shadow-px',
+} as const;
+
+// How a Square came to be hovered. The Area preview follows the mouse only.
+export const HoverSource = {
+  POINTER: 'pointer',
+  KEYBOARD: 'keyboard',
+} as const;
+
+// An axis value lights up in `accent` while its row or column is hovered.
+export const AxisValueEmphasis = {
+  NONE: 'none',
+  ACTIVE: 'active',
+} as const;
+
+export const AXIS_VALUE_EMPHASIS_CLASS = {
+  [AxisValueEmphasis.NONE]: 'text-ink',
+  [AxisValueEmphasis.ACTIVE]: 'text-accent',
+} as const;
+
+export const AXIS_LABEL = {
+  TIME: 'time →',
+  RESOURCES: 'resources ↑',
+} as const;
+
+// KeyboardEvent.key → the step it takes across the grid, in axis indexes.
+// Resources runs bottom to top, so ArrowUp is +1.
+export const GRID_ARROW_STEP = {
+  ArrowLeft: { time: -1, resource: 0 },
+  ArrowRight: { time: 1, resource: 0 },
+  ArrowUp: { time: 0, resource: 1 },
+  ArrowDown: { time: 0, resource: -1 },
+} as const;
+
+export const ESCAPE_KEY = 'Escape';
+
+// The tooltip and popover sit this far above their Square (§6).
+export const FLOAT_OFFSET_PX = 12;
+
+// The popover's name bullets alternate between these two (§6).
+export const POPOVER_BULLET_CLASS = ['bg-selection', 'bg-crowd-2'] as const;
+
+// Only keyboard focus counts as hover. A tap focuses a button too, and would
+// leave a lifted Square and its tooltip stuck on a touch screen.
+export const FOCUS_VISIBLE_SELECTOR = ':focus-visible';
 
 // PointerEvent.pointerType for a mouse (Pointer Events spec). Touch and pen
 // get no hover preview — a tap would leave it stuck on.
