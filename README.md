@@ -95,6 +95,7 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
 - React, Typescript, Vite as bread and butter
 - TailwindCSS: opportunity to learn
 - WebSockets by bidirectional traffic flow
+- design artefacts [https://claude.ai/artifact/B8xUuTAY1pmHCQcMD5FKRc](https://claude.ai/artifact/B8xUuTAY1pmHCQcMD5FKRc)
 
 ## Key learnings
 
