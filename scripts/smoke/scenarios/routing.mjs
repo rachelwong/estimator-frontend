@@ -27,7 +27,7 @@ export async function routing({ browser, reporter }) {
     check(`${path} is a known route`, !(await landsOn(page, /\/not-found$/, 1000)))
   }
 
-  await page.getByRole('link', { name: 'Product Poker' }).click()
+  await page.getByRole('link', { name: 'Fold and Flip' }).click()
   check('Header title → /welcome', await landsOn(page, `${APP}/welcome`))
 
   // --- An open Session, no identity ------------------------------------------
@@ -75,7 +75,7 @@ export async function routing({ browser, reporter }) {
   const notice = slow.getByRole('status')
   await notice.waitFor({ timeout: 1400 }).catch(() => {})
   check('Slow first load shows loading notice', await notice.isVisible())
-  check('Header shows while loading', await slow.getByText('Product Poker').isVisible())
+  check('Header shows while loading', await slow.getByText('Fold and Flip').isVisible())
   await slow.getByRole('heading', { name: 'Join a session' }).waitFor()
   check('Notice gone once loaded', (await slow.getByRole('status').count()) === 0)
 
@@ -86,7 +86,7 @@ export async function routing({ browser, reporter }) {
   const title = down.getByText('Could not reach the server')
   await title.waitFor({ timeout: 5000 }).catch(() => {})
   check('Unreachable: error screen says so', await title.isVisible())
-  check('Error screen keeps header', await down.getByText('Product Poker').isVisible())
+  check('Error screen keeps header', await down.getByText('Fold and Flip').isVisible())
 
   await down.unroute(`${API}/sessions/*`)
   await down.getByRole('button', { name: 'Retry' }).click()

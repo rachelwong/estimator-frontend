@@ -574,8 +574,8 @@ npx shadcn@latest add button input slider radio-group badge alert-dialog
 
 Each primitive lands as editable source in `src/components/ui/`.
 
-`src/components/AppHeader.tsx` — renders "Product Poker". Used by every page.
-Set the same string as the document title.
+`src/components/AppHeader.tsx` — renders the Fold and Flip lockup. Used by every
+page. Set the same string as the document title.
 
 **Done when**: a placeholder page shows the header, styled.
 
@@ -694,7 +694,7 @@ createBrowserRouter([
 **Changed from the first draft.** `AppError` was first planned on the top-level
 route. It now sits one level down, on an extra route with no path. In plain terms:
 an error page replaces the route it belongs to. On the top level that would
-replace `RootLayout` too, and the "Product Poker" header would disappear. One
+replace `RootLayout` too, and the Fold and Flip header would disappear. One
 level down, only the page area is swapped for the error, and the header stays.
 
 `src/routes/loaders.ts` — `joinLoader`, `startLoader`, `endedLoader`, each doing

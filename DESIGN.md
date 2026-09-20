@@ -512,7 +512,7 @@ That is the only one.
 | Breakpoint ranges | `≤767` mobile · `768–1199` tablet · `≥1200` desktop |
 | "Two visual modes" | Dropped |
 | Fonts | Self-hosted via Fontsource, matching the existing package pattern |
-| Sprites | In `public/sprites/` as SVG; they become React components in Phase 2 |
+| Sprites | In `src/assets/sprites/` as SVG, imported directly and rendered as `<img>` (Stage 2). Not React components — see the plan's Stage 2 note |
 
 ### Scheduled, not open
 

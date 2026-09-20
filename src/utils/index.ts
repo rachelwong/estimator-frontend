@@ -1,4 +1,5 @@
 export * from './errors'
 export * from './grid'
+export * from './logoValues'
 export * from './participantColours'
 export * from './pointSystems'

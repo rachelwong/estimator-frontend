@@ -11,7 +11,7 @@ Terms follow [`CONTEXT.md`](../../CONTEXT.md). Sequencing convention follows
 | Path | What it is |
 | --- | --- |
 | `public/screens/*.html` | 26 design-canvas artboards, one per screen per size |
-| `public/sprites/*.svg` | 30 pixel-art sprites, 8px per art pixel |
+| `src/assets/sprites/*.svg` | 30 pixel-art sprites, 8px per art pixel. Moved out of `public/` in Stage 2 so they are imported and bundled rather than fetched by path |
 
 The screens are **reference source, not runnable pages**. They carry inline
 styles only, `{{…}}` placeholders resolved from a `<script type="text/x-dc">`
@@ -239,9 +239,26 @@ and arrive with it.
 
 ### Stage 2 — Sprites and the logo
 
-- 30 SVGs in `public/sprites/` become React components in
-  `src/components/sprites/`, one per file plus a barrel, `aria-hidden`,
-  `shape-rendering="crispEdges"`, fills driven by prop so they recolour.
+- 30 SVGs in `src/assets/sprites/`, imported directly and rendered through one
+  `<Sprite>` wrapper as `<img alt="" aria-hidden>`.
+
+  **Changed from the original plan**, which called for 30 generated React
+  components with fills driven by a prop. The prop existed to serve recolouring,
+  and the design recolours exactly one sprite: the cream spade on the Reveal's
+  dark notice (§7), where an ink spade on ink would be invisible. Thirty
+  generated files and a generator script for one cream spade was machinery the
+  feature did not earn.
+
+  That one case is a CSS mask instead — the SVG's alpha supplies the shape and
+  `background-color` paints it, so the colour is a real palette token rather
+  than a filter chain's approximation, which keeps Stage 1's one-token-system
+  decision intact. `<SpriteMask>` carries it. The technique only works on a
+  single-colour mark: masking a character flattens its skin tone and outfit into
+  one silhouette, which is why nothing else uses it.
+
+  Cost of the change: an `<img>` is opaque to CSS, so any *future* sprite
+  needing selective fill replacement has to be redrawn as a second SVG or move
+  to a mask. Given one known consumer, that is the cheaper bet.
 - The logo: shake and flip on the shared 7s timeline, next value picked on the
   inner element's `animationiteration` so the number never swaps mid-flip (§8).
 - A placement component for the floating characters — around the edges on
@@ -274,6 +291,27 @@ and arrive with it.
 
 *Done when:* the logo cycles correctly, holds still under reduced motion, and no
 sprite is reachable by a screen reader.
+
+**Done.** The sheet is `src/routes/dev/SpritesPage/`, served at `/dev/sprites`
+in dev builds only. All 30 sprites are `<img>` with an empty `alt`, every one
+inlined as a data URI, so the production bundle carries the two logo cards the
+header needs and nothing else — the other 28 tree-shake out. The logo's shake
+and flip share one 7s timeline; under reduced motion the card holds at −8° and
+is pixel-identical over 3s. The scatter thins 13 → 5 → 2 across desktop, tablet
+and mobile. `npm run smoke` is 102/102.
+
+Two things this stage did that the plan put elsewhere:
+
+| What | Why |
+| --- | --- |
+| Repaired `scenarios/routing.mjs:30,78,89` now, not in Stage 10 | The rename lands here, so deferring the assertions would have left the suite red for eight stages and made every intervening stage's verification meaningless |
+| `prefers-reduced-motion` handled once, globally, in `@layer base` | Named per animation it would have to be remembered each stage. A blanket rule covers an animation the day it lands. Resting transforms are untouched, which is how the logo stays tilted |
+
+Sprite filenames expand to full names at the import site — `p1.svg` becomes
+`personOne`. `b1`–`b3` read as more head-and-shoulders avatars and are named
+`avatarFive`–`avatarSeven`; if that grouping is wrong the rename is one line
+each. The scatter positions are invented: the artboards place characters per
+screen and there is no shared placement table to reconcile them against.
 
 ### Stage 3 — Shape primitives
 
@@ -345,17 +383,33 @@ and the mobile menu with its backdrop and dashed-rule rows.
 
 All copy is placeholder, marked as such in source.
 
+**Move `WelcomePage` behind `lazy()` in this stage.** It is eager in
+[`router.tsx`](../../src/routes/router.tsx) today, which was right while it was
+a small page. Once it carries the section-3 Reveal window and roughly twenty
+sprites, everything it imports lands in the entry chunk, so Join, Active and
+Reveal would each pay for decoration they never render.
+
+Sprites stay imported from `src/assets/sprites/` rather than moving to
+`public/`. Measured on the Stage 2 build: 28 extra sprites cost +4.65 kB gzipped
+inlined, against 12.71 kB as separate files plus a request each — the pixel
+path data is repetitive enough that one gzip stream compresses it far better
+than thirty do. A smaller bundle number there would mean more bytes on the wire.
+
 ### Stage 10 — Copy, smoke tests, and a full pass
 
 - Final Welcome copy, "Why I made this", and the GitHub handle for both repo
   cards.
 - Repair the smoke assertions the rename breaks:
 
-  | File | Breaks on |
-  | --- | --- |
-  | `scenarios/routing.mjs:30,78,89` | `Product Poker` → `Fold and Flip` |
-  | `scenarios/session.mjs:44,84,99,106,107` | `End session` → `End session & reveal` |
-  | `lib.mjs:142,175` | Square fill is now the crowd ramp, not a per-person colour |
+  | File | Breaks on | Status |
+  | --- | --- | --- |
+  | `scenarios/routing.mjs:30,78,89` | `Product Poker` → `Fold and Flip` | **Done in Stage 2**, with the rename that broke it |
+  | `scenarios/session.mjs:44,84,99,106,107` | `End session` → `End session & reveal` | Stage 5 renames the button; repair it there |
+  | `lib.mjs:142,175` | Square fill is now the crowd ramp, not a per-person colour | Stage 4 changes the fill; repair it there |
+
+  The rule the first row establishes: repair a smoke assertion in the stage that
+  breaks it, not here. A suite left red across stages makes every intervening
+  stage's verification meaningless.
 
 - One pass across all three sizes, with reduced motion on and off, and a keyboard
   -only run through create → join → select → reveal.

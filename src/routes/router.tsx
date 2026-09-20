@@ -4,6 +4,7 @@ import { AppHeader } from '@/components/AppHeader'
 import { LoadingNotice } from '@/components/LoadingNotice'
 import { RoutePath } from '@/constants'
 import { AppError } from '@/routes/AppError'
+import { SpritesPage } from '@/routes/dev/SpritesPage'
 import { TokensPage } from '@/routes/dev/TokensPage'
 import { JoinSessionPage } from '@/routes/JoinSessionPage'
 import {
@@ -71,9 +72,14 @@ export const router = createBrowserRouter([
           },
           { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
           { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
-          // Stage 1's token sheet, dev builds only. Removed once the screens
-          // it stands in for exist.
-          ...(import.meta.env.DEV ? [{ path: '/dev/tokens', element: <TokensPage /> }] : []),
+          // Stage 1's token sheet and Stage 2's sprite sheet, dev builds only.
+          // Removed once the screens they stand in for exist.
+          ...(import.meta.env.DEV
+            ? [
+                { path: '/dev/tokens', element: <TokensPage /> },
+                { path: '/dev/sprites', element: <SpritesPage /> },
+              ]
+            : []),
           { path: '*', element: null, loader: () => redirect('/not-found') },
         ],
       },

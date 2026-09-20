@@ -50,6 +50,49 @@
     --breakpoint-*: initial;
     --breakpoint-tablet: 768px;
     --breakpoint-desktop: 1200px;
+
+    /* The logo's two halves share one 7s timeline (§8), which is what keeps
+       the flip landing inside the shake rather than drifting against it. */
+    --animate-logo-shake: ffShake 7s ease-in-out infinite;
+    --animate-logo-flip: ffFlip 7s ease-in-out infinite;
+}
+
+/* The logo cycle (DESIGN.md §8). The outer element shakes, the inner one
+   flips; the card rests at -8deg, which lives on the element rather than in
+   the keyframes so the tilt survives when animation is switched off. */
+@keyframes ffShake {
+    0%,
+    58% {
+        transform: rotate(-8deg);
+    }
+    60% {
+        transform: rotate(-2deg);
+    }
+    62% {
+        transform: rotate(-14deg);
+    }
+    64% {
+        transform: rotate(-4deg);
+    }
+    66%,
+    100% {
+        transform: rotate(-8deg);
+    }
+}
+
+@keyframes ffFlip {
+    0%,
+    66% {
+        transform: rotateY(0deg);
+    }
+    72%,
+    90% {
+        transform: rotateY(180deg);
+    }
+    96%,
+    100% {
+        transform: rotateY(360deg);
+    }
 }
 
 /* shadcn's role names aliased onto the palette above — var() only, no value of
@@ -133,6 +176,28 @@
     }
 }
 
+/* Sprites are plain <img> elements, which are opaque to CSS — a fill inside one
+   can't be restyled from outside. Exactly one sprite in the design needs a
+   colour other than the one it was drawn in: the cream spade on the Reveal's
+   dark notice (§7), where the ink spade would be invisible on ink.
+
+   So that one becomes a mask instead of an image: the SVG's alpha supplies the
+   shape and `background-color` paints it, which means the colour is a real
+   palette token rather than a filter chain's approximation of one. This only
+   works for a single-colour mark — masking a character flattens its skin tone
+   and outfit into one silhouette, which is why nothing else uses it. */
+@utility sprite-mask {
+    mask: var(--sprite-source) center / contain no-repeat;
+    -webkit-mask: var(--sprite-source) center / contain no-repeat;
+}
+
+/* Sprites are drawn at 8px per art pixel. The SVGs carry crispEdges, but a
+   browser scaling the rasterised result still smooths it, so the pixel grid is
+   pinned here too. */
+@utility sprite-pixels {
+    image-rendering: pixelated;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -143,4 +208,19 @@
   html {
     @apply font-body;
     }
+
+  /* §8: reduced motion switches off every animation and transition in the
+     app, not a list of named ones — so an animation added in a later stage is
+     covered the day it lands rather than the day someone remembers it. Resting
+     transforms are untouched, which is how the logo stays tilted and still. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }

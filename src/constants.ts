@@ -250,3 +250,30 @@ export const MOUSE_POINTER_TYPE = "mouse";
 // A missing session is an expected answer from GET /sessions/:id, not a
 // failure, so lib/api.ts checks for this status by name.
 export const HTTP_NOT_FOUND = 404;
+
+// The values the logo card flips to (DESIGN.md §1). The first eight Fibonacci
+// numbers, but declared here rather than sliced off FIBONACCI_SEQUENCE: that
+// one is the point system the server validates against, and the logo must not
+// change shape the day the point system does.
+export const LOGO_CARD_VALUES = [0, 1, 2, 3, 5, 8, 13, 21] as const;
+
+// Where the mark rests between shakes (§1). The keyframes pass through this
+// angle too, but it lives on the element so the tilt survives reduced motion,
+// which strips the animation and leaves the resting transform alone.
+export const LOGO_REST_ROTATION = "rotate(-8deg)";
+
+// Depth for the flip. Without it rotateY reads as a horizontal squash rather
+// than a card turning over (§8).
+export const LOGO_PERSPECTIVE_PX = 240;
+
+// The decorative cast around the window (§9). Each entry is one sprite and the
+// literal classes that place it — `cn build` and Tailwind's scanner only see
+// classes written in source, so these can never be assembled from a position.
+//
+// Desktop floats them around the edges; tablet lets them peek over the top and
+// lean out of the sides; mobile keeps the top pair only. Everything here is
+// hidden from screen readers by the sprite components themselves.
+export const SPRITE_SCATTER_CLASS = {
+  HIDDEN_BELOW_TABLET: "hidden tablet:block",
+  HIDDEN_BELOW_DESKTOP: "hidden desktop:block",
+} as const;
