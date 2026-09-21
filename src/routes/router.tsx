@@ -1,9 +1,6 @@
 import { LoadingWindow } from "@/components/LoadingWindow";
 import { RoutePath } from "@/constants";
 import { AppError } from "@/routes/AppError";
-import { PrimitivesPage } from "@/routes/dev/PrimitivesPage";
-import { SpritesPage } from "@/routes/dev/SpritesPage";
-import { TokensPage } from "@/routes/dev/TokensPage";
 import { JoinSessionPage } from "@/routes/JoinSessionPage";
 import {
   createSessionAction,
@@ -81,15 +78,6 @@ export const router = createBrowserRouter([
         element: <EndedPage />,
         loader: endedLoader,
       },
-      // The stage sheets — tokens, sprites, primitives — dev builds only.
-      // Removed once the screens they stand in for exist.
-      ...(import.meta.env.DEV
-        ? [
-            { path: "/dev/tokens", element: <TokensPage /> },
-            { path: "/dev/sprites", element: <SpritesPage /> },
-            { path: "/dev/primitives", element: <PrimitivesPage /> },
-          ]
-        : []),
       { path: "*", element: null, loader: () => redirect("/not-found") },
     ],
   },

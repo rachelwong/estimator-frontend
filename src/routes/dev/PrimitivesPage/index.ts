@@ -1,1 +1,0 @@
-export { PrimitivesPage } from './PrimitivesPage'
