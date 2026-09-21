@@ -1,6 +1,6 @@
 // Every loader's redirect, the error screen, and the loading notice —
 // PLAN.md "Routes" and "Cold starts", Phases 4 and 10.
-import { API, APP, createSessionByApi, createSocketPool, landsOn } from '../lib.mjs'
+import { API, APP, SOCKET_IO, createSessionByApi, createSocketPool, landsOn } from '../lib.mjs'
 
 const UNKNOWN_ID = 'noSuchSession000'
 const TOKEN_KEY = (sessionId) => `estimator:adminToken:${sessionId}`
@@ -17,8 +17,14 @@ export async function routing({ browser, reporter }) {
 
   await page.goto(`${APP}/a/b/c`)
   check('Unmatched path → /not-found', await landsOn(page, /\/not-found$/))
-  check('Not-found says so', await page.getByText('Session not found').isVisible())
-  await page.getByRole('link', { name: 'Create new session' }).click()
+  check(
+    'Not-found says so',
+    await page.getByRole('heading', { name: 'Session not found' }).isVisible(),
+  )
+  await page.getByRole('link', { name: 'Back to Welcome' }).click()
+  check('Not-found links to /welcome', await landsOn(page, `${APP}/welcome`))
+  await page.goto(`${APP}/not-found`)
+  await page.getByRole('link', { name: 'Start a session' }).click()
   check('Not-found links to /new', await landsOn(page, `${APP}/new`))
 
   // --- Static routes and the header link --------------------------------------
@@ -79,18 +85,38 @@ export async function routing({ browser, reporter }) {
   await slow.getByRole('heading', { name: 'Join session' }).waitFor()
   check('Notice gone once loaded', (await slow.getByRole('status').count()) === 0)
 
-  // --- Unreachable backend: error screen, then Retry recovers -----------------
+  // --- Unreachable backend: error screen, then Try again recovers -------------
   const down = await openPage(await browser.newContext(), { expectErrors: true })
   await down.route(`${API}/sessions/*`, (route) => route.abort())
   await down.goto(`${APP}/${open.sessionId}/join`)
-  const title = down.getByText('Could not reach the server')
+  const title = down.getByRole('heading', { name: 'Connection lost' })
   await title.waitFor({ timeout: 5000 }).catch(() => {})
   check('Unreachable: error screen says so', await title.isVisible())
   check('Error screen keeps header', await down.getByText('Fold and Flip').isVisible())
 
   await down.unroute(`${API}/sessions/*`)
-  await down.getByRole('button', { name: 'Retry' }).click()
+  await down.getByRole('button', { name: 'Try again' }).click()
   const recovered = down.getByRole('heading', { name: 'Join session' })
   await recovered.waitFor({ timeout: 5000 }).catch(() => {})
-  check('Retry recovers once reachable', await recovered.isVisible())
+  check('Try again recovers once reachable', await recovered.isVisible())
+
+  // --- A dropped Admin: Connection lost, then Try again reconnects ------------
+  const dropped = await openPage(await browser.newContext(), { expectErrors: true })
+  await dropped.goto(`${APP}/new`)
+  await dropped.evaluate(
+    ([key, token]) => localStorage.setItem(key, token),
+    [TOKEN_KEY(open.sessionId), open.adminToken],
+  )
+  await dropped.route(SOCKET_IO, (route) => route.abort())
+  await dropped.goto(`${APP}/${open.sessionId}/start`)
+  const lost = dropped.getByRole('heading', { name: 'Connection lost' })
+  await lost.waitFor({ timeout: 5000 }).catch(() => {})
+  check('Dropped Admin: Connection lost', await lost.isVisible())
+  check('Dropped Admin stays on /start', await landsOn(dropped, /\/start$/))
+
+  await dropped.unroute(SOCKET_IO)
+  await dropped.getByRole('button', { name: 'Try again' }).click()
+  const reconnected = dropped.getByRole('heading', { name: 'Pick your Square' })
+  await reconnected.waitFor({ timeout: 5000 }).catch(() => {})
+  check('Try again reconnects the Admin', await reconnected.isVisible())
 }

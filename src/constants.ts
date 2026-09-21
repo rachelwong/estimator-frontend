@@ -272,6 +272,64 @@ export const JOIN_WINDOW_CLASS = 'w-full max-w-[366px] tablet:max-w-[560px]';
 
 export const FORM_WINDOW_BODY_CLASS = 'tablet:gap-6 tablet:px-10 tablet:pt-8 tablet:pb-9';
 
+// The error window (§5, §7): the widest of the screens, since the broken grid
+// sits beside the words from tablet up. On a phone it stacks above them.
+export const ERROR_WINDOW_CLASS = {
+  window: 'w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[900px]',
+  body: 'gap-6 px-[18px] pt-5 pb-5 tablet:flex-row tablet:items-center tablet:gap-10 tablet:px-9 tablet:pt-10 tablet:pb-10 desktop:gap-14 desktop:px-12 desktop:pt-10 desktop:pb-10',
+} as const;
+
+// One layout for every error, only the words change (§7). The label is both
+// the window title and the Silkscreen line above the heading.
+//
+// Connection lost departs from §7's second sentence, "When you reconnect you'll
+// join as a new Participant". Only an Admin sees this screen — a Participant is
+// sent back to /join — and an Admin reconnects as the Admin, Selection intact.
+// The screen also stands in for a backend that can't be reached at all, which
+// on a free host is usually one still waking up.
+export const ERROR_SCREEN_COPY = {
+  NOT_FOUND: {
+    label: 'session not found',
+    title: 'Session not found',
+    body: 'This link doesn’t match a live session. Sessions live in memory, so a server restart or a mistyped link lands you here. Nothing was saved.',
+  },
+  CONNECTION_LOST: {
+    label: 'connection lost',
+    title: 'Connection lost',
+    body: 'We can’t reach the session right now. If the server is waking up, give it a moment and try again.',
+  },
+  SOMETHING_WENT_WRONG: {
+    label: 'something went wrong',
+    title: 'Something went wrong',
+    body: 'The session hit an error we didn’t expect. Try again, or start a fresh session.',
+  },
+} as const;
+
+// The error screens' illustration (§7): a 5×5 grid with five Squares fallen out
+// of it. Rows run top to bottom; each number is the Square's crowd step, and
+// null is a gap — drawn as a dashed outline where a Square used to be.
+export const BROKEN_GRID_STANDING = [
+  [1, 0, 0, 0, null],
+  [0, 2, 0, null, 1],
+  [2, 0, null, 2, 0],
+  [0, null, 0, 0, 0],
+  [0, 0, 0, 2, null],
+] as const;
+
+// The five that fell, lying tilted in a heap below the grid. Positions are in
+// Square pitches (a Square plus its gap) from the grid's top left, read off the
+// desktop artboard — so one table draws all three sizes. One is the Selection.
+export const BROKEN_GRID_FALLEN = [
+  { column: 1.06, row: 5.26, rotationDegrees: 40, fillClass: CROWD_CLASS[1] },
+  { column: 1.87, row: 5.78, rotationDegrees: 40, fillClass: CROWD_CLASS[1] },
+  { column: 2.83, row: 5.43, rotationDegrees: 40, fillClass: SELECTION_SQUARE_CLASS },
+  { column: 4.04, row: 5.72, rotationDegrees: -12, fillClass: CROWD_CLASS[1] },
+  { column: 3.83, row: 5.41, rotationDegrees: -12, fillClass: CROWD_CLASS[1] },
+] as const;
+
+// How tall the illustration is, in pitches: the grid and the heap beneath it.
+export const BROKEN_GRID_HEIGHT_PITCHES = 6.9;
+
 // Only keyboard focus counts as hover. A tap focuses a button too, and would
 // leave a lifted Square and its tooltip stuck on a touch screen.
 export const FOCUS_VISIBLE_SELECTOR = ':focus-visible';

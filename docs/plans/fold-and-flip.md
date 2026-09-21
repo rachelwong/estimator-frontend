@@ -489,6 +489,29 @@ Unifies [`NotFoundPage`](../../src/routes/NotFoundPage.tsx),
 [`AppError`](../../src/routes/AppError.tsx). Illustration is decorative and
 `aria-hidden`.
 
+**Done.** Windows measure 366 / 740 / 900, with Squares at 30 / 44 / 50 and the
+illustration at 166×235 / 236×331 / 266×373, within a pixel of the artboards.
+There's no page overflow at any size. The buttons stack full width on a phone.
+They sit side by side on desktop and wrap on tablet, as the artboard's do.
+Nothing animates, so reduced motion has nothing to stop. `npm run smoke` is
+141/141.
+
+Where this stage went past or against the letter above:
+
+| Choice | Why |
+| --- | --- |
+| **`ErrorScreen` takes the copy and the buttons, and each caller supplies its own** | The primary is a link on Not found and a retry on the other two, and the secondary target differs as well. A `kind` prop would have needed a switch inside the view to pick them |
+| **Connection lost's second sentence rewritten** — "If the server is waking up, give it a moment and try again" | §7's "you'll join as a new Participant" is false for everyone who sees this screen. A dropped Participant goes to `/join`, and a dropped Admin reconnects as the Admin with their Selection. `DESIGN.md` §12 still lists copy as open, so Stage 10 can revisit it |
+| **An unreachable backend reads as Connection lost**, and any other route error reads as Something went wrong | A cold start is the usual route error, and "the session hit an error we didn't expect" would misdescribe a server that's asleep. `describeError` and `ErrorCopy` are deleted, and the API's own error message now only reaches the console |
+| **Connection lost gets Try again**, and it revalidates rather than reloading | The old screen was static so that nothing would loop against a dead backend. A button the Admin presses doesn't loop. `startLoader` already swaps a dead Admin connection for a fresh one, so revalidating is enough. The shared `TryAgainButton` shows the inline loader while pressed |
+| The illustration is laid out in pitches, and only `--square` changes per breakpoint | The three artboards are one drawing at three scales. Keeping the gap at 4px (`SQUARE_GAP_PX`) at every size lets one table in `src/constants.ts` draw all three |
+| Buttons are the 56px `lg`, not the artboard's 52px, and the desktop text column loses its 460px cap | `lg` is what every other screen's call to action wears. At 460px the two buttons wrapped |
+| Screen heading stays an `h2` | As in Stage 5, the `h1` pass waits for Stage 10 |
+
+Smoke: the not-found and unreachable assertions follow the new copy, and a new
+scenario drops an Admin's socket on `/start`, checks for Connection lost, and
+confirms Try again reconnects them.
+
 ### Stage 9 — Welcome
 
 The largest phase, and last because section 3 embeds a **real Reveal window** —

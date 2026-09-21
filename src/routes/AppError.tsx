@@ -1,17 +1,16 @@
 import { useEffect } from 'react'
-import { useRevalidator, useRouteError } from 'react-router'
-import { PageLayout } from '@/components/PageLayout'
+import { Link, useRouteError } from 'react-router'
+import { ErrorScreen } from '@/components/ErrorScreen'
+import { TryAgainButton } from '@/components/TryAgainButton'
 import { Button } from '@/components/ui/button'
-import { describeError } from '@/utils'
+import { ERROR_SCREEN_COPY, RoutePath } from '@/constants'
+import { NetworkError } from '@/lib/api'
 
-// errorElement for every page. Retry re-runs the loaders rather than reloading
-// the page.
+// errorElement for every page. An unreachable backend — a cold start, usually —
+// reads as a lost connection; anything else is the catch-all.
 export function AppError() {
   const error = useRouteError()
-  const revalidator = useRevalidator()
-
-  const isRetrying = revalidator.state !== 'idle'
-  const { title, detail } = describeError(error)
+  const isUnreachable = error instanceof NetworkError
 
   // Once per error, not per render — retrying re-renders this page.
   useEffect(() => {
@@ -19,15 +18,22 @@ export function AppError() {
   }, [error])
 
   return (
-    <PageLayout>
-      <div className="mx-auto grid w-full max-w-md gap-4 px-6 py-10 text-center">
-        <h2 className="text-xl font-semibold">{title}</h2>
-        <p className="text-sm text-muted-foreground">{detail}</p>
-
-        <Button onClick={() => revalidator.revalidate()} disabled={isRetrying}>
-          {isRetrying ? 'Retrying…' : 'Retry'}
-        </Button>
-      </div>
-    </PageLayout>
+    <ErrorScreen
+      copy={isUnreachable ? ERROR_SCREEN_COPY.CONNECTION_LOST : ERROR_SCREEN_COPY.SOMETHING_WENT_WRONG}
+      actions={
+        <>
+          <TryAgainButton />
+          {isUnreachable ? (
+            <Button asChild size="lg" variant="secondary">
+              <Link to={RoutePath.WELCOME}>Back to Welcome</Link>
+            </Button>
+          ) : (
+            <Button asChild size="lg" variant="secondary">
+              <Link to={RoutePath.NEW}>Start a session</Link>
+            </Button>
+          )}
+        </>
+      }
+    />
   )
 }

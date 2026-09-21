@@ -1,18 +1,22 @@
 import { Link } from 'react-router'
-import { PageLayout } from '@/components/PageLayout'
+import { ErrorScreen } from '@/components/ErrorScreen'
 import { Button } from '@/components/ui/button'
-import { RoutePath } from '@/constants'
+import { ERROR_SCREEN_COPY, RoutePath } from '@/constants'
 
 export function NotFoundPage() {
   return (
-    <PageLayout>
-      <div className="mx-auto grid w-full max-w-md gap-4 px-6 py-10 text-center">
-        <h2 className="text-xl font-semibold">Session not found</h2>
-
-        <Button asChild>
-          <Link to={RoutePath.NEW}>Create new session</Link>
-        </Button>
-      </div>
-    </PageLayout>
+    <ErrorScreen
+      copy={ERROR_SCREEN_COPY.NOT_FOUND}
+      actions={
+        <>
+          <Button asChild size="lg">
+            <Link to={RoutePath.NEW}>Start a session</Link>
+          </Button>
+          <Button asChild size="lg" variant="secondary">
+            <Link to={RoutePath.WELCOME}>Back to Welcome</Link>
+          </Button>
+        </>
+      }
+    />
   )
 }
