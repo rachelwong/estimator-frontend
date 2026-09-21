@@ -23,13 +23,13 @@ export function WelcomeNavigation() {
       >
         <a
           href={`#${WelcomeSection.HOW_TO_USE}`}
-          className="hover:text-text-subtle"
+          className="hover:text-text-subtle no-underline text-ink"
         >
           How to use
         </a>
         <a
           href={REPOSITORY_URL.FRONTEND}
-          className="hidden hover:text-text-subtle desktop:inline"
+          className="hidden hover:text-text-subtle desktop:inline no-underline text-ink"
           target="_blank"
         >
           GitHub
