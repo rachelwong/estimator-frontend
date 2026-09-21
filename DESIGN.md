@@ -240,7 +240,7 @@ Participants follow with a dashed chip and "Abstained" in `abstained` red.
    `accent`), paragraph, Start a session + How to play.
 3. Hero demo — the real Reveal window (notice, heading, grid with a lifted
    Square and open popover, "who landed where" chips), 780px max.
-4. Pixel-dither band — `page-top` breaks into 12px pixels over 12 rows (Bayer
+4. Pixel-dither band — `page-top` breaks into 8px pixels over 12 rows (Bayer
    4×4 ordered dither) into cream, just before How to play.
 5. How to play — four cards LV.1–LV.4: Start a session / Pull up a chair /
    Hands down / The Reveal. 4 → 2 → 1 columns.

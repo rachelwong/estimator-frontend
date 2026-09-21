@@ -479,8 +479,8 @@ export const DITHER_BAYER_MATRIX = [
 
 export const DITHER_BLOCK_THRESHOLDS = [2, 8, 14] as const;
 
-// One cell of the dither — 12 rows of them make the 144px band.
-export const DITHER_PIXEL_PX = 12;
+// One cell of the dither — 12 rows of them make the 96px band.
+export const DITHER_PIXEL_PX = 8;
 
 // The sample Session the Welcome page demonstrates with (§7 item 3).
 // Real data shapes, so the demo is the real Reveal window rather
