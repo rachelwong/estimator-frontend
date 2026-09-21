@@ -9,7 +9,6 @@ import {
 import { cn } from "@/lib/utils";
 import { CodeIcon } from "./CodeIcon";
 import { MakerNote } from "./MakerNote";
-import { PlaceholderCopy } from "./PlaceholderCopy";
 
 // Why I made this (§7 item 6), a zine spread: the heading on an ink rule, three
 // notes split by ink rules, then a "read the source" bar with the sign-off and
@@ -49,18 +48,18 @@ export function WhyIMadeThisSection() {
       </div>
 
       <div className="flex flex-col gap-[18px] border-[3px] border-ink bg-white p-[18px] shadow-px-card tablet:px-[22px] tablet:py-5 desktop:flex-row desktop:items-center desktop:justify-between desktop:gap-6 desktop:py-[18px]">
-        <div className="flex flex-col gap-1.5">
-          <span className="font-label text-[12px]">the tools & process</span>
-          <span className="text-[16px] font-bold">
-            <PlaceholderCopy>
-              Estimation is hard. Teams have to weigh up unknowns, dependencies
-              and effort so product owners can make calls that affect everyone,
-              and too often the first number or the loudest voices becomes the
-              answer. Fold & Flip is planning poker tool that keeps every
-              estimate hidden until the reveal, so you hear what the entire team
-              actually thinks.
-            </PlaceholderCopy>
+        <div className="flex flex-col">
+          <span className="font-label text-[12px] mb-1.5">
+            the tools & process
           </span>
+          <span className="text-[16px] font-bold">
+            Front-end: React, TypeScript, TailwindCSS, Socket.io, Playwright,
+            Vercel
+          </span>
+          <span className="text-[16px] font-bold">
+            Back-end: Node.js, TypeScript, Websockets, Render
+          </span>
+          <span className="text-[16px] font-bold">AI: Claude Code</span>
         </div>
 
         <div className="grid gap-3.5 tablet:grid-cols-2 tablet:gap-4 desktop:flex">

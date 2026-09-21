@@ -1,10 +1,11 @@
-import { Sprite } from '@/components/Sprite'
+import { Sprite } from "@/components/Sprite";
+import parse from "html-react-parser";
 
 interface HouseRuleProps {
   /** A `.svg` imported from `@/assets/sprites`. */
-  sprite: string
-  title: string
-  description: string
+  sprite: string;
+  title: string;
+  description: string;
 }
 
 // One house rule: a sprite beside a bold line and a sentence. A Card's edge
@@ -17,8 +18,10 @@ export function HouseRule({ sprite, title, description }: HouseRuleProps) {
 
       <div className="flex flex-col gap-1.5">
         <strong className="text-[18px]">{title}</strong>
-        <p className="text-[15px] leading-[1.55] text-text-muted">{description}</p>
+        <p className="text-[15px] leading-[1.55] text-text-muted">
+          {parse(description)}
+        </p>
       </div>
     </li>
-  )
+  );
 }
