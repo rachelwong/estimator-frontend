@@ -530,7 +530,6 @@ export const CROWD_CHATTER_LINES = [
   "Pretty sure it's a 2. Ish.",
   "I estimate in naps.",
   "Coffee first, numbers later.",
-  "Refill before the Reveal.",
   "Is this before or after QA?",
   "Can I phone a senior dev?",
   "Nobody say 'just'.",
