@@ -14,7 +14,10 @@ export function SiteFooter() {
       )}
     >
       <span>React · Typescript · Node.js · Socket.io · TailwindCSS</span>
-      <a href={REPOSITORY_URL.PORTFOLIO} className="hover:text-text-subtle">
+      <a
+        href={REPOSITORY_URL.PORTFOLIO}
+        className="hover:text-text-subtle no-underline text-ink"
+      >
         &#169; {new Date().getFullYear()} Rachel Wong
       </a>
     </footer>
