@@ -1,48 +1,52 @@
-import { useState } from 'react'
-import { Form, useActionData, useNavigation } from 'react-router'
-import { PageLayout } from '@/components/PageLayout'
-import { PixelProgressBar } from '@/components/PixelProgressBar'
-import { PointSystemPicker } from '@/components/PointSystemPicker'
-import { RangeSlider } from '@/components/RangeSlider'
-import { SpriteScatter } from '@/components/SpriteScatter'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Window } from '@/components/Window'
+import { PageLayout } from "@/components/PageLayout";
+import { PixelProgressBar } from "@/components/PixelProgressBar";
+import { PointSystemPicker } from "@/components/PointSystemPicker";
+import { RangeSlider } from "@/components/RangeSlider";
+import { SpriteScatter } from "@/components/SpriteScatter";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Window } from "@/components/Window";
 import {
   CREATE_WINDOW_CLASS,
   FORM_WINDOW_BODY_CLASS,
   PixelBarSize,
   PointSystemType,
-} from '@/constants'
-import { cn } from '@/lib/utils'
-import { nameError } from '@/lib/validation'
-import type { ActionErrorData } from '@/types'
-import type { PointSystemType as PointSystemTypeValue } from '@/types'
+} from "@/constants";
+import { cn } from "@/lib/utils";
+import { nameError } from "@/lib/validation";
+import type {
+  ActionErrorData,
+  PointSystemType as PointSystemTypeValue,
+} from "@/types";
+import { useState } from "react";
+import { Form, useActionData, useNavigation } from "react-router";
 
 // The Create screen (DESIGN.md §7): window "new-session", your name, the point
 // system, the highest axis value, and Create session. No grid preview.
 // Default export so router.tsx can lazy() it directly.
 export default function CreateSessionPage() {
-  const [adminName, setAdminName] = useState('')
-  const [touched, setTouched] = useState(false)
-  const [pointSystemType, setPointSystemType] = useState<PointSystemTypeValue>(PointSystemType.NUMERICAL)
-  const [sliderMax, setSliderMax] = useState(0)
+  const [adminName, setAdminName] = useState("");
+  const [touched, setTouched] = useState(false);
+  const [pointSystemType, setPointSystemType] = useState<PointSystemTypeValue>(
+    PointSystemType.NUMERICAL,
+  );
+  const [sliderMax, setSliderMax] = useState(0);
 
-  const navigation = useNavigation()
-  const actionData = useActionData() as ActionErrorData | undefined
+  const navigation = useNavigation();
+  const actionData = useActionData() as ActionErrorData | undefined;
 
-  const validationError = nameError(adminName)
-  const isSubmitting = navigation.state === 'submitting'
+  const validationError = nameError(adminName);
+  const isSubmitting = navigation.state === "submitting";
 
   // A max of 0 is the slider's starting point, and a grid of one Square is no
   // grid at all — so the form waits for both answers before it will go.
-  const canSubmit = validationError === null && sliderMax > 0
+  const canSubmit = validationError === null && sliderMax > 0;
 
   // Switching point system clears the max, so the admin consciously re-picks
   // instead of inheriting a full-size grid from the previous choice.
   function handlePointSystemChange(next: PointSystemTypeValue) {
-    setPointSystemType(next)
-    setSliderMax(0)
+    setPointSystemType(next);
+    setSliderMax(0);
   }
 
   return (
@@ -61,8 +65,8 @@ export default function CreateSessionPage() {
               New session
             </h1>
             <p className="text-[16px] leading-[1.45] text-text-muted">
-              You’ll be the Admin: you pick like everyone else, and you’re the one who ends the
-              session.
+              You are the Admin: you estimate like everyone else, and you’re the
+              one who ends the session.
             </p>
           </div>
 
@@ -86,7 +90,10 @@ export default function CreateSessionPage() {
               )}
             </div>
 
-            <PointSystemPicker value={pointSystemType} onChange={handlePointSystemChange} />
+            <PointSystemPicker
+              value={pointSystemType}
+              onChange={handlePointSystemChange}
+            />
 
             <RangeSlider
               pointSystemType={pointSystemType}
@@ -94,22 +101,24 @@ export default function CreateSessionPage() {
               onChange={setSliderMax}
             />
 
-            {actionData?.error && <p className="text-[14px] text-abstained">{actionData.error}</p>}
+            {actionData?.error && (
+              <p className="text-[14px] text-abstained">{actionData.error}</p>
+            )}
 
             {/* Pressed, it carries the inline loader (§7) — held at full
                 strength rather than dimmed like a button that can't be used. */}
             <Button
               type="submit"
               size="lg"
-              className={cn('w-full', isSubmitting && 'disabled:opacity-100')}
+              className={cn("w-full", isSubmitting && "disabled:opacity-100")}
               disabled={isSubmitting || !canSubmit}
             >
               {isSubmitting && <PixelProgressBar size={PixelBarSize.INLINE} />}
-              {isSubmitting ? 'Creating session…' : 'Create session'}
+              {isSubmitting ? "Creating session…" : "Create session"}
             </Button>
           </Form>
         </Window>
       </div>
     </PageLayout>
-  )
+  );
 }
