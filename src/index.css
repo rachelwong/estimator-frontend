@@ -355,7 +355,10 @@
     scroll-behavior: smooth;
   }
 
-  a {
+  p ~ a,
+  span ~ a,
+  a.link,
+  .link {
     color: var(--color-accent);
     font-weight: bold;
     text-decoration: underline;

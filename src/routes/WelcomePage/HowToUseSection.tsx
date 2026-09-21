@@ -55,6 +55,7 @@ export function HowToUseSection() {
           <a
             href="https://www.atlassian.com/agile/project-management/fibonacci-story-points"
             target="_blank"
+            className="link"
           >
             Fibonacci
           </a>
