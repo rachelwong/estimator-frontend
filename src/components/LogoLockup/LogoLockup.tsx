@@ -9,8 +9,8 @@ interface LogoLockupProps {
 // carries the whole brand on its own, so the gap and the type size are the only
 // things this adds.
 //
-// The mark's height drives its own font size — the number on the card back is
-// sized in `em` — so scaling the lockup is one class on the mark.
+// The mark's width drives its own number size — the card back is a size
+// container — so scaling the lockup is one class on the mark.
 export function LogoLockup({ className }: LogoLockupProps) {
   return (
     <span className={cn('inline-flex items-center gap-3', className)}>

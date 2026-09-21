@@ -16,6 +16,7 @@ import {
   hoverCell,
   landsOn,
   openSquarePopover,
+  pageHeadings,
   revealed,
   squareAriaLabel,
   squareClasses,
@@ -126,6 +127,8 @@ export async function session({ browser, reporter }) {
   }
   check('No error banner after ending', (await admin.getByRole('alert').count()) === 0)
   await fay.getByRole('heading', { name: 'The Reveal' }).waitFor()
+  check('The Reveal is the one h1', (await pageHeadings(fay)).join() === 'The Reveal')
+  check('Chip row label sits under it', await fay.getByRole('heading', { name: 'your votes', level: 2 }).isVisible())
   check('Live Participant sees own name in Reveal', (await squareAriaLabel(fay, 4, 1)).includes('Fay'))
 
   // "Your Square": the tab that watched the Session end still knows its

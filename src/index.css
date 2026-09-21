@@ -269,8 +269,11 @@
   body {
     @apply bg-background text-foreground;
     }
+  /* Welcome's in-page links (How to play, Why keep Selections private?) slide
+     to their section rather than jumping. Reduced motion puts it back to a jump. */
   html {
     @apply font-body;
+    scroll-behavior: smooth;
     }
 
   /* §8: reduced motion switches off every animation and transition in the

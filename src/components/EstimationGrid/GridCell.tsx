@@ -20,6 +20,8 @@ interface GridCellProps {
   expanded?: boolean
   // Reveal only: when this Square's part of the arriving wave starts (§8).
   revealDelay?: number
+  // Reveal only: the wave is waiting to start, so the Square holds blank.
+  isWavePaused?: boolean
   // Roving: 0 on the one Square Tab lands on, −1 on the rest.
   tabIndex: number
   onClick: () => void
@@ -43,6 +45,7 @@ export function GridCell({
   pressed,
   expanded,
   revealDelay,
+  isWavePaused = false,
   tabIndex,
   onClick,
   onPointerEnter,
@@ -64,6 +67,8 @@ export function GridCell({
         SQUARE_LABEL_SIZE_CLASS[labelSize],
         SQUARE_HIGHLIGHT_CLASS[highlight],
         revealDelay !== undefined && 'animate-reveal-in',
+        // Paused inside its delay, `backwards` keeps it on the first keyframe.
+        isWavePaused && '[animation-play-state:paused]',
       )}
       style={{ width: size, height: size, animationDelay: revealDelay === undefined ? undefined : `${revealDelay}ms` }}
       onClick={onClick}

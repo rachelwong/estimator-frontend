@@ -43,9 +43,9 @@ export default function ReadySessionPage() {
             <Sprite source={spadeMark} className="size-13 shrink-0" />
 
             <div className="flex flex-col gap-1.5">
-              <h2 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[28px]">
+              <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[28px]">
                 Your session’s ready
-              </h2>
+              </h1>
               <p className="text-[15px] text-text-muted">{pointSystemSummary(session.pointSystem)}</p>
             </div>
           </div>

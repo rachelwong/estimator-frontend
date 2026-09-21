@@ -1,6 +1,6 @@
 // Every loader's redirect, the error screen, and the loading notice —
 // PLAN.md "Routes" and "Cold starts", Phases 4 and 10.
-import { API, APP, SOCKET_IO, createSessionByApi, createSocketPool, landsOn } from '../lib.mjs'
+import { API, APP, SOCKET_IO, createSessionByApi, createSocketPool, landsOn, pageHeadings } from '../lib.mjs'
 
 const UNKNOWN_ID = 'noSuchSession000'
 const TOKEN_KEY = (sessionId) => `estimator:adminToken:${sessionId}`
@@ -21,6 +21,7 @@ export async function routing({ browser, reporter }) {
     'Not-found says so',
     await page.getByRole('heading', { name: 'Session not found' }).isVisible(),
   )
+  check('Not-found heading is the one h1', (await pageHeadings(page)).join() === 'Session not found')
   await page.getByRole('link', { name: 'Back to Welcome' }).click()
   check('Not-found links to /welcome', await landsOn(page, `${APP}/welcome`))
   await page.goto(`${APP}/not-found`)
@@ -83,6 +84,7 @@ export async function routing({ browser, reporter }) {
   check('Slow first load shows loading notice', await notice.isVisible())
   check('Header shows while loading', await slow.getByText('Fold and Flip').isVisible())
   await slow.getByRole('heading', { name: 'Join session' }).waitFor()
+  check('Join heading is the one h1', (await pageHeadings(slow)).join() === 'Join session')
   check('Notice gone once loaded', (await slow.getByRole('status').count()) === 0)
 
   // --- Unreachable backend: error screen, then Try again recovers -------------
@@ -92,6 +94,7 @@ export async function routing({ browser, reporter }) {
   const title = down.getByRole('heading', { name: 'Connection lost' })
   await title.waitFor({ timeout: 5000 }).catch(() => {})
   check('Unreachable: error screen says so', await title.isVisible())
+  check('Connection lost is the one h1', (await pageHeadings(down)).join() === 'Connection lost')
   check('Error screen keeps header', await down.getByText('Fold and Flip').isVisible())
 
   await down.unroute(`${API}/sessions/*`)
@@ -119,4 +122,5 @@ export async function routing({ browser, reporter }) {
   const reconnected = dropped.getByRole('heading', { name: 'Pick your Square' })
   await reconnected.waitFor({ timeout: 5000 }).catch(() => {})
   check('Try again reconnects the Admin', await reconnected.isVisible())
+  check('Active heading is the one h1', (await pageHeadings(dropped)).join() === 'Pick your Square')
 }

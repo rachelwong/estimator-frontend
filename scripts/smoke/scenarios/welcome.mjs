@@ -1,6 +1,6 @@
 // The Welcome page — fold-and-flip.md Stage 9. No backend involved: the demos
 // run on a sample Session the page carries itself.
-import { APP, landsOn } from '../lib.mjs'
+import { APP, landsOn, pageHeadings } from '../lib.mjs'
 
 const DEMO_CROWD = ['Mia', 'Jim-1', 'Noor']
 const SIZES = { desktop: 1440, tablet: 834, mobile: 390 }
@@ -17,16 +17,34 @@ export async function welcome({ browser, reporter }) {
   const hero = desktop.getByRole('heading', { name: /ship together/ })
   await hero.waitFor()
   check('Hero heading shows', await hero.isVisible())
+  const welcomeHeadings = await pageHeadings(desktop)
+  check(
+    'Hero line is the one h1',
+    welcomeHeadings.length === 1 && /ship together/.test(welcomeHeadings[0]),
+    welcomeHeadings.join(' | '),
+  )
+  check(
+    'Demo Reveal heading sits under it',
+    await desktop.getByRole('heading', { name: 'The Reveal', level: 2 }).isVisible(),
+  )
 
-  // The hero's Reveal opens on its crowded Square, popover pinned.
+  // The hero's Reveal is pinned on its crowded Square, but holds its wave, and
+  // the popover with it, until the whole grid is on screen.
   const popover = desktop.getByRole('dialog')
+  await desktop.waitForTimeout(500)
+  check('Arriving pinned does not scroll the page', (await desktop.evaluate(() => window.scrollY)) === 0)
+  check('Demo popover waits while the grid is off screen', (await popover.count()) === 0)
+  check('Demo is the real Reveal window', await desktop.getByText('Voting is closed').isVisible())
+
+  // The hero demo is the first grid on the page.
+  await desktop.evaluate(() =>
+    document.querySelector('main [data-square]').closest('.grid').scrollIntoView({ block: 'center' }),
+  )
   await popover.waitFor()
   check(
-    'Demo popover open on arrival, every name',
+    'Demo popover opens once the wave lands, every name',
     JSON.stringify(await popover.locator('li').allInnerTexts()) === JSON.stringify(DEMO_CROWD),
   )
-  check('Demo is the real Reveal window', await desktop.getByText('Voting is closed').isVisible())
-  check('Arriving pinned does not scroll the page', (await desktop.evaluate(() => window.scrollY)) === 0)
 
   await desktop.keyboard.press('Escape')
   await popover.waitFor({ state: 'detached' })
@@ -35,6 +53,17 @@ export async function welcome({ browser, reporter }) {
   // Header link lands its section below the sticky header, not under it.
   await desktop.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'How to play' }).click()
   check('How to play link sets the hash', await landsOn(desktop, `${APP}/welcome#how-to-play`))
+  // The link slides rather than jumps, so measure once the page stops moving.
+  const scrollStart = await desktop.evaluate(() => window.scrollY)
+  await desktop.evaluate(
+    () =>
+      new Promise((resolve) => {
+        window.addEventListener('scrollend', resolve, { once: true })
+        setTimeout(resolve, 2000)
+      }),
+  )
+  const scrollEnd = await desktop.evaluate(() => window.scrollY)
+  check('How to play slides rather than jumps', scrollEnd > scrollStart, `${scrollStart} → ${scrollEnd}`)
   const headingTop = await desktop
     .getByRole('heading', { name: 'How to play', level: 2 })
     .evaluate((el) => el.getBoundingClientRect().top)

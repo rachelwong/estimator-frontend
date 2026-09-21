@@ -1,5 +1,5 @@
 // The create form and its ready screen — PLAN.md Phase 3, fold-and-flip.md Stage 7.
-import { API, APP, cells, landsOn } from '../lib.mjs'
+import { API, APP, cells, landsOn, pageHeadings } from '../lib.mjs'
 
 const NAME_RULE = 'Use 1-20 letters, numbers or spaces, with no symbols.'
 const FIBONACCI_AT_55 = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55']
@@ -19,6 +19,8 @@ export async function create({ browser, reporter }) {
   check('/ → /welcome', await landsOn(page, `${APP}/welcome`))
   await page.getByRole('link', { name: 'Start a session' }).first().click()
   check('Welcome button → /new', await landsOn(page, `${APP}/new`))
+  await page.getByRole('heading', { name: 'New session' }).waitFor()
+  check('New session is the one h1', (await pageHeadings(page)).join() === 'New session')
 
   check('Create disabled with no name', await submit.isDisabled())
   check('Numerical pressed by default', (await page.getByRole('button', { name: 'Numerical' }).getAttribute('aria-pressed')) === 'true')
@@ -81,6 +83,7 @@ export async function create({ browser, reporter }) {
   check('Create → /ready', await landsOn(page, /\/ready$/))
   const sessionId = new URL(page.url()).pathname.split('/')[1]
   await page.getByRole('heading', { name: 'Your session’s ready' }).waitFor()
+  check('Ready heading is the one h1', (await pageHeadings(page)).join() === 'Your session’s ready')
   check('Summary line recaps the grid', await page.getByText(SUMMARY_AT_55).isVisible())
   const link = await page.getByLabel('Share this link with the team').inputValue()
   check('Ready link points at /join', link === `${APP}/${sessionId}/join`, link)

@@ -88,6 +88,15 @@ export function createSocketPool(sessionId) {
   }
 }
 
+// --- Headings -----------------------------------------------------------------
+
+// Every h1 on the page, as text. Each screen has exactly one — its own heading,
+// not the header's lockup — so a check reads `(await pageHeadings(page)).join()`
+// against that one name.
+export async function pageHeadings(page) {
+  return (await page.getByRole('heading', { level: 1 }).allInnerTexts()).map((text) => text.replace(/\s+/g, ' ').trim())
+}
+
 // --- The grid -----------------------------------------------------------------
 // Squares are addressed by axis index, not value. Rows are reversed on screen
 // (highest Resources on top), so these map an index pair to DOM order.

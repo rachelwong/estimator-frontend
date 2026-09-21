@@ -105,7 +105,7 @@ export const LOADING_NOTICE_DELAY_MS = 400;
 
 // How long the copy button wears its `copied` fill and reads "Copied!"
 // (DESIGN.md §7).
-export const COPIED_FEEDBACK_MS = 1600
+export const COPIED_FEEDBACK_MS = 1600;
 
 // The three artboards the design is drawn at, and the widths where each takes
 // over: ≤767 mobile · 768–1199 tablet · ≥1200 desktop (DESIGN.md §12). These
@@ -114,7 +114,7 @@ export const COPIED_FEEDBACK_MS = 1600
 export const BREAKPOINT_PX = {
   TABLET: 768,
   DESKTOP: 1200,
-} as const
+} as const;
 
 // The crowd ramp: how many people landed on a Square, never Time or Resources
 // (DESIGN.md §2). Index by headcount, capped at the last entry — 0 is the idle
@@ -124,11 +124,11 @@ export const BREAKPOINT_PX = {
 // Whole literal class strings: Tailwind's scanner and `cn build` only see
 // classes that appear in the source.
 export const CROWD_CLASS = [
-  'bg-crowd-0 text-ink',
-  'bg-crowd-1 text-ink',
-  'bg-crowd-2 text-ink',
-  'bg-crowd-3 text-white',
-  'bg-crowd-4 text-white',
+  "bg-crowd-0 text-ink",
+  "bg-crowd-1 text-ink",
+  "bg-crowd-2 text-ink",
+  "bg-crowd-3 text-white",
+  "bg-crowd-4 text-white",
 ] as const;
 
 // The ramp step a Square inside the Selection's Area wears while the Session
@@ -136,7 +136,7 @@ export const CROWD_CLASS = [
 export const SELECTION_AREA_CROWD_STEP = 1;
 
 // Your own Selection while the Session runs.
-export const SELECTION_SQUARE_CLASS = 'bg-selection text-ink';
+export const SELECTION_SQUARE_CLASS = "bg-selection text-ink";
 
 // The headcount at which a Square stops being one person's and becomes a
 // crowd: its face says a count instead of a name.
@@ -145,9 +145,9 @@ export const CROWDED_SQUARE_MINIMUM = 2;
 // Which artboard a viewport falls in (§5). Read from BREAKPOINT_PX by
 // hooks/useBreakpoint.ts.
 export const Breakpoint = {
-  MOBILE: 'mobile',
-  TABLET: 'tablet',
-  DESKTOP: 'desktop',
+  MOBILE: "mobile",
+  TABLET: "tablet",
+  DESKTOP: "desktop",
 } as const;
 
 // Square size per artboard (§5): min(max, floor((available − (n − 1) × gap) / n)).
@@ -179,19 +179,19 @@ export const SQUARE_FULL_LABEL_MIN_PX = 56;
 
 // How much of a face a Square has room for (§6 "Labels in the Reveal").
 export const SquareLabelSize = {
-  FULL: 'full',
-  COMPACT: 'compact',
+  FULL: "full",
+  COMPACT: "compact",
 } as const;
 
 export const SQUARE_LABEL_SIZE_CLASS = {
-  [SquareLabelSize.FULL]: 'text-[11px]',
-  [SquareLabelSize.COMPACT]: 'text-[10px]',
+  [SquareLabelSize.FULL]: "text-[11px]",
+  [SquareLabelSize.COMPACT]: "text-[10px]",
 } as const;
 
 // What your own Selection says on its face.
 export const SELECTION_LABEL = {
-  [SquareLabelSize.FULL]: 'You',
-  [SquareLabelSize.COMPACT]: '★',
+  [SquareLabelSize.FULL]: "You",
+  [SquareLabelSize.COMPACT]: "★",
 } as const;
 
 // Name lengths, ellipsis included (§6): a full Square face, and the tooltip.
@@ -204,40 +204,41 @@ export const SQUARE_INITIALS_LENGTH = 2;
 // What a Square is doing beyond its fill. LIFTED is hover, keyboard focus or
 // a pinned popover; AREA_PREVIEW is inside the Area under the mouse.
 export const SquareHighlight = {
-  NONE: 'none',
-  AREA_PREVIEW: 'areaPreview',
-  LIFTED: 'lifted',
+  NONE: "none",
+  AREA_PREVIEW: "areaPreview",
+  LIFTED: "lifted",
 } as const;
 
 // `translate` rather than `transform`: Tailwind v4's translate utilities set
 // the standalone property, so that is the one to transition (§8: 90ms lift,
 // 120ms fill).
 export const SQUARE_HIGHLIGHT_CLASS = {
-  [SquareHighlight.NONE]: 'z-0',
-  [SquareHighlight.AREA_PREVIEW]: 'z-0 shadow-area-preview',
-  [SquareHighlight.LIFTED]: 'z-10 -translate-x-[3px] -translate-y-[3px] shadow-px',
+  [SquareHighlight.NONE]: "z-0",
+  [SquareHighlight.AREA_PREVIEW]: "z-0 shadow-area-preview",
+  [SquareHighlight.LIFTED]:
+    "z-10 -translate-x-[3px] -translate-y-[3px] shadow-px",
 } as const;
 
 // How a Square came to be hovered. The Area preview follows the mouse only.
 export const HoverSource = {
-  POINTER: 'pointer',
-  KEYBOARD: 'keyboard',
+  POINTER: "pointer",
+  KEYBOARD: "keyboard",
 } as const;
 
 // An axis value lights up in `accent` while its row or column is hovered.
 export const AxisValueEmphasis = {
-  NONE: 'none',
-  ACTIVE: 'active',
+  NONE: "none",
+  ACTIVE: "active",
 } as const;
 
 export const AXIS_VALUE_EMPHASIS_CLASS = {
-  [AxisValueEmphasis.NONE]: 'text-ink',
-  [AxisValueEmphasis.ACTIVE]: 'text-accent',
+  [AxisValueEmphasis.NONE]: "text-ink",
+  [AxisValueEmphasis.ACTIVE]: "text-accent",
 } as const;
 
 export const AXIS_LABEL = {
-  TIME: 'time →',
-  RESOURCES: 'resources ↑',
+  TIME: "time →",
+  RESOURCES: "resources ↑",
 } as const;
 
 // KeyboardEvent.key → the step it takes across the grid, in axis indexes.
@@ -249,45 +250,52 @@ export const GRID_ARROW_STEP = {
   ArrowDown: { time: 0, resource: -1 },
 } as const;
 
-export const ESCAPE_KEY = 'Escape';
+export const ESCAPE_KEY = "Escape";
 
 // The tooltip and popover sit this far above their Square (§6).
 export const FLOAT_OFFSET_PX = 12;
 
 // The popover's name bullets alternate between these two (§6).
-export const POPOVER_BULLET_CLASS = ['bg-selection', 'bg-crowd-2'] as const;
+export const POPOVER_BULLET_CLASS = ["bg-selection", "bg-crowd-2"] as const;
 
 // "Your Square" in the Reveal (§6): a 3px `selection` ring inset 7px, drawn
 // over whatever crowd fill the Square has.
-export const YOUR_SQUARE_CLASS = 'outline-3 outline-solid outline-selection -outline-offset-7';
+export const YOUR_SQUARE_CLASS =
+  "outline-3 outline-solid outline-selection -outline-offset-7";
 
 // The Reveal's diagonal wave (§8): each Square starts this much later than
 // the one before it on the diagonal — (time index + resources index) × step.
 // About 1.5s end to end on a 7×7.
 export const REVEAL_WAVE_STEP_MS = 70;
 
+// How much of an element counts as wholly on screen. Short of 1 because a
+// box sitting on a sub-pixel edge can report 0.998 and never reach it.
+export const FULLY_IN_VIEW_RATIO = 0.99;
+
 // The Active and Reveal windows are one size (§5), and hold the same grid.
 // The body is tighter than the Window default on mobile: a Fibonacci 7×7 at
 // 39px needs 335px, and the default padding leaves 328.
 export const SESSION_WINDOW_CLASS = {
-  window: 'w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[780px]',
-  body: 'gap-3.5 px-3 pt-2.5 pb-3.5 desktop:px-9 desktop:pt-7',
+  window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[780px]",
+  body: "gap-3.5 px-3 pt-2.5 pb-3.5 desktop:px-9 desktop:pt-7",
 } as const;
 
 // The Create and Join windows (§5): narrower than a session's, since they hold
 // a form rather than a grid. Both use the artboards' wider body from tablet up
 // — 32/40/36 around a 24px gap — where the Window default is tuned tighter.
-export const CREATE_WINDOW_CLASS = 'w-full max-w-[366px] tablet:max-w-[600px] desktop:max-w-[640px]';
+export const CREATE_WINDOW_CLASS =
+  "w-full max-w-[366px] tablet:max-w-[600px] desktop:max-w-[640px]";
 
-export const JOIN_WINDOW_CLASS = 'w-full max-w-[366px] tablet:max-w-[560px]';
+export const JOIN_WINDOW_CLASS = "w-full max-w-[366px] tablet:max-w-[560px]";
 
-export const FORM_WINDOW_BODY_CLASS = 'tablet:gap-6 tablet:px-10 tablet:pt-8 tablet:pb-9';
+export const FORM_WINDOW_BODY_CLASS =
+  "tablet:gap-6 tablet:px-10 tablet:pt-8 tablet:pb-9";
 
 // The error window (§5, §7): the widest of the screens, since the broken grid
 // sits beside the words from tablet up. On a phone it stacks above them.
 export const ERROR_WINDOW_CLASS = {
-  window: 'w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[900px]',
-  body: 'gap-6 px-[18px] pt-5 pb-5 tablet:flex-row tablet:items-center tablet:gap-10 tablet:px-9 tablet:pt-10 tablet:pb-10 desktop:gap-14 desktop:px-12 desktop:pt-10 desktop:pb-10',
+  window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[900px]",
+  body: "gap-6 px-[18px] pt-5 pb-5 tablet:flex-row tablet:items-center tablet:gap-10 tablet:px-9 tablet:pt-10 tablet:pb-10 desktop:gap-14 desktop:px-12 desktop:pt-10 desktop:pb-10",
 } as const;
 
 // One layout for every error, only the words change (§7). The label is both
@@ -300,19 +308,19 @@ export const ERROR_WINDOW_CLASS = {
 // on a free host is usually one still waking up.
 export const ERROR_SCREEN_COPY = {
   NOT_FOUND: {
-    label: 'session not found',
-    title: 'Session not found',
-    body: 'This link doesn’t match a live session. Sessions live in memory, so a server restart or a mistyped link lands you here. Nothing was saved.',
+    label: "session not found",
+    title: "Session not found",
+    body: "This link doesn’t match a live session. Sessions live in memory, so a server restart or a mistyped link lands you here. Nothing was saved.",
   },
   CONNECTION_LOST: {
-    label: 'connection lost',
-    title: 'Connection lost',
-    body: 'We can’t reach the session right now. If the server is waking up, give it a moment and try again.',
+    label: "connection lost",
+    title: "Connection lost",
+    body: "We can’t reach the session right now. If the server is waking up, give it a moment and try again.",
   },
   SOMETHING_WENT_WRONG: {
-    label: 'something went wrong',
-    title: 'Something went wrong',
-    body: 'The session hit an error we didn’t expect. Try again, or start a fresh session.',
+    label: "something went wrong",
+    title: "Something went wrong",
+    body: "The session hit an error we didn’t expect. Try again, or start a fresh session.",
   },
 } as const;
 
@@ -333,7 +341,12 @@ export const BROKEN_GRID_STANDING = [
 export const BROKEN_GRID_FALLEN = [
   { column: 1.06, row: 5.26, rotationDegrees: 40, fillClass: CROWD_CLASS[1] },
   { column: 1.87, row: 5.78, rotationDegrees: 40, fillClass: CROWD_CLASS[1] },
-  { column: 2.83, row: 5.43, rotationDegrees: 40, fillClass: SELECTION_SQUARE_CLASS },
+  {
+    column: 2.83,
+    row: 5.43,
+    rotationDegrees: 40,
+    fillClass: SELECTION_SQUARE_CLASS,
+  },
   { column: 4.04, row: 5.72, rotationDegrees: -12, fillClass: CROWD_CLASS[1] },
   { column: 3.83, row: 5.41, rotationDegrees: -12, fillClass: CROWD_CLASS[1] },
 ] as const;
@@ -343,7 +356,7 @@ export const BROKEN_GRID_HEIGHT_PITCHES = 6.9;
 
 // Only keyboard focus counts as hover. A tap focuses a button too, and would
 // leave a lifted Square and its tooltip stuck on a touch screen.
-export const FOCUS_VISIBLE_SELECTOR = ':focus-visible';
+export const FOCUS_VISIBLE_SELECTOR = ":focus-visible";
 
 // PointerEvent.pointerType for a mouse (Pointer Events spec). Touch and pen
 // get no hover preview — a tap would leave it stuck on.
@@ -384,7 +397,11 @@ export const SPRITE_SCATTER_CLASS = {
 
 // The three dots on the right of a Window's title bar, in the order they sit
 // (DESIGN.md §2). Decorative: they are not buttons and nothing reads them.
-export const WINDOW_CHROME_DOT_CLASS = ["bg-selection", "bg-chrome-green", "bg-danger"] as const;
+export const WINDOW_CHROME_DOT_CLASS = [
+  "bg-selection",
+  "bg-chrome-green",
+  "bg-danger",
+] as const;
 
 // A Chip's border treatment. Abstained is the dashed one — the design gives it
 // a dashed `text-subtle` edge rather than the solid ink every other chip wears
@@ -445,11 +462,13 @@ export const WelcomeSection = {
 
 // A section the header links to lands below the sticky header rather than
 // under it — one margin per Welcome header height (§5: 64 / 72 / 84).
-export const WELCOME_ANCHOR_CLASS = "scroll-mt-16 tablet:scroll-mt-[72px] desktop:scroll-mt-[84px]";
+export const WELCOME_ANCHOR_CLASS =
+  "scroll-mt-16 tablet:scroll-mt-[72px] desktop:scroll-mt-[84px]";
 
 // Welcome's header is taller than every other screen's (§5), and its sides
 // widen to the page's 80px padding on desktop.
-export const WELCOME_HEADER_CLASS = "h-16 tablet:h-[72px] desktop:h-[84px] desktop:px-20";
+export const WELCOME_HEADER_CLASS =
+  "h-16 tablet:h-[72px] desktop:h-[84px] desktop:px-20";
 
 // The page's side padding (§5: 20 / 40 / 80), shared by every Welcome section.
 export const WELCOME_GUTTER_CLASS = "px-5 tablet:px-10 desktop:px-20";
@@ -460,6 +479,8 @@ export const WELCOME_GUTTER_CLASS = "px-5 tablet:px-10 desktop:px-20";
 export const REPOSITORY_URL = {
   FRONTEND: "https://github.com/rachelwong/estimator-frontend",
   BACKEND: "https://github.com/rachelwong/estimator-backend",
+  MAIN: "https://github.com/rachelwong",
+  PORTFOLIO: "https://www.rachelwong.dev/",
 } as const;
 
 // The band where the Welcome page's lavender top breaks into pixels over the
@@ -485,7 +506,6 @@ export const WELCOME_DEMO_AXIS_VALUES: number[] = [0, 1, 2, 3, 5, 8, 13];
 
 export const WELCOME_DEMO_REVEAL: RevealPayload = {
   squares: [
-    { time: 13, resource: 8, names: ["Kai"] },
     { time: 8, resource: 5, names: ["Jim-2"] },
     { time: 5, resource: 3, names: ["Mia", "Jim-1", "Noor"] },
     { time: 5, resource: 2, names: ["Ben"] },

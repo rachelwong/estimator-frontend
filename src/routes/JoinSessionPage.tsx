@@ -39,9 +39,9 @@ export function JoinSessionPage() {
           className={JOIN_WINDOW_CLASS}
           bodyClassName={FORM_WINDOW_BODY_CLASS}
         >
-          <h2 className="font-display text-[22px] leading-[1.05] text-ink tablet:text-[30px]">
+          <h1 className="font-display text-[22px] leading-[1.05] text-ink tablet:text-[30px]">
             Join session
-          </h2>
+          </h1>
 
           <Form method="post" className="flex flex-col gap-5 tablet:gap-6">
             <div className="flex flex-col gap-2">

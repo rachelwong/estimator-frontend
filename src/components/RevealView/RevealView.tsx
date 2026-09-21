@@ -30,6 +30,7 @@ export function RevealView({ session, viewer }: RevealViewProps) {
           reveal={session.reveal}
           selection={viewer.selection}
           chip={revealChip(viewer)}
+          isScreenHeading
         >
           <StartSessionLink className="h-[52px] w-full text-[14px] tablet:hidden" />
         </RevealWindow>

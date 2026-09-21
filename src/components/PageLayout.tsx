@@ -17,6 +17,7 @@ interface PageLayoutProps {
 // Every screen's frame (DESIGN.md §5, §7): the white bar stuck to the top — the
 // lockup on the left, the screen's own controls on the right, a 3px ink rule
 // beneath — over the page's content, which fills at least the rest of the screen.
+// The lockup is a link, not a heading: each screen's own heading is its h1.
 //
 // Each page renders its own, so its controls are a plain prop. The header
 // remounts on a page change as a result, and the logo's 7s cycle starts over.
@@ -32,11 +33,9 @@ export function PageLayout({ actions, children, headerClassName, footer }: PageL
           headerClassName,
         )}
       >
-        <h1>
-          <Link to={RoutePath.WELCOME} aria-label="Fold and Flip home">
-            <LogoLockup />
-          </Link>
-        </h1>
+        <Link to={RoutePath.WELCOME} aria-label="Fold and Flip home">
+          <LogoLockup />
+        </Link>
 
         <div className="flex items-center gap-3.5">{actions}</div>
       </header>

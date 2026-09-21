@@ -40,9 +40,9 @@ export function ErrorScreen({ copy, actions }: ErrorScreenProps) {
           <div className="flex min-w-0 flex-1 flex-col gap-3.5 tablet:max-w-[380px] desktop:max-w-none">
             <span className="font-label text-[12px] text-ink">{copy.label}</span>
 
-            <h2 className="font-display text-[26px] leading-[1.05] text-ink tablet:text-[32px] desktop:text-[36px]">
+            <h1 className="font-display text-[26px] leading-[1.05] text-ink tablet:text-[32px] desktop:text-[36px]">
               {copy.title}
-            </h2>
+            </h1>
 
             <p className="text-[16px] leading-[1.55] text-text-muted">{copy.body}</p>
 

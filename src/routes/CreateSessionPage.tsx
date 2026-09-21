@@ -63,9 +63,9 @@ export default function CreateSessionPage() {
           bodyClassName={FORM_WINDOW_BODY_CLASS}
         >
           <div className="flex flex-col gap-1.5">
-            <h2 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[28px]">
+            <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[28px]">
               New session
-            </h2>
+            </h1>
             <p className="text-[16px] leading-[1.45] text-text-muted">
               You’ll be the Admin: you pick like everyone else, and you’re the one who ends the
               session.

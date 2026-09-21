@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useReducer, useRef, useState } from 'react'
-import type { FocusEvent, KeyboardEvent, PointerEvent } from 'react'
+import type { AnimationEvent, FocusEvent, KeyboardEvent, PointerEvent } from 'react'
 import {
   AXIS_LABEL,
   FOCUS_VISIBLE_SELECTOR,
@@ -9,7 +9,7 @@ import {
   MOUSE_POINTER_TYPE,
   SQUARE_GAP_PX,
 } from '@/constants'
-import { useBreakpoint, useEscapeKey } from '@/hooks'
+import { useBreakpoint, useEscapeKey, useFullyInView } from '@/hooks'
 import type { GridMode as GridModeValue, HoveredSquare, RevealPayload, Selection, SquareFit } from '@/types'
 import {
   axisEmphasis,
@@ -49,6 +49,8 @@ interface EstimationGridProps {
   onPinnedChange?: (pinned: Selection | null) => void
   /** How big the Squares may get. Defaults to the session windows' (§5). */
   squareFit?: SquareFit
+  /** Reveal only: hold the wave, and any pinned popover, until the grid is wholly on screen. */
+  holdsWaveUntilInView?: boolean
 }
 
 // Time runs left to right, Resources bottom to top — origin bottom-left:
@@ -79,6 +81,7 @@ export function EstimationGrid({
   pinned = null,
   onPinnedChange,
   squareFit,
+  holdsWaveUntilInView = false,
 }: EstimationGridProps) {
   // The Square that holds the Tab stop. Until one is touched, the Selection.
   const [cursor, setCursor] = useState<Selection | null>(null)
@@ -96,9 +99,19 @@ export function EstimationGrid({
   const originSquare = { time: axisValues[0], resource: axisValues[0] }
   const tabStop = cursor ?? selection ?? originSquare
 
+  // A held wave waits blank for the whole grid to scroll into view, then rolls
+  // once. A pin it opened with stays shut until the last Square lands, rather
+  // than floating over blank ones — the Welcome demo opens pinned.
+  const isWaveStarted = useFullyInView(scrollerRef, holdsWaveUntilInView)
+  const [isWaveLanded, setWaveLanded] = useState(!holdsWaveUntilInView)
+  const lastAxisValue = axisValues[axisValues.length - 1]
+  const lastSquareKey = squareKey(lastAxisValue, lastAxisValue)
+  const shownPinned = isWaveLanded ? pinned : null
+
   // No tooltip over the pinned Square: its popover already says who's there.
   const hoveredSquare = hovered?.square ?? null
-  const isHoveringPinned = hoveredSquare !== null && pinned !== null && isSameSquare(pinned, hoveredSquare)
+  const isHoveringPinned =
+    hoveredSquare !== null && shownPinned !== null && isSameSquare(shownPinned, hoveredSquare)
   const tooltipSquare = isHoveringPinned ? null : hoveredSquare
 
   const template = `repeat(${axisValues.length}, ${size}px)`
@@ -127,6 +140,13 @@ export function EstimationGrid({
 
     scrolledSelectorRef.current = pinnedSelector
   }, [pinnedSelector])
+
+  // The far corner is the wave's last Square, so its end is the wave's end.
+  function handleWaveEnd(event: AnimationEvent<HTMLDivElement>) {
+    if (event.target instanceof HTMLElement && event.target.dataset.square === lastSquareKey) {
+      setWaveLanded(true)
+    }
+  }
 
   // Running: choose it. Revealed: toggle its popover.
   function handleClick(square: Selection) {
@@ -216,6 +236,7 @@ export function EstimationGrid({
             <div
               className="grid"
               style={{ gridTemplateColumns: template, gap: SQUARE_GAP_PX }}
+              onAnimationEnd={isWaveLanded ? undefined : handleWaveEnd}
               onPointerLeave={() => {
                 if (hovered?.source === HoverSource.POINTER) {
                   onHoveredChange(null)
@@ -227,7 +248,7 @@ export function EstimationGrid({
                   {cols.map((time) => {
                     const square = { time, resource }
                     const names = namesAt(square)
-                    const isPinned = Boolean(pinned && isSameSquare(pinned, square))
+                    const isPinned = Boolean(shownPinned && isSameSquare(shownPinned, square))
 
                     return (
                       <GridCell
@@ -237,11 +258,12 @@ export function EstimationGrid({
                         label={squareLabel(mode, square, selection, names, faceSize)}
                         labelSize={faceSize}
                         fillClass={squareFillClass(mode, square, selection, names)}
-                        highlight={squareHighlight(mode, square, hovered, pinned)}
+                        highlight={squareHighlight(mode, square, hovered, shownPinned)}
                         ariaLabel={squareAriaLabel(mode, square, selection, names)}
                         pressed={isInteractive ? Boolean(selection && isSameSquare(selection, square)) : undefined}
                         expanded={!isInteractive && names.length > 0 ? isPinned : undefined}
                         revealDelay={isInteractive ? undefined : revealDelay(axisValues, square)}
+                        isWavePaused={!isWaveStarted}
                         tabIndex={isSameSquare(tabStop, square) ? 0 : -1}
                         onClick={() => handleClick(square)}
                         onPointerEnter={(event) => handlePointerEnter(event, square)}
@@ -277,12 +299,12 @@ export function EstimationGrid({
         />
       )}
 
-      {pinned && (
+      {shownPinned && (
         <SquarePopover
-          anchorKey={squareKey(pinned.time, pinned.resource)}
+          anchorKey={squareKey(shownPinned.time, shownPinned.resource)}
           boundsRef={scrollerRef}
-          title={popoverTitle(pinned)}
-          names={namesAt(pinned)}
+          title={popoverTitle(shownPinned)}
+          names={namesAt(shownPinned)}
         />
       )}
     </div>

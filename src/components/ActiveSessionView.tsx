@@ -58,9 +58,9 @@ export function ActiveSessionView({
           bodyClassName={SESSION_WINDOW_CLASS.body}
         >
           <div className="flex flex-col gap-1.5">
-            <h2 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
+            <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
               {hasSelection ? 'Hand’s down.' : 'Pick your Square'}
-            </h2>
+            </h1>
             <p className="font-body text-[15px] leading-[1.45] text-text-muted tablet:text-[16px]">
               {hasSelection
                 ? 'Your Selection and its Area are only visible to you. Pick another Square to move it, or the same one to clear it.'

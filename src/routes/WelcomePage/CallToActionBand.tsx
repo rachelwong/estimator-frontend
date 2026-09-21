@@ -1,5 +1,5 @@
-import { StartSessionButton } from './StartSessionButton'
-import { TeamSprites } from './TeamSprites'
+import { StartSessionButton } from "./StartSessionButton";
+import { TeamSprites } from "./TeamSprites";
 
 // The closing band in `accent` (§7 item 9): one last way in, with a crowd of
 // characters gathering along its bottom edge, clipped by the frame.
@@ -10,13 +10,14 @@ export function CallToActionBand() {
 
       <div className="flex flex-col items-start gap-[22px] px-5 pt-8 tablet:px-14 tablet:pt-16">
         <h2 className="font-display text-[23px] leading-[1.05] text-white tablet:text-[31px] desktop:text-[41px]">
-          Round up
+          Flip the points
           <br />
-          the team.
+          Align the team
+          <br />
         </h2>
 
         <StartSessionButton className="h-[52px] text-[14px]" />
       </div>
     </section>
-  )
+  );
 }

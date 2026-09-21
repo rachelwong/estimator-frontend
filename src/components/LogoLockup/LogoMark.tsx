@@ -42,9 +42,11 @@ export function LogoMark({ className }: LogoMarkProps) {
       >
         <Sprite source={logoCardFront} className="block h-full w-full [backface-visibility:hidden]" />
 
-        <span className="absolute inset-0 grid place-items-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+        {/* A size container, so the number is half the card's width at any
+            mark size — wide enough for "21" to sit inside the card's edge. */}
+        <span className="@container absolute inset-0 grid place-items-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
           <Sprite source={logoCardBack} className="absolute inset-0 h-full w-full" />
-          <span className="relative font-display text-[0.5em] leading-none text-ink">{value}</span>
+          <span className="relative font-display text-[50cqw] leading-none text-ink">{value}</span>
         </span>
       </span>
     </span>

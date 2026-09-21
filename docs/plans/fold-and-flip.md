@@ -586,6 +586,23 @@ shows it too.
 - One pass across all three sizes, with reduced motion on and off, and a keyboard
   -only run through create → join → select → reveal.
 
+**Done, except the copy.** The "Why I made this" note and its sign-off are still
+placeholders, awaiting text. The GitHub handle was settled in Stage 9. Seven
+screens (Welcome, New, Ready, Join, Active, Reveal, Not found) at 390 / 834 /
+1440, with reduced motion on and off, show no page overflow, no console errors
+and exactly one `h1`. Under reduced motion nothing is left running. The
+keyboard-only run gets from an empty create form to a pinned Reveal popover
+without a pointer. `npm run smoke` is 176/176.
+
+Where this stage went past or against the letter above:
+
+| Choice | Why |
+| --- | --- |
+| **The lockup is a link, not the `h1`.** Each screen's own heading is its `h1`, and on Welcome it is the hero line | The deferred pass from Stages 5, 8 and 9. With the lockup as `h1`, every screen shared the same top heading, and the dev sheets had two |
+| `RevealWindow` takes `isScreenHeading` | The window is the Reveal's `h1`, but under Welcome's hero it has to be an `h2`. Its chip-row label stays one level beneath either way |
+| Smoke checks "exactly one `h1`" on every screen it visits, through a `pageHeadings` helper | A heading level is invisible on screen, so nothing else would catch a regression |
+| The Welcome demo's popover waits for the wave | The demo now holds its wave until the grid is wholly on screen. Its pin opens when the last Square lands. The smoke test checks that it is shut on arrival, then scrolls the grid in and checks every name |
+
 ---
 
 ## Sequencing
