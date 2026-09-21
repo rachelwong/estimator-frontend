@@ -116,7 +116,7 @@ All three are free on Google Fonts.
 | Thing                                       | Border                                        | Shadow                         |
 | ------------------------------------------- | --------------------------------------------- | ------------------------------ |
 | Window (Active, Reveal, Create, Join, hero) | 3px ink                                       | `8px 8px 0 ink`                |
-| Card (How to use, House rules, source bar) | 3px ink                                       | `6px 6px 0 ink`                |
+| Card (How to use, House rules, source bar)  | 3px ink                                       | `6px 6px 0 ink`                |
 | Button / input / icon button                | 3px ink                                       | `4px 4px 0 ink` (inputs: none) |
 | Square                                      | 2px ink                                       | none; hover: see §6            |
 | Chip                                        | 2px ink (Abstained: 2px dashed `text-subtle`) | none                           |
@@ -235,7 +235,7 @@ Participants follow with a dashed chip and "Abstained" in `abstained` red.
 
 1. Header — logo, "How to use", GitHub,
    "Start a session" (mobile: logo + Menu button).
-2. Hero on `page-top` — Silkscreen badge "Planning poker, minus the poker
+2. Hero on `page-top` — Silkscreen badge "Planning poker, without the poker
    face", Bungee hero "Everyone plays a hand. / Nobody peeks." (second line in
    `accent`), paragraph, Start a session + How to use.
 3. Hero demo — the real Reveal window (notice, heading, grid with a lifted
