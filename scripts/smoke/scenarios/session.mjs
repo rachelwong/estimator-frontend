@@ -42,7 +42,7 @@ export async function session({ browser, reporter }) {
 
   const sessionId = new URL(admin.url()).pathname.split('/')[1]
   check('Admin lands on /start', true, sessionId)
-  check('Admin sees End session', await admin.getByRole('button', { name: 'End session' }).isVisible())
+  check('Admin sees End session', await admin.getByRole('button', { name: 'End session & reveal' }).isVisible())
   check('Admin sees share link', await admin.getByLabel('Session link').isVisible())
 
   const shareUrl = await admin.getByLabel('Session link').inputValue()
@@ -94,7 +94,7 @@ export async function session({ browser, reporter }) {
   await fay.waitForURL(/\/start$/)
   await cells(fay).first().waitFor()
   check('Participant lands on /start', true)
-  check('Participant has no End session', (await fay.getByRole('button', { name: 'End session' }).count()) === 0)
+  check('Participant has no End session', (await fay.getByRole('button', { name: 'End session & reveal' }).count()) === 0)
   check('Participant has no share link', (await fay.getByLabel('Session link').count()) === 0)
   check('Participant sees nobody else', (await chosen(fay)).length === 0)
   await selectSquare(fay, 4, 1)
@@ -109,15 +109,15 @@ export async function session({ browser, reporter }) {
   await admin.waitForTimeout(300)
 
   // --- Admin ends the Session through the dialog -----------------------------
-  await admin.getByRole('button', { name: 'End session' }).click()
+  await admin.getByRole('button', { name: 'End session & reveal' }).click()
   await admin.getByRole('alertdialog').waitFor()
   await admin.getByRole('button', { name: 'Cancel' }).click()
   await admin.waitForTimeout(300)
   check('Cancel keeps Session open', admin.url().endsWith('/start'))
   await admin.screenshot({ path: `${SHOTS}/admin-start.png` })
 
-  await admin.getByRole('button', { name: 'End session' }).click()
-  await admin.getByRole('alertdialog').getByRole('button', { name: 'End session' }).click()
+  await admin.getByRole('button', { name: 'End session & reveal' }).click()
+  await admin.getByRole('alertdialog').getByRole('button', { name: 'End session & reveal' }).click()
 
   for (const [label, page] of [['Admin', admin], ['Admin tab 2', adminTab2], ['Participant', fay]]) {
     check(`${label} moved to /ended`, await landsOn(page, /\/ended$/))

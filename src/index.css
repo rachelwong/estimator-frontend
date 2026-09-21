@@ -144,10 +144,11 @@
 /* shadcn's role names aliased onto the palette above — var() only, no value of
    their own. `bg-ink` and `bg-foreground` resolve to the same custom property,
    so the primitives keep working while we author in the design's vocabulary.
-   These are the 12 role names src/ actually references (Stage 3's button
-   restyle retired `secondary` and its foreground): a primitive added
-   later that reads a fifteenth renders unstyled until its alias joins the
-   list, which is a visible failure rather than a silent drift. */
+   These are the 10 role names src/ actually references (Stage 3's button
+   restyle retired `secondary` and its foreground, Stage 5's dialog restyle
+   `popover` and its foreground): a primitive added later that reads another
+   renders unstyled until its alias joins the list, which is a visible failure
+   rather than a silent drift. */
 @theme inline {
     --color-background: var(--color-cream);
     --color-foreground: var(--color-ink);
@@ -159,8 +160,6 @@
     --color-destructive: var(--color-danger);
     --color-muted: var(--color-crowd-0);
     --color-muted-foreground: var(--color-text-muted);
-    --color-popover: var(--color-ink);
-    --color-popover-foreground: var(--color-cream);
 
     --font-sans: var(--font-body);
     --font-heading: var(--font-display);

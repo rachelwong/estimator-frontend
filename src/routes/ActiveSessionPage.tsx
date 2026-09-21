@@ -3,7 +3,7 @@ import { ActiveSessionView } from '@/components/ActiveSessionView'
 import { ConnectionLost } from '@/components/ConnectionLost'
 import { LoadingWindow } from '@/components/LoadingWindow'
 import { SessionConnectionStatus } from '@/constants'
-import { useSessionConnection } from '@/hooks'
+import { useHeaderSlot, useSessionConnection } from '@/hooks'
 
 // Redirects here are part of what this page renders for a status, not a side
 // effect — hence <Navigate> rather than navigate() in an effect.
@@ -11,6 +11,7 @@ import { useSessionConnection } from '@/hooks'
 export default function ActiveSessionPage() {
   const sessionId = useParams().sessionId!
   const { state, isAdmin, select, dismissError, endSession } = useSessionConnection(sessionId)
+  const headerSlot = useHeaderSlot()
 
   const isLost =
     state.status === SessionConnectionStatus.DISCONNECTED ||
@@ -38,6 +39,7 @@ export default function ActiveSessionPage() {
     <ActiveSessionView
       sessionId={sessionId}
       state={state}
+      headerSlot={headerSlot}
       onSelect={({ time, resource }) => select(time, resource)}
       onDismissError={dismissError}
       // The server's ack, not the token, decides who sees the controls.

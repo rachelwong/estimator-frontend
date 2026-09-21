@@ -10,18 +10,24 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface AdminControlsProps {
   onEndSession: () => void
+  /** Where the trigger sits decides its size — the header's, or full width under the grid. */
+  className?: string
 }
 
-// Confirmed first: ending is irreversible. No navigation here — the
-// session-ended broadcast moves every tab, this one included, to /ended.
-export function AdminControls({ onEndSession }: AdminControlsProps) {
+// "End session & reveal" in `danger` (DESIGN.md §7). Confirmed first: ending is
+// irreversible. No navigation here — the session-ended broadcast moves every
+// tab, this one included, to /ended.
+export function AdminControls({ onEndSession, className }: AdminControlsProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">End session</Button>
+        <Button variant="destructive" className={cn('font-display font-normal', className)}>
+          End session &amp; reveal
+        </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
@@ -35,7 +41,7 @@ export function AdminControls({ onEndSession }: AdminControlsProps) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction variant="destructive" onClick={onEndSession}>
-            End session
+            End session &amp; reveal
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

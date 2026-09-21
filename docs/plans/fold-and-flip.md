@@ -392,6 +392,27 @@ Window `live`, role chip, heading that changes once there's a Selection, the
 share bar (default of the three designed options), and **End session & reveal**
 in `danger` — full width under the grid on mobile.
 
+**Done.** Windows measure 366 / 740 / 780 with the header at 60 / 72, and a
+Fibonacci 7×7 keeps its 39 / 64 / 70 Squares inside them without scrolling. An
+11×11 Numerical grid at 390px floors at 28px and scrolls inside the window, with
+no page overflow. One End button shows per size. Copy fills `copied` and reads
+"Copied!" for 1.6s. `npm run smoke` is 105/105.
+
+Where this stage went past or against the letter above:
+
+| Choice | Why |
+| --- | --- |
+| **Header controls are portalled into `RootLayout`'s header** through a slot (`lib/headerSlot.ts`, `useHeaderSlot`) | The header carries per-screen controls — End here, "Start a new session" on the Reveal — and a page can't hand children up through `<Outlet>`. The portal keeps End the page's own element, with its own callback and dialog, while the header stays mounted across pages so the logo's 7s cycle never restarts. A plain context, not `<Outlet context>`: the pathless `errorElement` route between them renders a default `<Outlet />` that would hand the pages `undefined` |
+| `AppHeader` takes only `actionsRef` | Welcome's taller header with nav and a menu (§5, §7) is the one foreseeable variant, and it has no consumer until Stage 9. It gets its prop then |
+| End is rendered twice, header and under the grid, and CSS shows one | Each owns its own confirm dialog, so whichever the viewport draws is the one that opens |
+| Share bar stays **Admin only** | The artboard draws it regardless of role, but `PLAN.md` Phase 11 settled it as Admin-only ("a Participant has nobody to invite") and the smoke suite asserts that. Reversing it is a one-line change in `ActiveSessionView` if the design's reading is the one wanted |
+| The link sits in a readonly `Input`, not the artboard's plain text box | It stays selectable by hand where the clipboard is blocked, and keeps the `Session link` label screen readers and the smoke tests use |
+| `ShareLink` keeps its name | `estimator-plan.md` and two feature specs refer to it; the bar is a restyle, not a new component |
+| Window gains `bodyClassName`; Active's mobile body is 12px, not the artboard's 14px | Stage 3's anticipated override. Our grid adds a 4px scroll gutter the artboard doesn't have, so a 7×7 at 39px needs 335px and 14px padding leaves 332 |
+| Confirm dialog and error banner restyled with no artboard to follow | The design draws neither. The dialog is a window without its title bar over the ink 45% backdrop the mobile menu uses (§7); the banner borrows End's `danger` fill and the button edge. `AlertDialogMedia` went with the restyle, having no caller |
+| `--color-popover` and its foreground removed from the alias block | The dialog restyle was their last reference. The count is now 10 |
+| The screen heading stays an `h2` | The header's lockup is the page's `h1` on every screen. Swapping that belongs to one pass across all screens, in Stage 10 |
+
 ### Stage 6 — Reveal screen
 
 Window `revealed`, the dark notice, "who landed where" chips, the Abstained
@@ -450,7 +471,7 @@ than thirty do. A smaller bundle number there would mean more bytes on the wire.
   | File | Breaks on | Status |
   | --- | --- | --- |
   | `scenarios/routing.mjs:30,78,89` | `Product Poker` → `Fold and Flip` | **Done in Stage 2**, with the rename that broke it |
-  | `scenarios/session.mjs:44,84,99,106,107` | `End session` → `End session & reveal` | Stage 5 renames the button; repair it there |
+  | `scenarios/session.mjs:45,97,112,119,120` | `End session` → `End session & reveal` | **Done in Stage 5**, with the rename |
   | `lib.mjs`, `session.mjs`, `join.mjs`, `create.mjs` | Crowd ramp fill, popover, new grid DOM | **Done in Stage 4** |
 
   The rule the first row establishes: repair a smoke assertion in the stage that

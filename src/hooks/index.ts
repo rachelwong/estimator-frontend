@@ -1,4 +1,5 @@
 export * from './useBreakpoint'
 export * from './useDelayedVisibility'
 export * from './useEscapeKey'
+export * from './useHeaderSlot'
 export * from './useSessionConnection'
