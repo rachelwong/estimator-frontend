@@ -44,9 +44,9 @@ export function HeroSection() {
         </h1>
 
         <p className="max-w-[600px] text-[18px] leading-[1.5] text-text-muted tablet:text-[21px]">
-          A live estimation board for dev teams. Share a link, everyone picks a
-          Square on a Time × Resources grid in private, then the Reveal shows
-          where you all landed.
+          Estimate story points as a team without anchoring. Share a link, pick
+          your square on the Time × Resources grid in private, then reveal
+          together and talk through what it takes to ship.
         </p>
 
         <div className="flex w-full flex-col gap-4 pt-1.5 tablet:w-auto tablet:flex-row">

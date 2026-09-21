@@ -30,6 +30,7 @@ export function WelcomeNavigation() {
         <a
           href={REPOSITORY_URL.FRONTEND}
           className="hidden hover:text-text-subtle desktop:inline"
+          target="_blank"
         >
           GitHub
         </a>

@@ -61,7 +61,7 @@ export function WhyIMadeThisSection() {
             asChild
             className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
           >
-            <a href={REPOSITORY_URL.FRONTEND}>
+            <a href={REPOSITORY_URL.FRONTEND} target="_blank">
               <CodeIcon />
               Frontend on GitHub
             </a>
@@ -71,7 +71,7 @@ export function WhyIMadeThisSection() {
             variant="secondary"
             className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
           >
-            <a href={REPOSITORY_URL.BACKEND}>
+            <a href={REPOSITORY_URL.BACKEND} target="_blank">
               <CodeIcon />
               Backend on GitHub
             </a>

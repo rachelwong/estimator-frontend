@@ -14,5 +14,5 @@ export function CodeIcon() {
     >
       <path d="M5 3 1 8l4 5M13 3l4 5-4 5M10.5 1 7.5 15" />
     </svg>
-  )
+  );
 }
