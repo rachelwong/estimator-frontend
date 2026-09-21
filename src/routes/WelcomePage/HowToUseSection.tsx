@@ -31,9 +31,9 @@ export function HowToUseSection() {
         <p className="text-[16px]">
           {" "}
           Estimation is hard. Teams have to weigh up unknowns, dependencies and
-          effort so that product owners and businesses can make calls that
-          affect everyone. All too often the first number callout or the loudest
-          voices becomes the answer. <br />
+          effort so that product owners, team leads and businesses can make
+          calls that affect everyone. All too often the first number callout or
+          the loudest voices becomes the answer. <br />
           <strong>Fold & Flip</strong> is an ice-breaker/planning-poker tool
           that gives every team member a chance to estimate. It keeps every
           estimate hidden until the reveal, so you hear what the entire team
