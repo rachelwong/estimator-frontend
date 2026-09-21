@@ -47,7 +47,7 @@ _Avoid_: Cell, box, tile, point
 **Selection**:
 The one Square a Participant is currently holding, or none. Picking a different
 Square moves it. Picking the same Square again clears it.
-_Avoid_: Vote, choice, estimate, guess, answer
+_Avoid_: choice, guess, answer
 
 **Area**:
 Every Square from the origin up to and including a given Square — the Time ×
@@ -65,11 +65,11 @@ _Avoid_: Results, summary, outcome, tally
 **Abstained**:
 The Participants who joined but had no Selection when the Session ended. Someone
 who left early and someone who stayed and chose nothing look the same here.
-_Avoid_: Skipped, passed, no vote, idle
+_Avoid_: Skipped, passed, no estimate, idle
 
 ## Notes
 
-- **Selection, not vote.** "Vote" suggests counting and a winner. Nothing is
+- **Selection, not estimate.** "Estimate" suggests counting and a winner. Nothing is
   counted or scored here — the Reveal just shows where people landed, and the
   team talks it over.
 - **Time and Resources are labels, not units.** Neither document says whether

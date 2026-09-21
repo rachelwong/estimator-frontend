@@ -295,7 +295,7 @@ session and the Reveal shows everyone's Square."
 - Header: logo · Share control (per option below) · End session & reveal
   (Admin, `danger`). On mobile the End button moves to full width under the grid.
 - Window title "<session> · live", chip "Admin" / "Participant".
-- Heading "Make your Vote" → "Hand's down." once there's a Selection, with a
+- Heading "Make your Estimate" → "Hand's down." once there's a Selection, with a
   one-line hint.
 - The grid.
 - No Participant count, no footer hint line.
@@ -345,7 +345,7 @@ only the copy changes.
 | Error                | Heading              | Body                                                                                                                                       | Primary         | Secondary       |
 | -------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------- | --------------- |
 | Not found            | Session not found    | This link doesn't match a live session. Sessions live in memory, so a server restart or a mistyped link lands you here. Nothing was saved. | Start a session | Back to Home    |
-| Connection lost      | Connection lost      | We can't reach the session right now. When you reconnect you'll join as a new Participant, so Make your Vote again.                        | Try again       | Back to Home    |
+| Connection lost      | Connection lost      | We can't reach the session right now. When you reconnect you'll join as a new Participant, so Make your Estimate again.                    | Try again       | Back to Home    |
 | Something went wrong | Something went wrong | The session hit an error we didn't expect. Try again, or start a fresh session.                                                            | Try again       | Start a session |
 
 ### Loader
@@ -469,7 +469,7 @@ Option C, "Pixel progress bar" (canvas: Spec · Loader options).
 
 - Use: Session, Participant, Admin, Point system, Axis values, Square,
   Selection, Area, Reveal, Abstained.
-- Never: vote/voting, player, dealer, host, results, tally, cell, choice.
+- Never: estimate/voting, player, dealer, host, results, tally, cell, choice.
   Crowds are "3 people", not "3 votes".
 - Time and Resources are labels, not units — no hours or days anywhere.
 - Poker is metaphor for headlines only ("Everyone plays a hand", "Hands

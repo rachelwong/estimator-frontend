@@ -164,11 +164,13 @@ export async function routing({ browser, reporter }) {
 
   await dropped.unroute(SOCKET_IO);
   await dropped.getByRole("button", { name: "Try again" }).click();
-  const reconnected = dropped.getByRole("heading", { name: "Make your Vote" });
+  const reconnected = dropped.getByRole("heading", {
+    name: "Make your Estimate",
+  });
   await reconnected.waitFor({ timeout: 5000 }).catch(() => {});
   check("Try again reconnects the Admin", await reconnected.isVisible());
   check(
     "Active heading is the one h1",
-    (await pageHeadings(dropped)).join() === "Make your Vote",
+    (await pageHeadings(dropped)).join() === "Make your Estimate",
   );
 }

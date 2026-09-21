@@ -11,7 +11,7 @@ export function RevealNotice() {
       <div className="flex flex-col gap-1">
         <strong className="text-[15px]">Voting is closed</strong>
         <p className="text-[14px] leading-[1.45] text-on-ink-muted">
-          The Admin ended this session, so every Vote is locked in. Pick a
+          The Admin ended this session, so every Estimate is locked in. Pick a
           Square to see who landed there.
         </p>
       </div>

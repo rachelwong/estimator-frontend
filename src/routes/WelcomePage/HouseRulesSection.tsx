@@ -44,7 +44,7 @@ export function HouseRulesSection() {
         <HouseRule
           sprite={ruleChange}
           title="Change your mind"
-          description="When the session is active, you can change your Vote on the Grid. Click on the same one to clear your selection."
+          description="When the session is active, you can change your Estimate on the Grid. Click on the same one to clear your selection."
         />
         <HouseRule
           sprite={ruleAxes}

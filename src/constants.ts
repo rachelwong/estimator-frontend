@@ -547,7 +547,7 @@ export const CROWD_CHATTER_LINES = [
   "Did anyone read the ticket?",
   "The Admin has spoken.",
   "Legacy code? Add a zero.",
-  "Is 'it depends' a Vote?",
+  "Is 'it depends' an Estimate?",
 ] as const;
 
 // The least a crowd line leans, as a share of its 3deg maximum (set in

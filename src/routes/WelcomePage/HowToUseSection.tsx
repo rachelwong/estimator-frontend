@@ -72,7 +72,7 @@ export function HowToUseSection() {
         >
           Everyone selects a square on the points grid, with time on one axis
           and resources (or effort) on the other. Nobody sees anyone else's
-          vote.
+          estimate.
         </HowToUseCard>
         <HowToUseCard
           level={3}

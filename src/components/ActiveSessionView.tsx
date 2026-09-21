@@ -59,11 +59,11 @@ export function ActiveSessionView({
         >
           <div className="flex flex-col gap-1.5">
             <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
-              {hasSelection ? "Hand’s down" : "Make your Vote"}
+              {hasSelection ? "Hand’s down" : "Make your Estimate"}
             </h1>
             <p className="font-body text-[15px] leading-[1.45] text-text-muted tablet:text-[16px]">
-              Time runs across, Resources go up. Your Vote stays private until
-              the Reveal.
+              Time runs across, Resources go up. Your Estimate stays private
+              until the Reveal.
             </p>
           </div>
 
