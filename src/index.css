@@ -269,7 +269,8 @@
   left: calc(20px + var(--chatter-jitter) * max(0px, 100% - 353px));
   translate: 0 var(--crowd-chatter-travel);
   rotate: calc(var(--chatter-tilt) * 3deg);
-  box-shadow: 4px 4px 0 color-mix(in srgb, var(--color-accent) 65%, var(--color-ink));
+  box-shadow: 4px 4px 0
+    color-mix(in srgb, var(--color-accent) 65%, var(--color-ink));
   will-change: translate;
   animation: ffChatter var(--crowd-chatter-duration) ease-in-out;
 
@@ -352,6 +353,12 @@
   html {
     @apply font-body;
     scroll-behavior: smooth;
+  }
+
+  a {
+    color: var(--color-accent);
+    font-weight: bold;
+    text-decoration: underline;
   }
 
   /* §8: reduced motion switches off every animation and transition in the

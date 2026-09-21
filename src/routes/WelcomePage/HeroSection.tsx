@@ -32,7 +32,7 @@ export function HeroSection() {
         <HeroSprites />
 
         <span className="border-2 border-ink bg-white px-3 py-1.5 font-label text-[12px] tablet:text-[14px]">
-          Planning poker, minus the poker face
+          Planning poker, without the poker face
         </span>
 
         <h1 className="max-w-[1000px] font-display text-[36px] leading-none text-ink tablet:text-[58px] desktop:text-[78px]">

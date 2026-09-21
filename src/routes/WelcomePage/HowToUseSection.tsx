@@ -31,14 +31,17 @@ export function HowToUseSection() {
         <p className="text-[16px]">
           {" "}
           Estimation is hard. Teams have to weigh up unknowns, dependencies and
-          effort so product owners and businesses can make calls that affect
-          everyone, and too often the first number callout or the loudest voices
-          becomes the answer. <br />
-          <strong>Fold & Flip</strong> is planning poker tool that keeps every
+          effort so that product owners and businesses can make calls that
+          affect everyone. All too often the first number callout or the loudest
+          voices becomes the answer. <br />
+          <strong>Fold & Flip</strong> is an ice-breaker/planning-poker tool
+          that gives every team member a chance to estimate. It keeps every
           estimate hidden until the reveal, so you hear what the entire team
           actually thinks. Every story point estimate on the grid is a function
           of <strong>time</strong> and <strong>resources</strong> (or effort),
           relative to other tasks or tickets in queue.
+          <br />
+          It's a conversation starter, not a line in the sand.
         </p>
       </div>
       <ol className="grid gap-5 tablet:grid-cols-2 tablet:gap-7 desktop:grid-cols-4">
@@ -48,8 +51,6 @@ export function HowToUseSection() {
           sprite={sessionStart}
           tintClass="bg-white"
         >
-          Call out what you're estimating -- a Jira ticket, a feature, or a new
-          design. <br />
           Choose a Point system (Numerical or{" "}
           <a
             href="https://www.atlassian.com/agile/project-management/fibonacci-story-points"
