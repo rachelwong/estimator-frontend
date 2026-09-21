@@ -310,21 +310,6 @@
   --font-heading: var(--font-display);
 }
 
-/* Sprites are plain <img> elements, which are opaque to CSS — a fill inside one
-   can't be restyled from outside. Exactly one sprite in the design needs a
-   colour other than the one it was drawn in: the cream spade on the Reveal's
-   dark notice (§7), where the ink spade would be invisible on ink.
-
-   So that one becomes a mask instead of an image: the SVG's alpha supplies the
-   shape and `background-color` paints it, which means the colour is a real
-   palette token rather than a filter chain's approximation of one. This only
-   works for a single-colour mark — masking a character flattens its skin tone
-   and outfit into one silhouette, which is why nothing else uses it. */
-@utility sprite-mask {
-  mask: var(--sprite-source) center / contain no-repeat;
-  -webkit-mask: var(--sprite-source) center / contain no-repeat;
-}
-
 /* Sprites are drawn at 8px per art pixel. The SVGs carry crispEdges, but a
    browser scaling the rasterised result still smooths it, so the pixel grid is
    pinned here too. */

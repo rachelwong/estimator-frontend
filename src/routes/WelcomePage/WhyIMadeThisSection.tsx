@@ -31,18 +31,34 @@ export function WhyIMadeThisSection() {
 
       <div className="grid gap-7 tablet:grid-cols-2 tablet:gap-0 desktop:grid-cols-3">
         <MakerNote
-          label="the problem"
-          text="[Placeholder: what kept going wrong in estimation meetings. For example, one loud number setting the tone for the whole team.]"
+          label="the experience"
+          text="This side project was inspired by the agile ceremonies, ideation workshops and stand-ups I've been part of at work. Estimation is hard, yet many decisions that shape a product team hinge on it.
+<br/><br/>
+In my experience, a few things make estimates less reliable:<br/>
+<ul className='list-disc my-2 pl-4'>
+<li>tasks scoped too large or too ambitiously</li>
+<li>scope creep</li>
+<li>the first number called out becomes the answer</li>
+<li>the same voices every sprint planning</li>
+<li>not all stakeholders are in the room</li>
+<li>not everyone feels able to contribute or ask questions</li>
+</ul>
+"
           className="tablet:border-r-2 tablet:border-ink tablet:pr-7 tablet:pb-7 desktop:pr-9 desktop:pb-0"
         />
         <MakerNote
           label="the idea"
-          text="[Placeholder: what you wanted to try instead. Two axes, private picks, and a Reveal the team can point at.]"
+          text="There's plenty of formal literature on agile, estimation and Scrum. I deliberately avoided reading those or referring to existing estimation tools, because I wanted to build something that addressed what I'd personally observed in previous roles.
+<br/><br/>
+I wanted a tool that invites every team member to contribute visibly and meaningfully, makes room for discussion when it's needed, and brings the team into alignment. A story point is a good-faith rough estimate, not a binding guarantee."
           className="tablet:pb-7 tablet:pl-7 desktop:border-r-2 desktop:border-ink desktop:px-9 desktop:pb-0"
         />
         <MakerNote
           label="the build"
-          text="[Placeholder: what you were learning or showing off along the way, like real-time sockets or a Node backend.]"
+          text="
+          I used this project to learn two things I'd shelved for 'later': back-end development and Claude Code. I've documented my process in detail in each repo's README. In a nutshell, I seeded the project with a <a className='link' href='https://miro.com/app/board/uXjVH-RcLGw=/?share_link_id=902798596342'>Miro board of storyboards</a> and a <a className='link' href='https://app.notion.com/p/rachelwong/Estimator-3bb375d34b3480548d26edd98dcc8a11?source=copy_link'>Notion doc</a>. I've used interview-style prompts and <a href='https://github.com/mattpocock/skills' className='link'>Matt Pocock's grilling skills</a>. Each stage is effectively a pull request: I review it, make manual changes, grill it, and commit manually. <br /><br/>
+I haven't yet figured out the best way to use AI; still to come.
+          "
           className="tablet:col-span-2 tablet:border-t-2 tablet:border-ink tablet:pt-7 desktop:col-span-1 desktop:border-t-0 desktop:pt-0 desktop:pl-9"
         />
       </div>

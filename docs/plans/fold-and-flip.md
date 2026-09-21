@@ -249,12 +249,9 @@ and arrive with it.
   generated files and a generator script for one cream spade was machinery the
   feature did not earn.
 
-  That one case is a CSS mask instead — the SVG's alpha supplies the shape and
-  `background-color` paints it, so the colour is a real palette token rather
-  than a filter chain's approximation, which keeps Stage 1's one-token-system
-  decision intact. `<SpriteMask>` carries it. The technique only works on a
-  single-colour mark: masking a character flattens its skin tone and outfit into
-  one silhouette, which is why nothing else uses it.
+  That one case is its own SVG instead: `spade.svg` is the logo mark's spade
+  (Option B) drawn in white, rendered through the plain `<Sprite>`. An earlier
+  CSS-mask version (`<SpriteMask>`) was removed along with its one consumer.
 
   Cost of the change: an `<img>` is opaque to CSS, so any _future_ sprite
   needing selective fill replacement has to be redrawn as a second SVG or move

@@ -1,26 +1,26 @@
-import { cn } from '@/lib/utils'
-import { PlaceholderCopy } from './PlaceholderCopy'
+import { cn } from "@/lib/utils";
+import parse from "html-react-parser";
 
 interface MakerNoteProps {
   /** The Silkscreen label over the accent rule: "the problem", "the idea", "the build". */
-  label: string
-  text: string
+  label: string;
+  text: string;
   /** Where this column sits in the spread — its padding and ink rules. */
-  className?: string
+  className?: string;
 }
 
 // One column of the Why I made this spread (§7 item 6): a Silkscreen label on an
 // accent rule, and a paragraph under it.
 export function MakerNote({ label, text, className }: MakerNoteProps) {
   return (
-    <div className={cn('flex flex-col gap-3.5', className)}>
+    <div className={cn("flex flex-col gap-3.5", className)}>
       <div className="border-b-[3px] border-accent pb-2.5">
         <span className="font-label text-[13px]">{label}</span>
       </div>
 
-      <p className="text-[16px] leading-[1.6] text-text-muted tablet:text-[18px]">
-        <PlaceholderCopy>{text}</PlaceholderCopy>
-      </p>
+      <div className="text-[12px] leading-[1.6] text-text-muted tablet:text-[18px]">
+        {parse(text)}
+      </div>
     </div>
-  )
+  );
 }
