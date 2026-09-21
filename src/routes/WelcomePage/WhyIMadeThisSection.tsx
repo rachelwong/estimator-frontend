@@ -1,15 +1,15 @@
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   REPOSITORY_URL,
   WELCOME_ANCHOR_CLASS,
   WELCOME_GUTTER_CLASS,
   WELCOME_SECTION_HEADING_CLASS,
   WelcomeSection,
-} from '@/constants'
-import { cn } from '@/lib/utils'
-import { CodeIcon } from './CodeIcon'
-import { MakerNote } from './MakerNote'
-import { PlaceholderCopy } from './PlaceholderCopy'
+} from "@/constants";
+import { cn } from "@/lib/utils";
+import { CodeIcon } from "./CodeIcon";
+import { MakerNote } from "./MakerNote";
+import { PlaceholderCopy } from "./PlaceholderCopy";
 
 // Why I made this (§7 item 6), a zine spread: the heading on an ink rule, three
 // notes split by ink rules, then a "read the source" bar with the sign-off and
@@ -21,14 +21,13 @@ export function WhyIMadeThisSection() {
     <section
       id={WelcomeSection.WHY_I_MADE_THIS}
       className={cn(
-        'flex flex-col gap-7 pt-20 tablet:gap-8 tablet:pt-[110px] desktop:gap-9',
+        "flex flex-col gap-7 pt-20 tablet:gap-8 tablet:pt-[110px] desktop:gap-9",
         WELCOME_GUTTER_CLASS,
         WELCOME_ANCHOR_CLASS,
       )}
     >
       <div className="flex flex-col gap-2.5 border-b-[3px] border-ink pb-3.5 tablet:flex-row tablet:flex-wrap tablet:items-end tablet:justify-between tablet:gap-x-6 tablet:gap-y-3 tablet:pb-4 desktop:pb-[18px]">
         <h2 className={WELCOME_SECTION_HEADING_CLASS}>Why I made this</h2>
-        <span className="font-label text-[12px] tablet:pb-1.5">notes from the maker</span>
       </div>
 
       <div className="grid gap-7 tablet:grid-cols-2 tablet:gap-0 desktop:grid-cols-3">
@@ -58,13 +57,20 @@ export function WhyIMadeThisSection() {
         </div>
 
         <div className="grid gap-3.5 tablet:grid-cols-2 tablet:gap-4 desktop:flex">
-          <Button asChild className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]">
+          <Button
+            asChild
+            className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
+          >
             <a href={REPOSITORY_URL.FRONTEND}>
               <CodeIcon />
               Frontend on GitHub
             </a>
           </Button>
-          <Button asChild variant="secondary" className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]">
+          <Button
+            asChild
+            variant="secondary"
+            className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
+          >
             <a href={REPOSITORY_URL.BACKEND}>
               <CodeIcon />
               Backend on GitHub
@@ -73,5 +79,5 @@ export function WhyIMadeThisSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
