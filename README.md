@@ -1,6 +1,6 @@
 # Jira Poker frontend
 
-[https://fold-and-flip.vercel.app/](https://fold-and-flip.vercel.app/)
+Final product - [https://fold-and-flip.vercel.app/](https://fold-and-flip.vercel.app/)
 
 Prototype version - [https://estimator-frontend-ashen.vercel.app](https://estimator-frontend-ashen.vercel.app)
 
@@ -17,6 +17,8 @@ VITE_API_BASE_URL=http://localhost:3001
 VITE_SOCKET_URL=http://localhost:3001
 ```
 
+There are two branches to this project. `master` for the working prototype. `release/design` with an additional `/welcome` screen and updated design system.
+
 For running a local instance on your machine:
 
 ```
@@ -26,6 +28,15 @@ npm run dev // runs on localhost:5173
 ```
 
 You will also need to run the [backend component](https://github.com/rachelwong/estimator-backend) as well.
+
+To try it out locally by yourself:
+
+1. Open a new tab on your browser of choice
+2. Go to [http://localhost:5173](http://localhost:5173)
+3. Create a new session
+4. Copy the session link
+5. Join the session (paste the link) in any number of incognito browser instances.
+6. End the session and see the reveal!
 
 ## Description
 
