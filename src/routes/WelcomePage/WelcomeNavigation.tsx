@@ -6,8 +6,8 @@ import { MenuIcon } from "./MenuIcon";
 import { MobileMenu } from "./MobileMenu";
 import { StartSessionButton } from "./StartSessionButton";
 
-// Welcome's side of the header (§7 item 1). Desktop links to How to play, the
-// repo and the Create form; tablet keeps How to play and the button; a
+// Welcome's side of the header (§7 item 1). Desktop links to How to use, the
+// repo and the Create form; tablet keeps How to use and the button; a
 // phone swaps them all for a Menu button that opens the menu window.
 export function WelcomeNavigation() {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -22,10 +22,10 @@ export function WelcomeNavigation() {
         className="hidden items-center gap-7 text-[16px] font-bold tablet:flex"
       >
         <a
-          href={`#${WelcomeSection.HOW_TO_PLAY}`}
+          href={`#${WelcomeSection.HOW_TO_USE}`}
           className="hover:text-text-subtle"
         >
-          How to play
+          How to use
         </a>
         <a
           href={REPOSITORY_URL.FRONTEND}

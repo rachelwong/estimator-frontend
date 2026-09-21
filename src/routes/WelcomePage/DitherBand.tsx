@@ -3,7 +3,7 @@ import { DITHER_BAYER_MATRIX, DITHER_BLOCK_THRESHOLDS, DITHER_PIXEL_PX } from '@
 import { ditherPath } from '@/utils'
 
 // Where the lavender top breaks into 8px pixels over the cream (§7 item 4),
-// just before How to play. One tile of the ordered dither, repeated across the
+// just before How to use. One tile of the ordered dither, repeated across the
 // band's width by an SVG pattern — so the pixels stay square at any width and
 // nothing has to measure the page.
 export function DitherBand() {

@@ -7,7 +7,7 @@ interface PageLayoutProps {
   /** The screen's own controls, on the right of the header. */
   actions?: ReactNode
   children: ReactNode
-  /** Under the page's content. Only Welcome has one (§7 item 9). */
+  /** Under the page's content. Every screen outside a session has one (§7 item 9). */
   footer?: ReactNode
 }
 

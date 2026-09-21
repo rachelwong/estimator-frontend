@@ -163,6 +163,13 @@ export function EstimationGrid({
       return
     }
 
+    // Revealed, a Square nobody landed on has nothing to say: no lift, no
+    // tooltip. Cleared rather than skipped, or the last Square stays lifted.
+    if (!isInteractive && namesAt(square).length === 0) {
+      onHoveredChange(null)
+      return
+    }
+
     onHoveredChange({ square, source: HoverSource.POINTER })
   }
 
@@ -261,6 +268,7 @@ export function EstimationGrid({
                         expanded={!isInteractive && names.length > 0 ? isPinned : undefined}
                         revealDelay={isInteractive ? undefined : revealDelay(axisValues, square)}
                         isWavePaused={!isWaveStarted}
+                        hasPointerCursor={isInteractive || names.length > 0}
                         tabIndex={isSameSquare(tabStop, square) ? 0 : -1}
                         onClick={() => handleClick(square)}
                         onPointerEnter={(event) => handlePointerEnter(event, square)}

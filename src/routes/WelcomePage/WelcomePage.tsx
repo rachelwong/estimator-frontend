@@ -1,10 +1,10 @@
 import { PageLayout } from "@/components/PageLayout";
+import { SiteFooter } from "@/components/SiteFooter";
 import { CallToActionBand } from "./CallToActionBand";
 import { DitherBand } from "./DitherBand";
 import { HeroSection } from "./HeroSection";
 import { HouseRulesSection } from "./HouseRulesSection";
-import { HowToPlaySection } from "./HowToPlaySection";
-import { WelcomeFooter } from "./WelcomeFooter";
+import { HowToUseSection } from "./HowToUseSection";
 import { WelcomeNavigation } from "./WelcomeNavigation";
 import { WhyIMadeThisSection } from "./WhyIMadeThisSection";
 
@@ -19,10 +19,10 @@ import { WhyIMadeThisSection } from "./WhyIMadeThisSection";
 // sprites would otherwise ride in the entry chunk for every Join and Reveal.
 export default function WelcomePage() {
   return (
-    <PageLayout actions={<WelcomeNavigation />} footer={<WelcomeFooter />}>
+    <PageLayout actions={<WelcomeNavigation />} footer={<SiteFooter />}>
       <HeroSection />
       <DitherBand />
-      <HowToPlaySection />
+      <HowToUseSection />
       <WhyIMadeThisSection />
       <HouseRulesSection />
       <CallToActionBand />

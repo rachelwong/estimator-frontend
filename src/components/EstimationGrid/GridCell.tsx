@@ -22,6 +22,8 @@ interface GridCellProps {
   revealDelay?: number
   // Reveal only: the wave is waiting to start, so the Square holds blank.
   isWavePaused?: boolean
+  // Off on a revealed Square nobody landed on: hovering it does nothing.
+  hasPointerCursor: boolean
   // Roving: 0 on the one Square Tab lands on, −1 on the rest.
   tabIndex: number
   onClick: () => void
@@ -49,6 +51,7 @@ export function GridCell({
   expanded,
   revealDelay,
   isWavePaused = false,
+  hasPointerCursor,
   tabIndex,
   onClick,
   onPointerEnter,
@@ -65,7 +68,8 @@ export function GridCell({
       aria-pressed={pressed}
       aria-expanded={expanded}
       className={cn(
-        'relative flex cursor-pointer flex-col items-center justify-center overflow-hidden border-2 border-ink p-0.5 text-center font-label leading-tight outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
+        'relative flex flex-col items-center justify-center overflow-hidden border-2 border-ink p-0.5 text-center font-label leading-tight outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
+        hasPointerCursor ? 'cursor-pointer' : 'cursor-default',
         fillClass,
         SQUARE_LABEL_SIZE_CLASS[labelSize],
         SQUARE_HIGHLIGHT_CLASS[highlight],

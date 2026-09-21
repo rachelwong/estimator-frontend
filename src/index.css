@@ -29,7 +29,7 @@
        the palette already carries. */
   --color-chrome-green: #4cc38a;
 
-  /* The one How to play card tint the palette doesn't already carry (§2).
+  /* The one How to use card tint the palette doesn't already carry (§2).
        The other three are white, `copied` and `crowd-0`. */
   --color-butter: #ffe8a8;
 
@@ -276,7 +276,7 @@
   body {
     @apply bg-background text-foreground;
   }
-  /* Welcome's in-page links (How to play, Why I made this) slide
+  /* Welcome's in-page links (How to use, Why I made this) slide
      to their section rather than jumping. Reduced motion puts it back to a jump. */
   html {
     @apply font-body;

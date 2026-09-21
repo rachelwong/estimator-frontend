@@ -1,4 +1,5 @@
 import { ErrorScreen } from "@/components/ErrorScreen";
+import { SiteFooter } from "@/components/SiteFooter";
 import { TryAgainButton } from "@/components/TryAgainButton";
 import { Button } from "@/components/ui/button";
 import { ERROR_SCREEN_COPY, RoutePath } from "@/constants";
@@ -24,6 +25,7 @@ export function AppError() {
           ? ERROR_SCREEN_COPY.CONNECTION_LOST
           : ERROR_SCREEN_COPY.SOMETHING_WENT_WRONG
       }
+      footer={<SiteFooter />}
       actions={
         <>
           <TryAgainButton />

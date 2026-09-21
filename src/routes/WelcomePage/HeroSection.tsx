@@ -57,7 +57,7 @@ export function HeroSection() {
             variant="secondary"
             className="h-[52px] font-display text-[14px] font-normal"
           >
-            <a href={`#${WelcomeSection.HOW_TO_PLAY}`}>How to play</a>
+            <a href={`#${WelcomeSection.HOW_TO_USE}`}>How to use</a>
           </Button>
         </div>
       </section>

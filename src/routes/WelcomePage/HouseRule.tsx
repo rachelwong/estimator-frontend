@@ -9,7 +9,7 @@ interface HouseRuleProps {
 
 // One house rule: a sprite beside a bold line and a sentence. A Card's edge
 // without its shadow or its hover, as the artboard draws it — flatter than the
-// How to play cards above, so the six read as a list rather than six more steps.
+// How to use cards above, so the six read as a list rather than six more steps.
 export function HouseRule({ sprite, title, description }: HouseRuleProps) {
   return (
     <li className="flex w-full items-start gap-[18px] border-[3px] border-ink bg-white p-[22px]">

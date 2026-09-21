@@ -67,7 +67,7 @@ interface DevCard {
   tintClass: string
 }
 
-// A Card wears a tint on the Welcome page (§2) — the four How to play fills.
+// A Card wears a tint on the Welcome page (§2) — the four How to use fills.
 // The point here is that the 3px edge and 6px shadow hold over any fill.
 export const DEV_CARDS: DevCard[] = [
   { title: 'LV.1', body: 'White — the default fill.', tintClass: 'bg-white' },

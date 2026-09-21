@@ -10,6 +10,8 @@ interface ErrorScreenProps {
   copy: ErrorScreenCopy
   /** Two buttons, the primary first: `selection`, then the white secondary. */
   actions: ReactNode
+  /** The site footer, for the screens outside a session. Connection lost is inside one, so goes without. */
+  footer?: ReactNode
 }
 
 // "Broken grid" (DESIGN.md §7, option C) — the one layout behind not found,
@@ -19,9 +21,9 @@ interface ErrorScreenProps {
 //
 // The header carries the logo only. Side by side from tablet up, stacked on a
 // phone, where the buttons also go full width.
-export function ErrorScreen({ copy, actions }: ErrorScreenProps) {
+export function ErrorScreen({ copy, actions, footer }: ErrorScreenProps) {
   return (
-    <PageLayout>
+    <PageLayout footer={footer}>
       <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
         <SpriteScatter />
 

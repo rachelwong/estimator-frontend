@@ -15,7 +15,7 @@ export const DEV_SURFACES = [
   { token: 'cream', bgClass: 'bg-cream', fgClass: 'text-ink', use: 'Page background' },
   { token: 'white', bgClass: 'bg-white', fgClass: 'text-ink', use: 'Windows, cards, inputs, secondary buttons' },
   { token: 'accent', bgClass: 'bg-accent', fgClass: 'text-white', use: 'Window title bars, CTA band, active axis label' },
-  { token: 'page-top', bgClass: 'bg-page-top', fgClass: 'text-ink', use: 'Top of Welcome, share bar, repo cards' },
+  { token: 'page-top', bgClass: 'bg-page-top', fgClass: 'text-ink', use: 'Top of Welcome, share bar' },
   { token: 'selection', bgClass: 'bg-selection', fgClass: 'text-ink', use: 'Your own Selection, primary buttons' },
   { token: 'danger', bgClass: 'bg-danger', fgClass: 'text-ink', use: 'End session & reveal' },
   { token: 'copied', bgClass: 'bg-copied', fgClass: 'text-ink', use: '"Copied!" state, live status chip' },

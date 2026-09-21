@@ -444,7 +444,7 @@ export const PIXEL_BAR_CLASS = {
 // The Welcome page's in-page anchors (§7): the header nav and the mobile menu
 // link to them, and the sections carry them as ids.
 export const WelcomeSection = {
-  HOW_TO_PLAY: "how-to-play",
+  HOW_TO_USE: "how-to-use",
   WHY_I_MADE_THIS: "why-i-made-this",
 } as const;
 
@@ -456,7 +456,7 @@ export const WELCOME_ANCHOR_CLASS =
 // The page's side padding (§5: 20 / 40 / 80), shared by every Welcome section.
 export const WELCOME_GUTTER_CLASS = "px-5 tablet:px-10 desktop:px-20";
 
-// Where the two repos live. The Welcome page's repo cards, header and menu
+// Where the two repos live. Why I made this, the Welcome header and menu
 // link to them (§7 item 6); the handle is the one the frontend's own remote
 // points at.
 export const REPOSITORY_URL = {

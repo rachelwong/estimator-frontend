@@ -48,7 +48,7 @@ All corners are square. Text on every fill below meets WCAG AA for its size.
 | `text-muted`   | `#3E3852` | Body copy on cream/white                                                           |
 | `text-subtle`  | `#5B5570` | Secondary labels, Abstained chip border                                            |
 | `accent`       | `#6A4FF0` | Window title bars, "Nobody peeks.", active axis label, CTA band (white text on it) |
-| `page-top`     | `#DCD3FB` | Top of the Welcome page, share bar, repo cards                                     |
+| `page-top`     | `#DCD3FB` | Top of the Welcome page, share bar                                                 |
 | `selection`    | `#FFC53D` | The Participant's own Selection, primary buttons (ink text)                        |
 | `danger`       | `#FF5A5F` | End session & reveal (ink text)                                                    |
 | `copied`       | `#D7F2E4` | "Copied!" state, live status chip                                                  |
@@ -71,7 +71,7 @@ the two axes are never collapsed into one colour (Product principle 3).
 ### Decorative
 
 - Window chrome dots: `#FFC53D`, `#4CC38A`, `#FF5A5F`.
-- "How to play" card tints: `#FFFFFF`, `#FFE8A8`, `#D7F2E4`, `#F2EDFF`.
+- "How to use" card tints: `#FFFFFF`, `#FFE8A8`, `#D7F2E4`, `#F2EDFF`.
 
 ---
 
@@ -116,7 +116,7 @@ All three are free on Google Fonts.
 | Thing                                       | Border                                        | Shadow                         |
 | ------------------------------------------- | --------------------------------------------- | ------------------------------ |
 | Window (Active, Reveal, Create, Join, hero) | 3px ink                                       | `8px 8px 0 ink`                |
-| Card (How to play, House rules, repo cards) | 3px ink                                       | `6px 6px 0 ink`                |
+| Card (How to use, House rules, source bar) | 3px ink                                       | `6px 6px 0 ink`                |
 | Button / input / icon button                | 3px ink                                       | `4px 4px 0 ink` (inputs: none) |
 | Square                                      | 2px ink                                       | none; hover: see §6            |
 | Chip                                        | 2px ink (Abstained: 2px dashed `text-subtle`) | none                           |
@@ -233,20 +233,26 @@ Participants follow with a dashed chip and "Abstained" in `abstained` red.
 
 ### Welcome (`/welcome`)
 
-1. Header — logo, "How to play", GitHub,
+1. Header — logo, "How to use", GitHub,
    "Start a session" (mobile: logo + Menu button).
 2. Hero on `page-top` — Silkscreen badge "Planning poker, minus the poker
    face", Bungee hero "Everyone plays a hand. / Nobody peeks." (second line in
-   `accent`), paragraph, Start a session + How to play.
+   `accent`), paragraph, Start a session + How to use.
 3. Hero demo — the real Reveal window (notice, heading, grid with a lifted
    Square and open popover, "who landed where" chips), 780px max.
 4. Pixel-dither band — `page-top` breaks into 8px pixels over 12 rows (Bayer
-   4×4 ordered dither) into cream, just before How to play.
-5. How to play — four cards LV.1–LV.4: Start a session / Pull up a chair /
+   4×4 ordered dither) into cream, just before How to use.
+5. How to use — four cards LV.1–LV.4: Start a session / Pull up a chair /
    Hands down / The Reveal. 4 → 2 → 1 columns.
-6. Why I made this — placeholder note + two `page-top` repo cards
-   (estimator-frontend, estimator-backend) each with "View on GitHub". Note left
-   / cards right on desktop; cards side by side on tablet; stacked on mobile.
+6. Why I made this — a zine spread. Heading on a 3px ink rule with the
+   Silkscreen caption "notes from the maker" opposite. Three placeholder notes
+   (the problem / the idea / the build), each a Silkscreen label on a 3px
+   `accent` rule over a paragraph, split by 2px ink rules: 3 columns on desktop;
+   problem and idea side by side with the build across the bottom on tablet;
+   stacked on mobile. Below, a white "read the source" bar (Card border and
+   shadow) with the sign-off and "Frontend on GitHub" (yellow) + "Backend on
+   GitHub" (white): one row on desktop; buttons side by side under the text on
+   tablet; stacked on mobile.
 7. House rules — six feature cards. 3 → 2 → 1 columns.
 8. CTA band in `accent` — "Round up the team." + Start a session, with pixel
    characters.
@@ -255,7 +261,7 @@ Participants follow with a dashed chip and "Abstained" in `abstained` red.
 **Mobile menu:** the Menu button (3-bar icon) becomes a yellow "Close" button.
 An ink 45% backdrop covers the page below the header; a window titled "menu"
 drops in 12px from the edges with 60px rows (sprite + label + →) separated by
-2px dashed ink: How to play · Why I made this ·
+2px dashed ink: How to use · Why I made this ·
 Frontend on GitHub · Backend on GitHub, then a full-width Start a session.
 Tapping the backdrop closes it.
 

@@ -36,9 +36,9 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
         <Window title="menu" bodyClassName="gap-0 px-4 pt-1.5 pb-[18px]">
           <ul>
             <MenuRow
-              href={`#${WelcomeSection.HOW_TO_PLAY}`}
+              href={`#${WelcomeSection.HOW_TO_USE}`}
               sprite={cardBack}
-              label="How to play"
+              label="How to use"
               onClick={onClose}
             />
             <MenuRow

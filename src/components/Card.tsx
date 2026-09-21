@@ -8,7 +8,7 @@ interface CardProps {
 
 // The smaller of the two framed surfaces: 3px ink edge, 6px offset shadow,
 // square corners (DESIGN.md §4). A Window frames a whole screen; a Card is one
-// item in a row of them — How to play, the repo cards.
+// item in a row of them — How to use, House rules.
 //
 // The fill is white here and overridden per card where the design tints them.
 export function Card({ children, className }: CardProps) {
