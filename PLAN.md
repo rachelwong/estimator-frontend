@@ -42,11 +42,12 @@ out-of-scope task-description feature.
 ### Reversed by the Fold and Flip design
 
 The visual redesign in [`DESIGN.md`](./DESIGN.md), sequenced in
-[`docs/plans/fold-and-flip.md`](./docs/plans/fold-and-flip.md), reverses two of
+[`docs/plans/fold-and-flip.md`](./docs/plans/fold-and-flip.md), reverses three of
 `estimator-plan.md`'s resolved decisions outright:
 
 | # | It says | The design does | Where |
 | --- | --- | --- | --- |
+| 3 | The Fibonacci slider places each value by its magnitude and snaps to the nearest | Values sit evenly along the track, one notch apart, with a Silkscreen tick under each. The values the slider offers are unchanged | `DESIGN.md` §7, Create artboards |
 | 16 | Mobile/responsive out of scope, desktop-only, no breakpoints | Three breakpoints; every screen drawn at 390 / 834 / 1440 | `DESIGN.md` §5 |
 | 18 | Grid is click/tap only — no `tabIndex`, arrow keys or ARIA roles | Roving `tabIndex`, arrow keys, Enter/Space, an `aria-label` per Square | `DESIGN.md` §6 |
 
@@ -102,6 +103,7 @@ linked. No component anywhere maps a status to a screen.
 | `/welcome` | `WelcomePage` | — |
 | `/new` | `CreateSessionPage` | — |
 | `/:sessionId` | — | Always redirects to `/join` |
+| `/:sessionId/ready` | `ReadySessionPage` | Unknown → `/not-found`, ended → `/ended`, no admin token → `/start` or `/join` |
 | `/:sessionId/join` | `JoinSessionPage` | Unknown → `/not-found`, ended → `/ended`, already connected → `/start` |
 | `/:sessionId/start` | `ActiveSessionPage` | Unknown → `/not-found`, ended → `/ended`, no identity → `/join` |
 | `/:sessionId/ended` | `EndedPage` | Unknown → `/not-found`, still open → `/start` or `/join` |
@@ -659,6 +661,10 @@ The creating Admin already has an identity, so no detour through `/join`.
 
 **Done when**: a real Session is created, the token is in `localStorage`, and
 the URL changes. `/start` can still 404.
+
+> Since Fold and Flip Stage 7 the picker is two segmented buttons, the slider
+> spaces its values evenly, submit reads "Create session", and success lands
+> on a ready screen at `/:sessionId/ready` that links on to `/start`.
 
 ---
 

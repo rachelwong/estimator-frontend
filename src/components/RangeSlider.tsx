@@ -1,8 +1,8 @@
-import type { KeyboardEvent } from 'react'
-import { Slider } from '@/components/ui/slider'
-import { SLIDER_STEP_DIRECTION } from '@/constants'
+import { useId } from 'react'
+import type { CSSProperties } from 'react'
+import { cn } from '@/lib/utils'
 import type { PointSystemType } from '@/types'
-import { nearestValue, pointSystemValues, stepValue } from '@/utils'
+import { pointSystemValues, sliderTickIndexes } from '@/utils'
 
 interface RangeSliderProps {
   pointSystemType: PointSystemType
@@ -10,57 +10,70 @@ interface RangeSliderProps {
   onChange: (value: number) => void
 }
 
-// The thumb rests only on values the grid can actually use, placed by their
-// magnitude — so Fibonacci's gaps widen the way the sequence does:
+// The pixel slider (DESIGN.md §7): a 10px track filled `accent` up to the
+// thumb, a 28px square white thumb, and Silkscreen ticks beneath.
 //
-//   0 1 2 3  5   8      13         21              34                        55
-//   ●┼┼┼─┼───┼──────┼──────────┼──────────────┼──────────────────────────────┼
+// The track steps by index, not by magnitude, so every value sits the same
+// distance from the next — Fibonacci's 34 and 55 are one notch apart, the same
+// as 0 and 1. That is what lets a tick sit under each value, and it means an
+// arrow key, a Page key or a drag can only ever land on a value the grid uses.
 //
-// Numerical runs through the same path; every integer up to its maximum is a
-// value, so nothing is snapped away.
+// A native range input, so the browser supplies the keyboard, pointer and
+// accessibility behaviour. Its own value is the index; `aria-valuetext` tells a
+// screen reader the axis value instead, and a hidden input submits it.
 //
-// Which values those are depends on the point system, so the two controls are
+// Which values exist depends on the point system, so the two controls are
 // co-dependent. Resetting the value on a switch is the caller's job — this
 // component only renders what it is given.
 export function RangeSlider({ pointSystemType, value, onChange }: RangeSliderProps) {
+  const id = useId()
   const values = pointSystemValues(pointSystemType)
-  const max = values[values.length - 1]
+  const lastIndex = values.length - 1
+  const index = values.indexOf(value)
 
-  // Captured, so these keys never reach the Slider: its own step would land
-  // between values, and snapping back would leave the thumb stuck. Home and End
-  // still go through — both ends of the track are values.
-  function handleKeyDown(event: KeyboardEvent) {
-    const direction = SLIDER_STEP_DIRECTION[event.key as keyof typeof SLIDER_STEP_DIRECTION]
-
-    if (direction === undefined) {
-      return
-    }
-
-    event.preventDefault()
-    event.stopPropagation()
-    onChange(stepValue(values, value, direction))
-  }
+  // The thumb's centre, as a share of the track. Ticks use it for their place,
+  // the track for how far its fill runs.
+  const position = (at: number) => (at / lastIndex) * 100
 
   return (
-    <div className="grid gap-2">
+    <div className="flex flex-col gap-2.5">
       <div className="flex items-baseline justify-between">
-        <span className="text-sm">What is the maximum point value?</span>
-        <span className="text-sm font-medium tabular-nums">{value}</span>
+        <label htmlFor={id} className="text-[15px] font-extrabold">
+          Highest axis value
+        </label>
+        <span className="font-display text-[23px] text-accent tabular-nums">{value}</span>
       </div>
 
-      <Slider
-        name="sliderMax"
-        min={0}
-        max={max}
-        step={1}
-        value={[value]}
-        onValueChange={([next]) => onChange(nearestValue(values, next))}
-        onKeyDownCapture={handleKeyDown}
-      />
+      <div className="flex h-11 items-center">
+        <input
+          id={id}
+          type="range"
+          min={0}
+          max={lastIndex}
+          step={1}
+          value={index}
+          aria-valuetext={String(value)}
+          onChange={(event) => onChange(values[Number(event.target.value)])}
+          className="pixel-slider"
+          style={{ '--slider-fill': `${position(index)}%` } as CSSProperties}
+        />
+        <input type="hidden" name="sliderMax" value={value} />
+      </div>
 
-      <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
-        <span>0</span>
-        <span>{max}</span>
+      {/* Inset by half the thumb, which is how far its centre can travel. */}
+      <div aria-hidden="true" className="relative mx-3.5 h-3.5 font-label text-[11px]">
+        {sliderTickIndexes(pointSystemType, values.length).map((tick) => (
+          <span
+            key={tick}
+            className={cn(
+              'absolute top-0 -translate-x-1/2',
+              tick === index ? 'text-accent' : 'text-ink',
+            )}
+            style={{ left: `${position(tick)}%` }}
+          >
+            {values[tick]}
+          </span>
+        ))}
       </div>
     </div>
   )

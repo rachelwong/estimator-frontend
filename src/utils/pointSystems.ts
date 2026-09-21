@@ -1,5 +1,11 @@
-import { FIBONACCI_SEQUENCE, NUMERICAL_MAX, PointSystemType } from '@/constants'
-import type { PointSystemType as PointSystemTypeValue } from '@/types'
+import {
+  FIBONACCI_SEQUENCE,
+  NUMERICAL_MAX,
+  POINT_SYSTEM_LABEL,
+  PointSystemType,
+  SLIDER_TICK_EVERY,
+} from '@/constants'
+import type { PointSystem, PointSystemType as PointSystemTypeValue } from '@/types'
 
 // The maxima the slider may rest on. Ascending, and the same list the server
 // builds the axes from — mirrors computeAxisValues in
@@ -12,23 +18,19 @@ export function pointSystemValues(type: PointSystemTypeValue): readonly number[]
   return Array.from({ length: NUMERICAL_MAX + 1 }, (_, index) => index)
 }
 
-// Where a slider position lands. Nearest and nothing else, so it is monotonic:
-// a pointer moving right can never send the thumb back, which anything
-// direction-aware would do around every midpoint.
-export function nearestValue(values: readonly number[], target: number): number {
-  return values.reduce((best, value) => {
-    return Math.abs(value - target) < Math.abs(best - target) ? value : best
-  })
+// The slider positions that carry a tick label, as indexes into `values`.
+// Always includes both ends.
+export function sliderTickIndexes(type: PointSystemTypeValue, count: number): number[] {
+  const every = SLIDER_TICK_EVERY[type]
+
+  return Array.from({ length: count }, (_, index) => index).filter(
+    (index) => index % every === 0 || index === count - 1,
+  )
 }
 
-// One value along, clamped at the ends. What an arrow key moves by — the gaps
-// are too wide for the slider's own step of 1 to cross.
-export function stepValue(
-  values: readonly number[],
-  current: number,
-  direction: number,
-): number {
-  const next = values.indexOf(current) + direction
+// The ready screen's one-line recap (§7): "Fibonacci · highest value 13 · 7 × 7 Squares".
+export function pointSystemSummary({ type, sliderMax, axisValues }: PointSystem): string {
+  const size = axisValues.length
 
-  return values[Math.min(Math.max(next, 0), values.length - 1)]
+  return `${POINT_SYSTEM_LABEL[type]} · highest value ${sliderMax} · ${size} × ${size} Squares`
 }

@@ -13,6 +13,7 @@ import {
   endedLoader,
   joinAction,
   joinLoader,
+  readyLoader,
   startLoader,
 } from '@/routes/loaders'
 import { NotFoundPage } from '@/routes/NotFoundPage'
@@ -25,13 +26,14 @@ import { WelcomePage } from '@/routes/WelcomePage'
 /* oxlint-disable react/only-export-components */
 
 // Code-split: each of these is a chunk the entry no longer carries. Create
-// pulls in the Radix slider and radio-group; Active and Ended share the
-// estimation grid.
+// and Ready are the Admin's path in, which nobody else walks; Active and
+// Ended share the estimation grid.
 // RootLayout's Suspense boundary covers them all while a chunk loads.
 //
 // Welcome, Join and NotFound stay eager above — all three are cold-start
 // landings, and none pulls anything the entry chunk doesn't already have.
 const CreateSessionPage = lazy(() => import('@/routes/CreateSessionPage'))
+const ReadySessionPage = lazy(() => import('@/routes/ReadySessionPage'))
 const ActiveSessionPage = lazy(() => import('@/routes/ActiveSessionPage'))
 const EndedPage = lazy(() => import('@/routes/EndedPage'))
 
@@ -71,6 +73,7 @@ export const router = createBrowserRouter([
             loader: joinLoader,
             action: joinAction,
           },
+          { path: '/:sessionId/ready', element: <ReadySessionPage />, loader: readyLoader },
           { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
           { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
           // The stage sheets — tokens, sprites, primitives — dev builds only.

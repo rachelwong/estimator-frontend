@@ -1,9 +1,7 @@
 import { LinkIcon } from 'lucide-react'
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { CopyLinkButton } from '@/components/CopyLinkButton'
 import { Input } from '@/components/ui/input'
-import { COPIED_FEEDBACK_MS } from '@/constants'
-import { cn } from '@/lib/utils'
+import { sessionJoinUrl } from '@/lib/sessionLink'
 
 interface ShareLinkProps {
   sessionId: string
@@ -13,18 +11,8 @@ interface ShareLinkProps {
 // full-width `page-top` strip under the header, holding the link and a Copy
 // button. Its content lines up with the window below it, so the inner row takes
 // the window's widths (§5). On mobile the row stacks.
-//
-// Points at /join, the entry for anyone without an identity. The Admin's own
-// /start would bounce them there anyway.
 export function ShareLink({ sessionId }: ShareLinkProps) {
-  const [isCopied, setIsCopied] = useState(false)
-  const url = `${window.location.origin}/${sessionId}/join`
-
-  async function handleCopy() {
-    await navigator.clipboard.writeText(url)
-    setIsCopied(true)
-    setTimeout(() => setIsCopied(false), COPIED_FEEDBACK_MS)
-  }
+  const url = sessionJoinUrl(sessionId)
 
   return (
     <div className="relative z-10 border-b-[3px] border-ink bg-page-top px-3 py-3 tablet:px-10 tablet:py-3.5">
@@ -45,13 +33,7 @@ export function ShareLink({ sessionId }: ShareLinkProps) {
             onFocus={(event) => event.target.select()}
           />
 
-          <Button
-            type="button"
-            className={cn('min-w-[112px]', isCopied && 'bg-copied')}
-            onClick={handleCopy}
-          >
-            {isCopied ? 'Copied!' : 'Copy link'}
-          </Button>
+          <CopyLinkButton url={url} />
         </div>
       </div>
     </div>

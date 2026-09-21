@@ -6,15 +6,11 @@
 // The rule itself is PARTICIPANT_NAME_PATTERN in lib/patterns.ts. The server
 // trims and collapses the same way before it validates, so stray whitespace is
 // never what fails.
-import { PointSystemType } from '@/constants'
 import { PARTICIPANT_NAME_PATTERN, REPEATED_SPACES_PATTERN } from '@/lib/patterns'
-import type { PointSystemType as PointSystemTypeValue } from '@/types'
 
 const MAX_NAME_LENGTH = 20
 
 const NAME_RULE = 'Use 1-20 letters, numbers or spaces, with no symbols.'
-
-const POINT_SYSTEM_TYPES: readonly string[] = Object.values(PointSystemType)
 
 // Trim the ends, collapse runs of spaces. What the name is judged on, and what
 // the server stores.
@@ -31,10 +27,4 @@ export function nameError(name: string): string | null {
   }
 
   return NAME_RULE
-}
-
-// The radio group hands back a bare string, and the create form will not submit
-// a point system the server would reject.
-export function isPointSystemType(value: string): value is PointSystemTypeValue {
-  return POINT_SYSTEM_TYPES.includes(value)
 }

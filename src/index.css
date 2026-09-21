@@ -164,12 +164,54 @@
     background: repeating-linear-gradient(90deg, transparent 0 5px, var(--color-white) 5px 8px);
 }
 
+/* The Create form's slider (§7): a 10px track with a 2px ink edge, filled
+   `accent` up to the thumb and `crowd-0` beyond it, and a 28px square white
+   thumb on a 3px shadow. RangeSlider sets --slider-fill per render; the
+   gradient lives here so the colours stay palette tokens. */
+@utility pixel-slider {
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    margin: 0;
+    cursor: pointer;
+    border: 2px solid var(--color-ink);
+    background: linear-gradient(
+        to right,
+        var(--color-accent) 0 var(--slider-fill),
+        var(--color-crowd-0) var(--slider-fill) 100%
+    );
+
+    &::-webkit-slider-thumb {
+        appearance: none;
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--color-ink);
+        background: var(--color-white);
+        box-shadow: 3px 3px 0 var(--color-ink);
+    }
+
+    &::-moz-range-thumb {
+        width: 28px;
+        height: 28px;
+        box-sizing: border-box;
+        border: 3px solid var(--color-ink);
+        border-radius: 0;
+        background: var(--color-white);
+        box-shadow: 3px 3px 0 var(--color-ink);
+    }
+
+    &:focus-visible {
+        outline: 3px solid var(--color-ink);
+        outline-offset: 8px;
+    }
+}
+
 /* shadcn's role names aliased onto the palette above — var() only, no value of
    their own. `bg-ink` and `bg-foreground` resolve to the same custom property,
    so the primitives keep working while we author in the design's vocabulary.
-   These are the 10 role names src/ actually references (Stage 3's button
-   restyle retired `secondary` and its foreground, Stage 5's dialog restyle
-   `popover` and its foreground): a primitive added later that reads another
+   These are the role names src/ still references (Stage 3's button restyle
+   retired `secondary` and its foreground, Stage 5's dialog restyle `popover`
+   and its foreground, Stage 7's form errors `destructive`): a primitive added later that reads another
    renders unstyled until its alias joins the list, which is a visible failure
    rather than a silent drift. */
 @theme inline {
@@ -180,7 +222,6 @@
     --color-ring: var(--color-accent);
     --color-primary: var(--color-selection);
     --color-primary-foreground: var(--color-ink);
-    --color-destructive: var(--color-danger);
     --color-muted: var(--color-crowd-0);
     --color-muted-foreground: var(--color-text-muted);
 
@@ -208,6 +249,13 @@
    pinned here too. */
 @utility sprite-pixels {
     image-rendering: pixelated;
+}
+
+/* A sprite set down as a sticker (§9): a soft ink drop at 18%, the one shadow
+   in the design that isn't a hard offset. The white outline is already drawn
+   into the sprite. */
+@utility sprite-sticker {
+    filter: drop-shadow(3px 3px 0 color-mix(in srgb, var(--color-ink) 18%, transparent));
 }
 
 @layer base {

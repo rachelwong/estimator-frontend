@@ -76,7 +76,7 @@ export async function routing({ browser, reporter }) {
   await notice.waitFor({ timeout: 1400 }).catch(() => {})
   check('Slow first load shows loading notice', await notice.isVisible())
   check('Header shows while loading', await slow.getByText('Fold and Flip').isVisible())
-  await slow.getByRole('heading', { name: 'Join a session' }).waitFor()
+  await slow.getByRole('heading', { name: 'Join session' }).waitFor()
   check('Notice gone once loaded', (await slow.getByRole('status').count()) === 0)
 
   // --- Unreachable backend: error screen, then Retry recovers -----------------
@@ -90,7 +90,7 @@ export async function routing({ browser, reporter }) {
 
   await down.unroute(`${API}/sessions/*`)
   await down.getByRole('button', { name: 'Retry' }).click()
-  const recovered = down.getByRole('heading', { name: 'Join a session' })
+  const recovered = down.getByRole('heading', { name: 'Join session' })
   await recovered.waitFor({ timeout: 5000 }).catch(() => {})
   check('Retry recovers once reachable', await recovered.isVisible())
 }

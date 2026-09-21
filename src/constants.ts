@@ -81,29 +81,21 @@ export const FIBONACCI_SEQUENCE = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55] as const;
 
 export const NUMERICAL_MAX = 20;
 
-// The Page keys ask for a bigger move than an arrow (WAI-ARIA slider pattern),
-// and three values crosses either scale in a few presses.
-const SLIDER_PAGE_STEP = 3;
-
-// KeyboardEvent.key values that move the slider, and by how many values.
-// RangeSlider takes these keys itself: the Slider's own steps are in points,
-// not values, so they land between Fibonacci values — from 34 neither an arrow
-// nor a Page key would ever reach 55.
-export const SLIDER_STEP_DIRECTION = {
-  ArrowRight: 1,
-  ArrowUp: 1,
-  ArrowLeft: -1,
-  ArrowDown: -1,
-  PageUp: SLIDER_PAGE_STEP,
-  PageDown: -SLIDER_PAGE_STEP,
+// What each point system is called on the Create form's segmented buttons and
+// in the ready screen's summary line (DESIGN.md §7). The buttons sit in this
+// object's order.
+export const POINT_SYSTEM_LABEL = {
+  [PointSystemType.NUMERICAL]: "Numerical",
+  [PointSystemType.FIBONACCI]: "Fibonacci",
 } as const;
 
-// Two mutually exclusive options, so radios rather than the wireframe's
-// "dropdown list" — both are worth seeing at once.
-export const POINT_SYSTEM_OPTIONS = [
-  { value: PointSystemType.NUMERICAL, label: "Numerical integers" },
-  { value: PointSystemType.FIBONACCI, label: "Fibonacci sequence" },
-] as const;
+// Which of the slider's values get a Silkscreen tick beneath the track (§7):
+// every nth. Fibonacci's ten all fit; Numerical's twenty-one would run together
+// on a phone, so it is labelled every fifth — 0, 5, 10, 15, 20.
+export const SLIDER_TICK_EVERY = {
+  [PointSystemType.NUMERICAL]: 5,
+  [PointSystemType.FIBONACCI]: 1,
+} as const;
 
 // Below this, the wait is a warm server and needs no explanation. Showing
 // the notice anyway flashes it for a frame on every navigation.
@@ -270,6 +262,15 @@ export const SESSION_WINDOW_CLASS = {
   window: 'w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[780px]',
   body: 'gap-3.5 px-3 pt-2.5 pb-3.5 desktop:px-9 desktop:pt-7',
 } as const;
+
+// The Create and Join windows (§5): narrower than a session's, since they hold
+// a form rather than a grid. Both use the artboards' wider body from tablet up
+// — 32/40/36 around a 24px gap — where the Window default is tuned tighter.
+export const CREATE_WINDOW_CLASS = 'w-full max-w-[366px] tablet:max-w-[600px] desktop:max-w-[640px]';
+
+export const JOIN_WINDOW_CLASS = 'w-full max-w-[366px] tablet:max-w-[560px]';
+
+export const FORM_WINDOW_BODY_CLASS = 'tablet:gap-6 tablet:px-10 tablet:pt-8 tablet:pb-9';
 
 // Only keyboard focus counts as hover. A tap focuses a button too, and would
 // leave a lifted Square and its tooltip stuck on a touch screen.

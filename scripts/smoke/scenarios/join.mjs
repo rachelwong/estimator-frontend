@@ -31,7 +31,7 @@ export async function join({ browser, reporter }) {
   await name.fill('Jim@Bob')
   await name.blur()
   check('Symbol in name shows rule', await page.getByText(NAME_RULE).isVisible())
-  check('Enter disabled for bad name', await page.getByRole('button', { name: 'Enter Session' }).isDisabled())
+  check('Join disabled for bad name', await page.getByRole('button', { name: 'Join session' }).isDisabled())
   check('Bad name opens no socket', socketTraffic.length === 0)
 
   // A space is a name, not a symbol.

@@ -192,7 +192,7 @@ export async function selectSquare(page, time, resource) {
 export async function joinInBrowser(page, sessionId, name) {
   await page.goto(`${APP}/${sessionId}/join`)
   await page.locator('input[name="name"]').fill(name)
-  await page.getByRole('button', { name: 'Enter Session' }).click()
+  await page.getByRole('button', { name: 'Join session' }).click()
   await page.waitForURL(/\/start$/)
   await cells(page).first().waitFor()
 }

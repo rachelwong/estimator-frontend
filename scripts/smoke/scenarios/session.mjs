@@ -33,10 +33,12 @@ export async function session({ browser, reporter }) {
   })
   const admin = await openPage(adminContext)
   await admin.goto(`${APP}/new`)
-  await admin.getByLabel('Provide your name').fill('Ada')
+  await admin.getByLabel('Your name').fill('Ada')
   await admin.getByRole('slider').focus()
   await admin.keyboard.press('End')
-  await admin.getByRole('button', { name: 'Start Session' }).click()
+  await admin.getByRole('button', { name: 'Create session' }).click()
+  await admin.waitForURL(/\/ready$/)
+  await admin.getByRole('link', { name: 'Go to the session →' }).click()
   await admin.waitForURL(/\/start$/)
   await cells(admin).first().waitFor()
 
@@ -90,7 +92,7 @@ export async function session({ browser, reporter }) {
   const fay = await openPage(await browser.newContext())
   await fay.goto(shareUrl)
   await fay.locator('input[name="name"]').fill('Fay')
-  await fay.getByRole('button', { name: 'Enter Session' }).click()
+  await fay.getByRole('button', { name: 'Join session' }).click()
   await fay.waitForURL(/\/start$/)
   await cells(fay).first().waitFor()
   check('Participant lands on /start', true)
@@ -255,7 +257,7 @@ export async function session({ browser, reporter }) {
   await fresh.getByRole('link', { name: 'Start a new session' }).click()
   await fresh.waitForURL(`${APP}/new`)
   check('Start a new session goes to /new', true)
-  check('Create form starts empty', (await fresh.getByLabel('Provide your name').inputValue()) === '')
+  check('Create form starts empty', (await fresh.getByLabel('Your name').inputValue()) === '')
 }
 
 // The Square at the origin — bottom-left, so the last row's first.

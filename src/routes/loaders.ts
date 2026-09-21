@@ -98,6 +98,23 @@ export async function startLoader({ params }: LoaderFunctionArgs) {
   return session
 }
 
+// The ready screen belongs to the Admin who just made the Session. Anyone else
+// is sent where an open Session would send them; an ended one goes to /ended.
+export async function readyLoader({ params }: LoaderFunctionArgs) {
+  const sessionId = params.sessionId!
+  const session = await loadSession(sessionId)
+
+  if (session.ended) {
+    return redirect(`/${sessionId}/ended`)
+  }
+
+  if (getAdminToken(sessionId) === null) {
+    return redirect(openSessionPath(sessionId))
+  }
+
+  return session
+}
+
 export async function endedLoader({ params }: LoaderFunctionArgs) {
   const sessionId = params.sessionId!
   const session = await loadSession(sessionId)
@@ -160,8 +177,9 @@ export async function createSessionAction({ request }: ActionFunctionArgs) {
     const session = await createSession(input)
     setAdminToken(session.sessionId, session.adminToken)
 
-    // The creating admin already has an identity, so skip /join.
-    return redirect(`/${session.sessionId}/start`)
+    // The ready screen, with the link to hand out. The creating admin already
+    // has an identity, so it goes on to /start and never through /join.
+    return redirect(`/${session.sessionId}/ready`)
   } catch (error) {
     if (error instanceof ApiError) {
       return { error: error.message } satisfies ActionErrorData

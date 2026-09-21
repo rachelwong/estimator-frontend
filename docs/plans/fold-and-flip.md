@@ -453,6 +453,34 @@ Where this stage went past or against the letter above:
   summary line, link in a `crowd-0` box with Copy link.
 - **Join:** heading, one input, button, and the privacy note. Nothing else.
 
+**Done.** Windows measure 366 / 600 / 640 for Create and 366 / 560 / 560 for
+Join, with headings at 20 / 28 / 28 and 22 / 30 / 30 and no page overflow. The
+slider's ticks sit under the thumb's own value on a phone. Create lands on
+`/:sessionId/ready`, which survives a refresh and sends anyone without the
+admin token to `/join`. "Change settings" reopens the form on the same point
+system and maximum. `npm run smoke` is 137/137.
+
+Where this stage went past or against the letter above:
+
+| Choice | Why |
+| --- | --- |
+| **Slider values evenly spaced, reversing `estimator-plan.md` #3** | The artboard puts a tick under every value, which magnitude placement can't fit: Fibonacci's 0–8 crowd into the first 15% of the track. The track now steps by index, so a key or drag can only land on a real value, and `nearestValue`, `stepValue` and `SLIDER_STEP_DIRECTION` are gone. Recorded in `PLAN.md`'s reversed table |
+| **Native range input, not the Radix Slider.** `ui/slider.tsx` and `ui/radio-group.tsx` deleted | The browser supplies keys, drag and ARIA for an index slider. The input's value is the index, so `aria-valuetext` gives the axis value to screen readers and a hidden input submits it. The segmented buttons are `aria-pressed` toggles in a labelled group, as the artboard marks them up |
+| **The ready state is its own route, `/:sessionId/ready`**, not a branch of the Create page | It holds a Session id and a link the Admin may refresh into, which is the routing skill's test for a route. `readyLoader` lets in only a browser holding the admin token |
+| "Change settings" carries the point system and maximum back, **not the name** | Carried as location state. The ready screen gets the Session over REST, which has no Admin name, and holding the name somewhere else would need storage for one field. The Session it leaves stays in server memory until the next restart; there is no delete endpoint |
+| Numerical ticks every fifth value | Twenty-one labels don't fit on a phone. The artboard labels 1, 5, 10, 15, 20; ours starts at 0 because 0 is still the unpicked start (create gating) |
+| Form errors in `abstained` red, and the `destructive` alias removed | `danger` on white is about 3:1, below AA for 14px text. `abstained` is the palette's AA red. That was the alias's last reference |
+| `CopyLinkButton` and `sessionJoinUrl` pulled out of `ShareLink` | The ready screen is their second consumer. The copy button there is white (`secondary`), in the share bar yellow |
+| Pressed submit buttons show the inline loader at full opacity | §7 puts the loader "inside the pressed button". A disabled button dims to 50%, which washed the bar out |
+| Join's window title reads `join`, not `join · <session>` | The Stage 0 decision drops the Session name from titles |
+
+**Bundle.** Join now draws the sprite scatter, and Join is eager, so the
+sprites' chunk (45 kB gzipped) is modulepreloaded on every cold start instead of
+loading with Create or Active. The entry itself shrank 91.7 → 89.6 kB gzipped
+with Radix's slider and radio group gone. Join's visitors need the sprites
+anyway. Welcome and Not Found pay for sprites they don't draw yet, until Stages
+8 and 9 give them characters of their own.
+
 ### Stage 8 — Error and loading screens
 
 One "broken grid" layout for all three errors, copy varying by kind (§7 table).
@@ -496,6 +524,7 @@ than thirty do. A smaller bundle number there would mean more bytes on the wire.
   | `scenarios/session.mjs:45,97,112,119,120` | `End session` → `End session & reveal` | **Done in Stage 5**, with the rename |
   | `lib.mjs`, `session.mjs`, `join.mjs`, `create.mjs` | Crowd ramp fill, popover, new grid DOM | **Done in Stage 4** |
   | `session.mjs`, `join.mjs` | The "Ended" chip, the Abstained section, `Create new session` → `Start a new session` | **Done in Stage 6** |
+  | `create.mjs`, `session.mjs`, `join.mjs`, `routing.mjs`, `lib.mjs` | Form labels and buttons, the native slider, Create landing on `/ready` | **Done in Stage 7** |
 
   The rule the first row establishes: repair a smoke assertion in the stage that
   breaks it, not here. A suite left red across stages makes every intervening
