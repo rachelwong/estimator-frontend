@@ -83,9 +83,8 @@ export const FIBONACCI_SEQUENCE = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55] as const;
 
 export const NUMERICAL_MAX = 20;
 
-// What each point system is called on the Create form's segmented buttons and
-// in the ready screen's summary line (DESIGN.md §7). The buttons sit in this
-// object's order.
+// What each point system is called on the Create form's segmented buttons
+// (DESIGN.md §7). The buttons sit in this object's order.
 export const POINT_SYSTEM_LABEL = {
   [PointSystemType.NUMERICAL]: "Numerical",
   [PointSystemType.FIBONACCI]: "Fibonacci",
@@ -158,15 +157,6 @@ export const SQUARE_FIT = {
   [Breakpoint.DESKTOP]: { available: 630, max: 70 },
 } as const;
 
-// The Welcome page's "Why keep Selections private?" grids (§7 item 6). Two
-// windows sit side by side on desktop, each in half the width a session window
-// gets, so their Squares cap smaller — 50 / 48 / 36, off the artboards.
-export const COMPARISON_SQUARE_FIT = {
-  [Breakpoint.MOBILE]: { available: 298, max: 36 },
-  [Breakpoint.TABLET]: { available: 580, max: 48 },
-  [Breakpoint.DESKTOP]: { available: 630, max: 50 },
-} as const;
-
 export const SQUARE_GAP_PX = 4;
 
 // The floor under the §5 formula. Numerical to 20 is a 21×21 grid, which the
@@ -194,8 +184,7 @@ export const SELECTION_LABEL = {
   [SquareLabelSize.COMPACT]: "★",
 } as const;
 
-// Name lengths, ellipsis included (§6): a full Square face, and the tooltip.
-export const SQUARE_NAME_MAX_CHARS = 8;
+// The tooltip's name length, ellipsis included (§6).
 export const TOOLTIP_NAME_MAX_CHARS = 14;
 
 // A small Square shows a lone name as its first letters: "Mia" → "Mi".
@@ -308,17 +297,17 @@ export const ERROR_WINDOW_CLASS = {
 // on a free host is usually one still waking up.
 export const ERROR_SCREEN_COPY = {
   NOT_FOUND: {
-    label: "session not found",
+    label: "Sorry, please try again",
     title: "Session not found",
-    body: "This link doesn’t match a live session. Sessions live in memory, so a server restart or a mistyped link lands you here. Nothing was saved.",
+    body: "This link doesn’t match a live session. Please talk to your team to create another new session",
   },
   CONNECTION_LOST: {
-    label: "connection lost",
+    label: "Sorry, please try again later",
     title: "Connection lost",
     body: "We can’t reach the session right now. If the server is waking up, give it a moment and try again.",
   },
   SOMETHING_WENT_WRONG: {
-    label: "something went wrong",
+    label: "Sorry, please try again later",
     title: "Something went wrong",
     body: "The session hit an error we didn’t expect. Try again, or start a fresh session.",
   },
@@ -456,25 +445,19 @@ export const PIXEL_BAR_CLASS = {
 // link to them, and the sections carry them as ids.
 export const WelcomeSection = {
   HOW_TO_PLAY: "how-to-play",
-  WHY_PRIVATE: "why-private",
   WHY_I_MADE_THIS: "why-i-made-this",
 } as const;
 
 // A section the header links to lands below the sticky header rather than
-// under it — one margin per Welcome header height (§5: 64 / 72 / 84).
+// under it — one margin per header height (§5: 64 / 72 / 84).
 export const WELCOME_ANCHOR_CLASS =
   "scroll-mt-16 tablet:scroll-mt-[72px] desktop:scroll-mt-[84px]";
-
-// Welcome's header is taller than every other screen's (§5), and its sides
-// widen to the page's 80px padding on desktop.
-export const WELCOME_HEADER_CLASS =
-  "h-16 tablet:h-[72px] desktop:h-[84px] desktop:px-20";
 
 // The page's side padding (§5: 20 / 40 / 80), shared by every Welcome section.
 export const WELCOME_GUTTER_CLASS = "px-5 tablet:px-10 desktop:px-20";
 
 // Where the two repos live. The Welcome page's repo cards, header and menu
-// link to them (§7 item 7); the handle is the one the frontend's own remote
+// link to them (§7 item 6); the handle is the one the frontend's own remote
 // points at.
 export const REPOSITORY_URL = {
   FRONTEND: "https://github.com/rachelwong/estimator-frontend",
@@ -499,9 +482,9 @@ export const DITHER_BLOCK_THRESHOLDS = [2, 8, 14] as const;
 // One cell of the dither — 12 rows of them make the 144px band.
 export const DITHER_PIXEL_PX = 12;
 
-// The sample Session the Welcome page demonstrates with (§7 items 3 and 6).
-// Real data shapes, so the demos are the real grid and Reveal window rather
-// than pictures of them. Fibonacci to 13: a 7×7, the grid every artboard draws.
+// The sample Session the Welcome page demonstrates with (§7 item 3).
+// Real data shapes, so the demo is the real Reveal window rather
+// than a picture of it. Fibonacci to 13: a 7×7, the grid every artboard draws.
 export const WELCOME_DEMO_AXIS_VALUES: number[] = [0, 1, 2, 3, 5, 8, 13];
 
 export const WELCOME_DEMO_REVEAL: RevealPayload = {
@@ -518,9 +501,6 @@ export const WELCOME_DEMO_REVEAL: RevealPayload = {
 // The hero's Reveal opens on the crowded Square, its popover already pinned.
 export const WELCOME_DEMO_PINNED: Selection = { time: 5, resource: 3 };
 
-// Where "While you pick" starts: a Selection with its Area around it.
-export const WELCOME_DEMO_SELECTION: Selection = { time: 8, resource: 5 };
-
 // The Welcome page's type scale (§3): a section heading — 27 / 36 / 44 — and a
 // card or sub heading — 17 / 19 / 20.
 export const WELCOME_SECTION_HEADING_CLASS =
@@ -528,8 +508,3 @@ export const WELCOME_SECTION_HEADING_CLASS =
 
 export const WELCOME_CARD_HEADING_CLASS =
   "font-display text-[17px] leading-[1.1] text-ink tablet:text-[19px] desktop:text-[20px]";
-
-// The body of the two windows in "Why keep Selections private?": tighter than
-// the Window default, around a grid capped by COMPARISON_SQUARE_FIT.
-export const COMPARISON_WINDOW_BODY_CLASS =
-  "items-center gap-3 px-3.5 pt-3.5 pb-3.5 tablet:gap-3 tablet:px-6 tablet:pt-6 tablet:pb-6 desktop:px-6 desktop:pt-6 desktop:pb-6";

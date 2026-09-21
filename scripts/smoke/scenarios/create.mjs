@@ -1,9 +1,8 @@
-// The create form and its ready screen — PLAN.md Phase 3, fold-and-flip.md Stage 7.
+// The create form — PLAN.md Phase 3, fold-and-flip.md Stage 7.
 import { API, APP, cells, landsOn, pageHeadings } from '../lib.mjs'
 
 const NAME_RULE = 'Use 1-20 letters, numbers or spaces, with no symbols.'
 const FIBONACCI_AT_55 = ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55']
-const SUMMARY_AT_55 = 'Fibonacci · highest value 55 · 10 × 10 Squares'
 const DRAG_MOVES = 60
 
 export async function create({ browser, reporter }) {
@@ -76,39 +75,14 @@ export async function create({ browser, reporter }) {
     .allTextContents()
   check('A tick under every value', ticks.join() === FIBONACCI_AT_55.join(), ticks.join())
 
-  // --- The ready screen -------------------------------------------------------
+  // --- Created ----------------------------------------------------------------
   await page.getByRole('slider').focus()
   await page.keyboard.press('End')
   await submit.click()
-  check('Create → /ready', await landsOn(page, /\/ready$/))
+  check('Create → /start', await landsOn(page, /\/start$/))
   const sessionId = new URL(page.url()).pathname.split('/')[1]
-  await page.getByRole('heading', { name: 'Your session’s ready' }).waitFor()
-  check('Ready heading is the one h1', (await pageHeadings(page)).join() === 'Your session’s ready')
-  check('Summary line recaps the grid', await page.getByText(SUMMARY_AT_55).isVisible())
-  const link = await page.getByLabel('Share this link with the team').inputValue()
-  check('Ready link points at /join', link === `${APP}/${sessionId}/join`, link)
-
-  await page.reload()
-  await page.getByText(SUMMARY_AT_55).waitFor()
-  check('Refresh keeps the ready screen', true)
-
-  // Someone else with the link never sees it — no admin token.
-  const visitor = await openPage(await browser.newContext())
-  await visitor.goto(`${APP}/${sessionId}/ready`)
-  check('Visitor on /ready → /join', await landsOn(visitor, /\/join$/))
-
-  // Change settings reopens the form on the same point system and maximum.
-  await page.getByRole('link', { name: 'Change settings' }).click()
-  check('Change settings → /new', await landsOn(page, `${APP}/new`))
-  check('Point system carried back', (await fibonacci.getAttribute('aria-pressed')) === 'true')
-  check('Maximum carried back', (await sliderValue(page)) === '55')
-
-  await name.fill('Ada')
-  await submit.click()
-  await page.waitForURL(/\/ready$/)
-  check('Second create is a new Session', !page.url().includes(sessionId))
-  await page.getByRole('link', { name: 'Go to the session →' }).click()
-  await page.waitForURL(/\/start$/)
+  const link = await page.getByLabel('Session link').inputValue()
+  check('Share link points at /join', link === `${APP}/${sessionId}/join`, link)
   await cells(page).first().waitFor()
   check('Fibonacci grid is 10×10', (await cells(page).count()) === 100)
 

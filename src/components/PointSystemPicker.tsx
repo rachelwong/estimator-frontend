@@ -10,7 +10,8 @@ interface PointSystemPickerProps {
 
 // Two-up segmented buttons (DESIGN.md §7): the pressed one fills `accent` and
 // stands on a 4px shadow, the other sits flat in white. The swap is instant:
-// a faded fill would flash white text on a pale button. Toggle buttons with
+// a faded fill would flash white text on a pale button. Hover only dims, and
+// that eases in, like every Button's. Toggle buttons with
 // `aria-pressed` in a labelled group, as the artboard marks them up — two
 // options both worth seeing at once.
 //
@@ -33,7 +34,7 @@ export function PointSystemPicker({ value, onChange }: PointSystemPickerProps) {
             aria-pressed={type === value}
             onClick={() => onChange(type)}
             className={cn(
-              'h-13 cursor-pointer border-[3px] border-ink font-body text-[16px] font-extrabold outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink',
+              'h-13 cursor-pointer border-[3px] border-ink transition-[filter] hover:brightness-95 font-body text-[16px] font-extrabold outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink',
               type === value ? 'bg-accent text-white shadow-px' : 'bg-white text-ink',
             )}
           >

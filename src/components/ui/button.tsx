@@ -5,7 +5,8 @@ import { Slot } from "radix-ui"
 
 // Fold and Flip's button (DESIGN.md §4): 3px ink edge, a 4px offset shadow,
 // square corners. Pressing it moves the button onto its own shadow, which is
-// the whole depth model of this design — nothing fades or ripples.
+// the whole depth model of this design — nothing ripples. Hover dims it a shade,
+// eased rather than snapped.
 //
 // The shadcn source stays, restyled in place, so the primitives that compose it
 // (alert-dialog) keep working. What went with the restyle: the `ghost`, `link`
@@ -13,7 +14,7 @@ import { Slot } from "radix-ui"
 // had no caller, and a variant nobody uses is a variant nobody has checked
 // against the palette.
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 border-[3px] border-ink whitespace-nowrap shadow-px transition-[translate,box-shadow,background-color] outline-none select-none hover:brightness-95 focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink active:translate-x-[4px] active:translate-y-[4px] active:shadow-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-[18px]",
+  "group/button inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 border-[3px] border-ink whitespace-nowrap shadow-px transition-[translate,box-shadow,background-color,filter] outline-none select-none hover:brightness-95 focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink active:translate-x-[4px] active:translate-y-[4px] active:shadow-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-[18px]",
   {
     variants: {
       variant: {

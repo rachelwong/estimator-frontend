@@ -10,7 +10,7 @@ import {
   SQUARE_GAP_PX,
 } from '@/constants'
 import { useBreakpoint, useEscapeKey, useFullyInView } from '@/hooks'
-import type { GridMode as GridModeValue, HoveredSquare, RevealPayload, Selection, SquareFit } from '@/types'
+import type { GridMode as GridModeValue, HoveredSquare, RevealPayload, Selection } from '@/types'
 import {
   axisEmphasis,
   groupNames,
@@ -47,8 +47,6 @@ interface EstimationGridProps {
   /** Reveal only: the Square whose popover is open. */
   pinned?: Selection | null
   onPinnedChange?: (pinned: Selection | null) => void
-  /** How big the Squares may get. Defaults to the session windows' (§5). */
-  squareFit?: SquareFit
   /** Reveal only: hold the wave, and any pinned popover, until the grid is wholly on screen. */
   holdsWaveUntilInView?: boolean
 }
@@ -80,7 +78,6 @@ export function EstimationGrid({
   onHoveredChange,
   pinned = null,
   onPinnedChange,
-  squareFit,
   holdsWaveUntilInView = false,
 }: EstimationGridProps) {
   // The Square that holds the Tab stop. Until one is touched, the Selection.
@@ -94,7 +91,7 @@ export function EstimationGrid({
   const cols = axisValues
   const namesBySquare = groupNames(reveal)
   const isInteractive = mode === GridMode.INTERACTIVE
-  const size = squareSize(axisValues.length, breakpoint, squareFit)
+  const size = squareSize(axisValues.length, breakpoint)
   const faceSize = labelSize(size)
   const originSquare = { time: axisValues[0], resource: axisValues[0] }
   const tabStop = cursor ?? selection ?? originSquare

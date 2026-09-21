@@ -1,7 +1,7 @@
-import { Link } from 'react-router'
-import { ErrorScreen } from '@/components/ErrorScreen'
-import { Button } from '@/components/ui/button'
-import { ERROR_SCREEN_COPY, RoutePath } from '@/constants'
+import { ErrorScreen } from "@/components/ErrorScreen";
+import { Button } from "@/components/ui/button";
+import { ERROR_SCREEN_COPY, RoutePath } from "@/constants";
+import { Link } from "react-router";
 
 export function NotFoundPage() {
   return (
@@ -13,10 +13,10 @@ export function NotFoundPage() {
             <Link to={RoutePath.NEW}>Start a session</Link>
           </Button>
           <Button asChild size="lg" variant="secondary">
-            <Link to={RoutePath.WELCOME}>Back to Welcome</Link>
+            <Link to={RoutePath.WELCOME}>Back to Home</Link>
           </Button>
         </>
       }
     />
-  )
+  );
 }

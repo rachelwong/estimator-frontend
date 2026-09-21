@@ -8,7 +8,7 @@ import { WELCOME_GUTTER_CLASS, WELCOME_SECTION_HEADING_CLASS } from '@/constants
 import { cn } from '@/lib/utils'
 import { HouseRule } from './HouseRule'
 
-// House rules (§7 item 8): six things worth knowing before a first Session.
+// House rules (§7 item 7): six things worth knowing before a first Session.
 // Three across on desktop, two on tablet, one on a phone.
 export function HouseRulesSection() {
   return (

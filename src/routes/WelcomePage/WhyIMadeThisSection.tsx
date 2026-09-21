@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 import { PlaceholderCopy } from './PlaceholderCopy'
 import { RepositoryCard } from './RepositoryCard'
 
-// Why I made this (§7 item 7): a note, and a card for each repo. The note sits
+// Why I made this (§7 item 6): a note, and a card for each repo. The note sits
 // left of the cards on desktop; on tablet the cards go side by side beneath it,
 // and on a phone everything stacks.
 export function WhyIMadeThisSection() {

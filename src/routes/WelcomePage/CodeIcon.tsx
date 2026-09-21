@@ -1,4 +1,4 @@
-// The </> mark on the repo cards' "View on GitHub" buttons (§7 item 7). Drawn
+// The </> mark on the repo cards' "View on GitHub" buttons (§7 item 6). Drawn
 // in the text colour, so it follows the button it sits in.
 export function CodeIcon() {
   return (

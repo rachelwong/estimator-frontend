@@ -16,10 +16,19 @@ interface HowToPlayCardProps {
 
 // One step of How to play (§7 item 5): an ink "LV.n" tag and a sprite across
 // the top, then the step's name and a sentence about it.
+//
+// Hovered, it slides 6px down onto its shadow — a Square's hover lift run in
+// reverse, at the same 90ms. The repo cards stay put: their button is what
+// answers the pointer there.
 export function HowToPlayCard({ level, title, sprite, tintClass, children }: HowToPlayCardProps) {
   return (
     <li className="flex">
-      <Card className={cn('flex w-full flex-col gap-3.5', tintClass)}>
+      <Card
+        className={cn(
+          'flex w-full flex-col gap-3.5 transition-[translate,box-shadow] duration-[90ms] hover:translate-x-[6px] hover:translate-y-[6px] hover:shadow-none',
+          tintClass,
+        )}
+      >
         <div className="flex items-start justify-between">
           <span className="bg-ink px-2 py-1 font-label text-[13px] text-cream">LV.{level}</span>
           <Sprite source={sprite} className="h-auto w-[52px] tablet:w-16" />

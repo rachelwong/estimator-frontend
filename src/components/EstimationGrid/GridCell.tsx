@@ -34,6 +34,9 @@ interface GridCellProps {
 // One Square. Every decision about it is made by EstimationGrid; this only
 // draws it. `data-square` is how the grid finds it again to move focus and to
 // anchor the tooltip and popover.
+//
+// Each line of the label is cut to the Square's width with an ellipsis, so a
+// long name never runs past the edge whatever the font and Square size.
 export function GridCell({
   squareKey,
   size,
@@ -62,7 +65,7 @@ export function GridCell({
       aria-pressed={pressed}
       aria-expanded={expanded}
       className={cn(
-        'relative flex cursor-pointer items-center justify-center overflow-hidden border-2 border-ink p-0.5 text-center font-label leading-tight whitespace-pre-line outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
+        'relative flex cursor-pointer flex-col items-center justify-center overflow-hidden border-2 border-ink p-0.5 text-center font-label leading-tight outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
         fillClass,
         SQUARE_LABEL_SIZE_CLASS[labelSize],
         SQUARE_HIGHLIGHT_CLASS[highlight],
@@ -77,7 +80,11 @@ export function GridCell({
       onBlur={onBlur}
       onKeyDown={onKeyDown}
     >
-      {label}
+      {label.split('\n').map((line) => (
+        <span key={line} className="max-w-full truncate">
+          {line}
+        </span>
+      ))}
     </button>
   )
 }

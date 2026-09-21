@@ -1,7 +1,7 @@
 import { REPOSITORY_URL, WELCOME_GUTTER_CLASS } from "@/constants";
 import { cn } from "@/lib/utils";
 
-// Welcome's footer (§7 item 10). The artboard also links "Privacy", but there is
+// Welcome's footer (§7 item 9). The artboard also links "Privacy", but there is
 // no privacy page to send anyone to, so it waits until one exists.
 export function WelcomeFooter() {
   return (

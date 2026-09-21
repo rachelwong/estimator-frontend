@@ -1,7 +1,7 @@
 import { StartSessionButton } from "./StartSessionButton";
 import { TeamSprites } from "./TeamSprites";
 
-// The closing band in `accent` (§7 item 9): one last way in, with a crowd of
+// The closing band in `accent` (§7 item 8): one last way in, with a crowd of
 // characters gathering along its bottom edge, clipped by the frame.
 export function CallToActionBand() {
   return (

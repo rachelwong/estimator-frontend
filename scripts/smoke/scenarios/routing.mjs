@@ -1,126 +1,174 @@
 // Every loader's redirect, the error screen, and the loading notice —
 // PLAN.md "Routes" and "Cold starts", Phases 4 and 10.
-import { API, APP, SOCKET_IO, createSessionByApi, createSocketPool, landsOn, pageHeadings } from '../lib.mjs'
+import {
+  API,
+  APP,
+  SOCKET_IO,
+  createSessionByApi,
+  createSocketPool,
+  landsOn,
+  pageHeadings,
+} from "../lib.mjs";
 
-const UNKNOWN_ID = 'noSuchSession000'
-const TOKEN_KEY = (sessionId) => `estimator:adminToken:${sessionId}`
+const UNKNOWN_ID = "noSuchSession000";
+const TOKEN_KEY = (sessionId) => `estimator:adminToken:${sessionId}`;
 
 export async function routing({ browser, reporter }) {
-  const { check, openPage } = reporter
-  const page = await openPage(await browser.newContext())
+  const { check, openPage } = reporter;
+  const page = await openPage(await browser.newContext());
 
   // --- Unknown Sessions and paths --------------------------------------------
-  for (const path of ['', '/join', '/start', '/ended']) {
-    await page.goto(`${APP}/${UNKNOWN_ID}${path}`)
-    check(`Unknown /:id${path} → /not-found`, await landsOn(page, /\/not-found$/))
+  for (const path of ["", "/join", "/start", "/ended"]) {
+    await page.goto(`${APP}/${UNKNOWN_ID}${path}`);
+    check(
+      `Unknown /:id${path} → /not-found`,
+      await landsOn(page, /\/not-found$/),
+    );
   }
 
-  await page.goto(`${APP}/a/b/c`)
-  check('Unmatched path → /not-found', await landsOn(page, /\/not-found$/))
+  await page.goto(`${APP}/a/b/c`);
+  check("Unmatched path → /not-found", await landsOn(page, /\/not-found$/));
   check(
-    'Not-found says so',
-    await page.getByRole('heading', { name: 'Session not found' }).isVisible(),
-  )
-  check('Not-found heading is the one h1', (await pageHeadings(page)).join() === 'Session not found')
-  await page.getByRole('link', { name: 'Back to Welcome' }).click()
-  check('Not-found links to /welcome', await landsOn(page, `${APP}/welcome`))
-  await page.goto(`${APP}/not-found`)
-  await page.getByRole('link', { name: 'Start a session' }).click()
-  check('Not-found links to /new', await landsOn(page, `${APP}/new`))
+    "Not-found says so",
+    await page.getByRole("heading", { name: "Session not found" }).isVisible(),
+  );
+  check(
+    "Not-found heading is the one h1",
+    (await pageHeadings(page)).join() === "Session not found",
+  );
+  await page.getByRole("link", { name: "Back to Home" }).click();
+  check("Not-found links to /welcome", await landsOn(page, `${APP}/welcome`));
+  await page.goto(`${APP}/not-found`);
+  await page.getByRole("link", { name: "Start a session" }).click();
+  check("Not-found links to /new", await landsOn(page, `${APP}/new`));
 
   // --- Static routes and the header link --------------------------------------
-  for (const path of ['/welcome', '/new']) {
-    await page.goto(`${APP}${path}`)
-    check(`${path} is a known route`, !(await landsOn(page, /\/not-found$/, 1000)))
+  for (const path of ["/welcome", "/new"]) {
+    await page.goto(`${APP}${path}`);
+    check(
+      `${path} is a known route`,
+      !(await landsOn(page, /\/not-found$/, 1000)),
+    );
   }
 
-  await page.getByRole('link', { name: 'Fold and Flip' }).click()
-  check('Header title → /welcome', await landsOn(page, `${APP}/welcome`))
+  await page.getByRole("link", { name: "Fold and Flip" }).click();
+  check("Header title → /welcome", await landsOn(page, `${APP}/welcome`));
 
   // --- An open Session, no identity ------------------------------------------
-  const open = await createSessionByApi()
-  for (const path of ['', '/start', '/ended']) {
-    await page.goto(`${APP}/${open.sessionId}${path}`)
-    check(`Open, no identity: /:id${path} → /join`, await landsOn(page, /\/join$/))
+  const open = await createSessionByApi();
+  for (const path of ["", "/start", "/ended"]) {
+    await page.goto(`${APP}/${open.sessionId}${path}`);
+    check(
+      `Open, no identity: /:id${path} → /join`,
+      await landsOn(page, /\/join$/),
+    );
   }
 
   // --- An Admin token ---------------------------------------------------------
-  const adminPage = await openPage(await browser.newContext())
-  await adminPage.goto(`${APP}/new`)
+  const adminPage = await openPage(await browser.newContext());
+  await adminPage.goto(`${APP}/new`);
   await adminPage.evaluate(
     ([key, token]) => localStorage.setItem(key, token),
     [TOKEN_KEY(open.sessionId), open.adminToken],
-  )
-  await adminPage.goto(`${APP}/${open.sessionId}/join`)
-  check('Admin token: /join → /start', await landsOn(adminPage, /\/start$/))
+  );
+  await adminPage.goto(`${APP}/${open.sessionId}/join`);
+  check("Admin token: /join → /start", await landsOn(adminPage, /\/start$/));
 
   // A token outliving a server restart must still reach /not-found, not /start.
-  await adminPage.evaluate(([key]) => localStorage.setItem(key, 'stale'), [TOKEN_KEY(UNKNOWN_ID)])
-  await adminPage.goto(`${APP}/${UNKNOWN_ID}/start`)
-  check('Stale Admin token → /not-found', await landsOn(adminPage, /\/not-found$/))
+  await adminPage.evaluate(
+    ([key]) => localStorage.setItem(key, "stale"),
+    [TOKEN_KEY(UNKNOWN_ID)],
+  );
+  await adminPage.goto(`${APP}/${UNKNOWN_ID}/start`);
+  check(
+    "Stale Admin token → /not-found",
+    await landsOn(adminPage, /\/not-found$/),
+  );
 
   // --- An ended Session -------------------------------------------------------
-  const ended = await createSessionByApi()
-  const sockets = createSocketPool(ended.sessionId)
-  const adminSocket = await sockets.admin(ended.adminToken)
-  adminSocket.emit('end-session', ended.adminToken)
-  await page.waitForTimeout(300)
-  sockets.close()
+  const ended = await createSessionByApi();
+  const sockets = createSocketPool(ended.sessionId);
+  const adminSocket = await sockets.admin(ended.adminToken);
+  adminSocket.emit("end-session", ended.adminToken);
+  await page.waitForTimeout(300);
+  sockets.close();
 
-  for (const path of ['', '/join', '/start']) {
-    await page.goto(`${APP}/${ended.sessionId}${path}`)
-    check(`Ended: /:id${path} → /ended`, await landsOn(page, /\/ended$/))
+  for (const path of ["", "/join", "/start"]) {
+    await page.goto(`${APP}/${ended.sessionId}${path}`);
+    check(`Ended: /:id${path} → /ended`, await landsOn(page, /\/ended$/));
   }
 
   // --- Cold start: loading notice, then the page ------------------------------
-  const slow = await openPage(await browser.newContext())
+  const slow = await openPage(await browser.newContext());
   await slow.route(`${API}/sessions/*`, async (route) => {
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    await route.continue()
-  })
-  await slow.goto(`${APP}/${open.sessionId}/join`, { waitUntil: 'commit' })
-  const notice = slow.getByRole('status')
-  await notice.waitFor({ timeout: 1400 }).catch(() => {})
-  check('Slow first load shows loading notice', await notice.isVisible())
-  check('Header shows while loading', await slow.getByText('Fold and Flip').isVisible())
-  await slow.getByRole('heading', { name: 'Join session' }).waitFor()
-  check('Join heading is the one h1', (await pageHeadings(slow)).join() === 'Join session')
-  check('Notice gone once loaded', (await slow.getByRole('status').count()) === 0)
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await route.continue();
+  });
+  await slow.goto(`${APP}/${open.sessionId}/join`, { waitUntil: "commit" });
+  const notice = slow.getByRole("status");
+  await notice.waitFor({ timeout: 1400 }).catch(() => {});
+  check("Slow first load shows loading notice", await notice.isVisible());
+  check(
+    "Header shows while loading",
+    await slow.getByText("Fold and Flip").isVisible(),
+  );
+  await slow.getByRole("heading", { name: "Join session" }).waitFor();
+  check(
+    "Join heading is the one h1",
+    (await pageHeadings(slow)).join() === "Join session",
+  );
+  check(
+    "Notice gone once loaded",
+    (await slow.getByRole("status").count()) === 0,
+  );
 
   // --- Unreachable backend: error screen, then Try again recovers -------------
-  const down = await openPage(await browser.newContext(), { expectErrors: true })
-  await down.route(`${API}/sessions/*`, (route) => route.abort())
-  await down.goto(`${APP}/${open.sessionId}/join`)
-  const title = down.getByRole('heading', { name: 'Connection lost' })
-  await title.waitFor({ timeout: 5000 }).catch(() => {})
-  check('Unreachable: error screen says so', await title.isVisible())
-  check('Connection lost is the one h1', (await pageHeadings(down)).join() === 'Connection lost')
-  check('Error screen keeps header', await down.getByText('Fold and Flip').isVisible())
+  const down = await openPage(await browser.newContext(), {
+    expectErrors: true,
+  });
+  await down.route(`${API}/sessions/*`, (route) => route.abort());
+  await down.goto(`${APP}/${open.sessionId}/join`);
+  const title = down.getByRole("heading", { name: "Connection lost" });
+  await title.waitFor({ timeout: 5000 }).catch(() => {});
+  check("Unreachable: error screen says so", await title.isVisible());
+  check(
+    "Connection lost is the one h1",
+    (await pageHeadings(down)).join() === "Connection lost",
+  );
+  check(
+    "Error screen keeps header",
+    await down.getByText("Fold and Flip").isVisible(),
+  );
 
-  await down.unroute(`${API}/sessions/*`)
-  await down.getByRole('button', { name: 'Try again' }).click()
-  const recovered = down.getByRole('heading', { name: 'Join session' })
-  await recovered.waitFor({ timeout: 5000 }).catch(() => {})
-  check('Try again recovers once reachable', await recovered.isVisible())
+  await down.unroute(`${API}/sessions/*`);
+  await down.getByRole("button", { name: "Try again" }).click();
+  const recovered = down.getByRole("heading", { name: "Join session" });
+  await recovered.waitFor({ timeout: 5000 }).catch(() => {});
+  check("Try again recovers once reachable", await recovered.isVisible());
 
   // --- A dropped Admin: Connection lost, then Try again reconnects ------------
-  const dropped = await openPage(await browser.newContext(), { expectErrors: true })
-  await dropped.goto(`${APP}/new`)
+  const dropped = await openPage(await browser.newContext(), {
+    expectErrors: true,
+  });
+  await dropped.goto(`${APP}/new`);
   await dropped.evaluate(
     ([key, token]) => localStorage.setItem(key, token),
     [TOKEN_KEY(open.sessionId), open.adminToken],
-  )
-  await dropped.route(SOCKET_IO, (route) => route.abort())
-  await dropped.goto(`${APP}/${open.sessionId}/start`)
-  const lost = dropped.getByRole('heading', { name: 'Connection lost' })
-  await lost.waitFor({ timeout: 5000 }).catch(() => {})
-  check('Dropped Admin: Connection lost', await lost.isVisible())
-  check('Dropped Admin stays on /start', await landsOn(dropped, /\/start$/))
+  );
+  await dropped.route(SOCKET_IO, (route) => route.abort());
+  await dropped.goto(`${APP}/${open.sessionId}/start`);
+  const lost = dropped.getByRole("heading", { name: "Connection lost" });
+  await lost.waitFor({ timeout: 5000 }).catch(() => {});
+  check("Dropped Admin: Connection lost", await lost.isVisible());
+  check("Dropped Admin stays on /start", await landsOn(dropped, /\/start$/));
 
-  await dropped.unroute(SOCKET_IO)
-  await dropped.getByRole('button', { name: 'Try again' }).click()
-  const reconnected = dropped.getByRole('heading', { name: 'Pick your Square' })
-  await reconnected.waitFor({ timeout: 5000 }).catch(() => {})
-  check('Try again reconnects the Admin', await reconnected.isVisible())
-  check('Active heading is the one h1', (await pageHeadings(dropped)).join() === 'Pick your Square')
+  await dropped.unroute(SOCKET_IO);
+  await dropped.getByRole("button", { name: "Try again" }).click();
+  const reconnected = dropped.getByRole("heading", { name: "Make your Vote" });
+  await reconnected.waitFor({ timeout: 5000 }).catch(() => {});
+  check("Try again reconnects the Admin", await reconnected.isVisible());
+  check(
+    "Active heading is the one h1",
+    (await pageHeadings(dropped)).join() === "Make your Vote",
+  );
 }

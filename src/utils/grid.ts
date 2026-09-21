@@ -13,7 +13,6 @@ import {
   SQUARE_GAP_PX,
   SQUARE_INITIALS_LENGTH,
   SQUARE_MIN_PX,
-  SQUARE_NAME_MAX_CHARS,
   SquareHighlight,
   SquareLabelSize,
   TOOLTIP_NAME_MAX_CHARS,
@@ -27,7 +26,6 @@ import type {
   LandedPerson,
   RevealPayload,
   Selection,
-  SquareFit,
   SquareHighlight as SquareHighlightValue,
   SquareLabelSize as SquareLabelSizeValue,
 } from '@/types'
@@ -57,10 +55,9 @@ export function squareFillClass(
   return inArea(square, selection) ? CROWD_CLASS[SELECTION_AREA_CROWD_STEP] : CROWD_CLASS[0]
 }
 
-// §5, floored at SQUARE_MIN_PX. Fibonacci's 7×7 gives 70 / 64 / 39 at the
-// session windows' fit; a grid in a narrower frame passes its own.
-export function squareSize(count: number, breakpoint: Breakpoint, fit: SquareFit = SQUARE_FIT): number {
-  const { available, max } = fit[breakpoint]
+// §5, floored at SQUARE_MIN_PX. Fibonacci's 7×7 gives 70 / 64 / 39.
+export function squareSize(count: number, breakpoint: Breakpoint): number {
+  const { available, max } = SQUARE_FIT[breakpoint]
   const fitted = Math.floor((available - (count - 1) * SQUARE_GAP_PX) / count)
 
   return Math.max(SQUARE_MIN_PX, Math.min(max, fitted))
@@ -73,10 +70,12 @@ export function labelSize(size: number): SquareLabelSizeValue {
 // A Square's face (§6). Running: "You" / "★" on your Selection, else blank.
 // Revealed, by headcount and room:
 //
-//   people   full        compact
-//   0        —           —
-//   1        Barthol…    Ba
-//   3        3⏎people    ×3
+//   people   full          compact
+//   0        —             —
+//   1        Bartholomew   Ba
+//   3        3⏎people      ×3
+//
+// The name goes out whole; GridCell cuts it to the Square's width with "…".
 export function squareLabel(
   mode: GridModeValue,
   square: Selection,
@@ -95,7 +94,7 @@ export function squareLabel(
   const isFull = size === SquareLabelSize.FULL
 
   if (names.length < CROWDED_SQUARE_MINIMUM) {
-    return isFull ? truncate(names[0], SQUARE_NAME_MAX_CHARS) : names[0].slice(0, SQUARE_INITIALS_LENGTH)
+    return isFull ? names[0] : names[0].slice(0, SQUARE_INITIALS_LENGTH)
   }
 
   return isFull ? `${names.length}\npeople` : `×${names.length}`

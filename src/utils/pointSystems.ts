@@ -1,11 +1,10 @@
 import {
   FIBONACCI_SEQUENCE,
   NUMERICAL_MAX,
-  POINT_SYSTEM_LABEL,
   PointSystemType,
   SLIDER_TICK_EVERY,
 } from '@/constants'
-import type { PointSystem, PointSystemType as PointSystemTypeValue } from '@/types'
+import type { PointSystemType as PointSystemTypeValue } from '@/types'
 
 // The maxima the slider may rest on. Ascending, and the same list the server
 // builds the axes from — mirrors computeAxisValues in
@@ -26,11 +25,4 @@ export function sliderTickIndexes(type: PointSystemTypeValue, count: number): nu
   return Array.from({ length: count }, (_, index) => index).filter(
     (index) => index % every === 0 || index === count - 1,
   )
-}
-
-// The ready screen's one-line recap (§7): "Fibonacci · highest value 13 · 7 × 7 Squares".
-export function pointSystemSummary({ type, sliderMax, axisValues }: PointSystem): string {
-  const size = axisValues.length
-
-  return `${POINT_SYSTEM_LABEL[type]} · highest value ${sliderMax} · ${size} × ${size} Squares`
 }

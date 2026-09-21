@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { AdminControls } from '@/components/AdminControls'
-import { ErrorBanner } from '@/components/ErrorBanner'
-import { EstimationGrid } from '@/components/EstimationGrid'
-import { PageLayout } from '@/components/PageLayout'
-import { ShareLink } from '@/components/ShareLink'
-import { SpriteScatter } from '@/components/SpriteScatter'
-import { Window } from '@/components/Window'
-import { GridMode, SESSION_WINDOW_CLASS } from '@/constants'
-import type { ActiveConnectionState, HoveredSquare, Selection } from '@/types'
+import { AdminControls } from "@/components/AdminControls";
+import { ErrorBanner } from "@/components/ErrorBanner";
+import { EstimationGrid } from "@/components/EstimationGrid";
+import { PageLayout } from "@/components/PageLayout";
+import { ShareLink } from "@/components/ShareLink";
+import { SpriteScatter } from "@/components/SpriteScatter";
+import { Window } from "@/components/Window";
+import { GridMode, SESSION_WINDOW_CLASS } from "@/constants";
+import type { ActiveConnectionState, HoveredSquare, Selection } from "@/types";
+import { useState } from "react";
 
 interface ActiveSessionViewProps {
-  sessionId: string
-  state: ActiveConnectionState
-  onSelect: (selection: Selection) => void
-  onDismissError: () => void
+  sessionId: string;
+  state: ActiveConnectionState;
+  onSelect: (selection: Selection) => void;
+  onDismissError: () => void;
   // Present for the Admin only.
-  onEndSession?: () => void
+  onEndSession?: () => void;
 }
 
 // The Active screen (DESIGN.md §7). One view for Participant and Admin alike —
@@ -32,8 +32,8 @@ export function ActiveSessionView({
   onDismissError,
   onEndSession,
 }: ActiveSessionViewProps) {
-  const [hovered, setHovered] = useState<HoveredSquare | null>(null)
-  const hasSelection = state.selection !== null
+  const [hovered, setHovered] = useState<HoveredSquare | null>(null);
+  const hasSelection = state.selection !== null;
 
   return (
     <PageLayout
@@ -53,22 +53,24 @@ export function ActiveSessionView({
 
         <Window
           title="live"
-          chip={state.isAdmin ? 'Admin' : 'Participant'}
+          chip={state.isAdmin ? "Admin" : "Participant"}
           className={SESSION_WINDOW_CLASS.window}
           bodyClassName={SESSION_WINDOW_CLASS.body}
         >
           <div className="flex flex-col gap-1.5">
             <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
-              {hasSelection ? 'Hand’s down.' : 'Pick your Square'}
+              {hasSelection ? "Hand’s down." : "Make your Vote"}
             </h1>
             <p className="font-body text-[15px] leading-[1.45] text-text-muted tablet:text-[16px]">
               {hasSelection
-                ? 'Your Selection and its Area are only visible to you. Pick another Square to move it, or the same one to clear it.'
-                : 'Time runs across, Resources go up. Your Selection stays private until the Reveal.'}
+                ? "Your Vote is only visible to you. Pick another Square to change your Vote, or click the same Square to clear your choice."
+                : "Time runs across, Resources go up. Your Vote stays private until the Reveal."}
             </p>
           </div>
 
-          {state.error && <ErrorBanner error={state.error} onDismiss={onDismissError} />}
+          {state.error && (
+            <ErrorBanner error={state.error} onDismiss={onDismissError} />
+          )}
 
           <EstimationGrid
             axisValues={state.pointSystem.axisValues}
@@ -88,5 +90,5 @@ export function ActiveSessionView({
         </Window>
       </div>
     </PageLayout>
-  )
+  );
 }

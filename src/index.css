@@ -1,124 +1,125 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 /* Self-hosted, latin only. Bungee and Silkscreen ship one weight each;
    Figtree's variable axis covers the 400–800 the design asks for (§3). */
-@import '@fontsource/bungee/latin-400.css';
-@import '@fontsource-variable/figtree/wght.css';
-@import '@fontsource/silkscreen/latin-400.css';
+@import "@fontsource/bungee/latin-400.css";
+@import "@fontsource-variable/figtree/wght.css";
+@import "@fontsource/silkscreen/latin-400.css";
 
 /* The Fold and Flip palette (DESIGN.md §2). This block is the only place in
    the repo a hex is authored — everything else, shadcn's role names included,
    points at it through var(). `white` is Tailwind's own and is not restated. */
 @theme {
-    --color-ink: #1e1b2e;
-    --color-cream: #fff6e5;
-    --color-text-muted: #3e3852;
-    --color-text-subtle: #5b5570;
-    --color-accent: #6a4ff0;
-    --color-page-top: #dcd3fb;
-    --color-selection: #ffc53d;
-    --color-danger: #ff5a5f;
-    --color-copied: #d7f2e4;
-    --color-abstained: #b42318;
-    --color-on-ink-muted: #c9c3da;
+  --color-ink: #1e1b2e;
+  --color-cream: #fff6e5;
+  --color-text-muted: #3e3852;
+  --color-text-subtle: #5b5570;
+  --color-accent: #6a4ff0;
+  --color-page-top: #dcd3fb;
+  --color-selection: #ffc53d;
+  --color-danger: #ff5a5f;
+  --color-copied: #d7f2e4;
+  --color-abstained: #b42318;
+  --color-on-ink-muted: #c9c3da;
 
-    /* The one decorative colour with no other home: the middle dot in a
+  /* The one decorative colour with no other home: the middle dot in a
        Window's chrome (§2). Its neighbours are `selection` and `danger`, which
        the palette already carries. */
-    --color-chrome-green: #4cc38a;
+  --color-chrome-green: #4cc38a;
 
-    /* The one How to play card tint the palette doesn't already carry (§2).
+  /* The one How to play card tint the palette doesn't already carry (§2).
        The other three are white, `copied` and `crowd-0`. */
-    --color-butter: #ffe8a8;
+  --color-butter: #ffe8a8;
 
-    /* Crowd ramp: how many people landed on a Square, never Time or Resources
+  /* Crowd ramp: how many people landed on a Square, never Time or Resources
        (§2). Text flips to white at crowd-3. */
-    --color-crowd-0: #f2edff;
-    --color-crowd-1: #c9bcf7;
-    --color-crowd-2: #8e77f2;
-    --color-crowd-3: #5a3fd6;
-    --color-crowd-4: #2a1f5c;
+  --color-crowd-0: #f2edff;
+  --color-crowd-1: #c9bcf7;
+  --color-crowd-2: #8e77f2;
+  --color-crowd-3: #5a3fd6;
+  --color-crowd-4: #2a1f5c;
 
-    /* Hard offset shadows, no blur, always ink (§4). The accent one carries
+  /* Hard offset shadows, no blur, always ink (§4). The accent one carries
        the dark notice and the Reveal popover. */
-    --shadow-px: 4px 4px 0 var(--color-ink);
-    --shadow-px-card: 6px 6px 0 var(--color-ink);
-    --shadow-px-window: 8px 8px 0 var(--color-ink);
-    --shadow-px-accent: 4px 4px 0 var(--color-accent);
+  --shadow-px: 4px 4px 0 var(--color-ink);
+  --shadow-px-card: 6px 6px 0 var(--color-ink);
+  --shadow-px-window: 8px 8px 0 var(--color-ink);
+  --shadow-px-accent: 4px 4px 0 var(--color-accent);
 
-    /* The Area preview on the running grid (§6): `accent` at 15% laid over
+  /* The Area preview on the running grid (§6): `accent` at 15% laid over
        whatever fill the Square already has. A shadow rather than a background
        so it composes with the Selection Area's crowd-1 underneath. */
-    --shadow-area-preview: inset 0 0 0 999px color-mix(in srgb, var(--color-accent) 15%, transparent);
+  --shadow-area-preview: inset 0 0 0 999px
+    color-mix(in srgb, var(--color-accent) 15%, transparent);
 
-    --font-display: 'Bungee', sans-serif;
-    --font-body: 'Figtree Variable', system-ui, sans-serif;
-    --font-label: 'Silkscreen', monospace;
+  --font-display: "Bungee", sans-serif;
+  --font-body: "Figtree Variable", system-ui, sans-serif;
+  --font-label: "Silkscreen", monospace;
 
-    /* ≤767 mobile · 768–1199 tablet · ≥1200 desktop (§12). Tailwind's own
+  /* ≤767 mobile · 768–1199 tablet · ≥1200 desktop (§12). Tailwind's own
        sm/md/lg/xl scale is cleared so there is one breakpoint vocabulary and
        it is the design's three artboards — `lg:` at 1024px sits inside the
        tablet range and would have read as desktop. */
-    --breakpoint-*: initial;
-    --breakpoint-tablet: 768px;
-    --breakpoint-desktop: 1200px;
+  --breakpoint-*: initial;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1200px;
 
-    /* The logo's two halves share one 7s timeline (§8), which is what keeps
+  /* The logo's two halves share one 7s timeline (§8), which is what keeps
        the flip landing inside the shake rather than drifting against it. */
-    --animate-logo-shake: ffShake 7s ease-in-out infinite;
-    --animate-logo-flip: ffFlip 7s ease-in-out infinite;
+  --animate-logo-shake: ffShake 7s ease-in-out infinite;
+  --animate-logo-flip: ffFlip 7s ease-in-out infinite;
 
-    /* The loader's accent fill, stepping across its track in whole blocks (§7).
+  /* The loader's accent fill, stepping across its track in whole blocks (§7).
        The step count is the block count, so the fill can only ever rest on a
        block edge — eight blocks across the large bar, five across the inline
        one. Under reduced motion the global rule below collapses the duration,
        which leaves the bar full and still rather than mid-step. */
-    --animate-pixel-bar-large: ffBar 1.6s steps(8) infinite;
-    --animate-pixel-bar-inline: ffBar 1.6s steps(5) infinite;
+  --animate-pixel-bar-large: ffBar 1.6s steps(8) infinite;
+  --animate-pixel-bar-inline: ffBar 1.6s steps(5) infinite;
 
-    /* The Reveal's diagonal wave (§8). `backwards` holds each Square at the
+  /* The Reveal's diagonal wave (§8). `backwards` holds each Square at the
        first keyframe through its delay, which GridCell sets per Square. */
-    --animate-reveal-in: ffRevealIn 700ms ease-out backwards;
+  --animate-reveal-in: ffRevealIn 700ms ease-out backwards;
 }
 
 /* The logo cycle (DESIGN.md §8). The outer element shakes, the inner one
    flips; the card rests at -8deg, which lives on the element rather than in
    the keyframes so the tilt survives when animation is switched off. */
 @keyframes ffShake {
-    0%,
-    58% {
-        transform: rotate(-8deg);
-    }
-    60% {
-        transform: rotate(-2deg);
-    }
-    62% {
-        transform: rotate(-14deg);
-    }
-    64% {
-        transform: rotate(-4deg);
-    }
-    66%,
-    100% {
-        transform: rotate(-8deg);
-    }
+  0%,
+  58% {
+    transform: rotate(-8deg);
+  }
+  60% {
+    transform: rotate(-2deg);
+  }
+  62% {
+    transform: rotate(-14deg);
+  }
+  64% {
+    transform: rotate(-4deg);
+  }
+  66%,
+  100% {
+    transform: rotate(-8deg);
+  }
 }
 
 @keyframes ffFlip {
-    0%,
-    66% {
-        transform: rotateY(0deg);
-    }
-    72%,
-    90% {
-        transform: rotateY(180deg);
-    }
-    96%,
-    100% {
-        transform: rotateY(360deg);
-    }
+  0%,
+  66% {
+    transform: rotateY(0deg);
+  }
+  72%,
+  90% {
+    transform: rotateY(180deg);
+  }
+  96%,
+  100% {
+    transform: rotateY(360deg);
+  }
 }
 
 /* A revealed Square arriving (§8): idle and blank, then lifted in crowd-2,
@@ -126,29 +127,29 @@
    its own final styles; and the declaration never changes afterwards, so a
    hover or popover re-render doesn't replay it. */
 @keyframes ffRevealIn {
-    0% {
-        background: var(--color-crowd-0);
-        color: transparent;
-        transform: none;
-        box-shadow: none;
-    }
-    45% {
-        background: var(--color-crowd-2);
-        color: transparent;
-        transform: translate(-2px, -2px);
-        box-shadow: 3px 3px 0 var(--color-ink);
-    }
+  0% {
+    background: var(--color-crowd-0);
+    color: transparent;
+    transform: none;
+    box-shadow: none;
+  }
+  45% {
+    background: var(--color-crowd-2);
+    color: transparent;
+    transform: translate(-2px, -2px);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
 }
 
 /* The loader (§7). The fill grows; `steps()` on the animation is what turns a
    smooth width into whole blocks. */
 @keyframes ffBar {
-    from {
-        width: 0;
-    }
-    to {
-        width: 100%;
-    }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 /* The white gaps between the loader's blocks, laid over the fill rather than
@@ -157,15 +158,19 @@
    block count) with a 3px gap, which is why the two sizes need two utilities:
    220/8 gives 27.5px, 40/5 gives 8px. */
 @utility pixel-bar-blocks-large {
-    background: repeating-linear-gradient(
-        90deg,
-        transparent 0 24.5px,
-        var(--color-white) 24.5px 27.5px
-    );
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 24.5px,
+    var(--color-white) 24.5px 27.5px
+  );
 }
 
 @utility pixel-bar-blocks-inline {
-    background: repeating-linear-gradient(90deg, transparent 0 5px, var(--color-white) 5px 8px);
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 5px,
+    var(--color-white) 5px 8px
+  );
 }
 
 /* The Create form's slider (§7): a 10px track with a 2px ink edge, filled
@@ -173,41 +178,41 @@
    thumb on a 3px shadow. RangeSlider sets --slider-fill per render; the
    gradient lives here so the colours stay palette tokens. */
 @utility pixel-slider {
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  margin: 0;
+  cursor: pointer;
+  border: 2px solid var(--color-ink);
+  background: linear-gradient(
+    to right,
+    var(--color-accent) 0 var(--slider-fill),
+    var(--color-crowd-0) var(--slider-fill) 100%
+  );
+
+  &::-webkit-slider-thumb {
     appearance: none;
-    width: 100%;
-    height: 10px;
-    margin: 0;
-    cursor: pointer;
-    border: 2px solid var(--color-ink);
-    background: linear-gradient(
-        to right,
-        var(--color-accent) 0 var(--slider-fill),
-        var(--color-crowd-0) var(--slider-fill) 100%
-    );
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--color-ink);
+    background: var(--color-white);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
 
-    &::-webkit-slider-thumb {
-        appearance: none;
-        width: 28px;
-        height: 28px;
-        border: 3px solid var(--color-ink);
-        background: var(--color-white);
-        box-shadow: 3px 3px 0 var(--color-ink);
-    }
+  &::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    box-sizing: border-box;
+    border: 3px solid var(--color-ink);
+    border-radius: 0;
+    background: var(--color-white);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
 
-    &::-moz-range-thumb {
-        width: 28px;
-        height: 28px;
-        box-sizing: border-box;
-        border: 3px solid var(--color-ink);
-        border-radius: 0;
-        background: var(--color-white);
-        box-shadow: 3px 3px 0 var(--color-ink);
-    }
-
-    &:focus-visible {
-        outline: 3px solid var(--color-ink);
-        outline-offset: 8px;
-    }
+  &:focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 8px;
+  }
 }
 
 /* shadcn's role names aliased onto the palette above — var() only, no value of
@@ -219,18 +224,18 @@
    renders unstyled until its alias joins the list, which is a visible failure
    rather than a silent drift. */
 @theme inline {
-    --color-background: var(--color-cream);
-    --color-foreground: var(--color-ink);
-    --color-border: var(--color-ink);
-    --color-input: var(--color-ink);
-    --color-ring: var(--color-accent);
-    --color-primary: var(--color-selection);
-    --color-primary-foreground: var(--color-ink);
-    --color-muted: var(--color-crowd-0);
-    --color-muted-foreground: var(--color-text-muted);
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-ink);
+  --color-border: var(--color-ink);
+  --color-input: var(--color-ink);
+  --color-ring: var(--color-accent);
+  --color-primary: var(--color-selection);
+  --color-primary-foreground: var(--color-ink);
+  --color-muted: var(--color-crowd-0);
+  --color-muted-foreground: var(--color-text-muted);
 
-    --font-sans: var(--font-body);
-    --font-heading: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-display);
 }
 
 /* Sprites are plain <img> elements, which are opaque to CSS — a fill inside one
@@ -244,37 +249,39 @@
    works for a single-colour mark — masking a character flattens its skin tone
    and outfit into one silhouette, which is why nothing else uses it. */
 @utility sprite-mask {
-    mask: var(--sprite-source) center / contain no-repeat;
-    -webkit-mask: var(--sprite-source) center / contain no-repeat;
+  mask: var(--sprite-source) center / contain no-repeat;
+  -webkit-mask: var(--sprite-source) center / contain no-repeat;
 }
 
 /* Sprites are drawn at 8px per art pixel. The SVGs carry crispEdges, but a
    browser scaling the rasterised result still smooths it, so the pixel grid is
    pinned here too. */
 @utility sprite-pixels {
-    image-rendering: pixelated;
+  image-rendering: pixelated;
 }
 
 /* A sprite set down as a sticker (§9): a soft ink drop at 18%, the one shadow
    in the design that isn't a hard offset. The white outline is already drawn
    into the sprite. */
 @utility sprite-sticker {
-    filter: drop-shadow(3px 3px 0 color-mix(in srgb, var(--color-ink) 18%, transparent));
+  filter: drop-shadow(
+    3px 3px 0 color-mix(in srgb, var(--color-ink) 18%, transparent)
+  );
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
-  /* Welcome's in-page links (How to play, Why keep Selections private?) slide
+  }
+  /* Welcome's in-page links (How to play, Why I made this) slide
      to their section rather than jumping. Reduced motion puts it back to a jump. */
   html {
     @apply font-body;
     scroll-behavior: smooth;
-    }
+  }
 
   /* §8: reduced motion switches off every animation and transition in the
      app, not a list of named ones — so an animation added in a later stage is

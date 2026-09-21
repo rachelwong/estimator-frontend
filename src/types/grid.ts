@@ -1,4 +1,4 @@
-import type { Breakpoint, HoverSource } from './constants'
+import type { HoverSource } from './constants'
 import type { Selection } from './protocol'
 
 // The Square under the mouse or keyboard focus, and which of the two put it
@@ -14,7 +14,3 @@ export interface LandedPerson {
   name: string
   square: Selection
 }
-
-// How big a grid's Squares may get at each artboard (§5): the width budget
-// they share, and the size they stop growing at.
-export type SquareFit = Record<Breakpoint, { available: number; max: number }>

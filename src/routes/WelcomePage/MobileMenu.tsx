@@ -1,16 +1,15 @@
-import speechBubbleQuestion from '@/assets/sprites/bubbleq.svg'
-import cardBack from '@/assets/sprites/cardback.svg'
-import laptop from '@/assets/sprites/laptop.svg'
-import personFour from '@/assets/sprites/p4.svg'
-import server from '@/assets/sprites/server.svg'
-import { Window } from '@/components/Window'
-import { REPOSITORY_URL, WelcomeSection } from '@/constants'
-import { MenuRow } from './MenuRow'
-import { StartSessionButton } from './StartSessionButton'
+import cardBack from "@/assets/sprites/cardback.svg";
+import laptop from "@/assets/sprites/laptop.svg";
+import personFour from "@/assets/sprites/p4.svg";
+import server from "@/assets/sprites/server.svg";
+import { Window } from "@/components/Window";
+import { REPOSITORY_URL, WelcomeSection } from "@/constants";
+import { MenuRow } from "./MenuRow";
+import { StartSessionButton } from "./StartSessionButton";
 
 interface MobileMenuProps {
-  id: string
-  onClose: () => void
+  id: string;
+  onClose: () => void;
 }
 
 // The phone's menu (§7 "Mobile menu"): an ink 45% backdrop over the page below
@@ -23,7 +22,11 @@ interface MobileMenuProps {
 export function MobileMenu({ id, onClose }: MobileMenuProps) {
   return (
     <div className="tablet:hidden">
-      <div aria-hidden="true" className="fixed inset-x-0 top-16 bottom-0 bg-ink/45" onClick={onClose} />
+      <div
+        aria-hidden="true"
+        className="fixed inset-x-0 top-16 bottom-0 bg-ink/45"
+        onClick={onClose}
+      />
 
       <nav
         id={id}
@@ -36,12 +39,6 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
               href={`#${WelcomeSection.HOW_TO_PLAY}`}
               sprite={cardBack}
               label="How to play"
-              onClick={onClose}
-            />
-            <MenuRow
-              href={`#${WelcomeSection.WHY_PRIVATE}`}
-              sprite={speechBubbleQuestion}
-              label="Why keep Selections private?"
               onClick={onClose}
             />
             <MenuRow
@@ -72,5 +69,5 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
         </Window>
       </nav>
     </div>
-  )
+  );
 }

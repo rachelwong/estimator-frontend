@@ -38,8 +38,6 @@ export async function session({ browser, reporter }) {
   await admin.getByRole('slider').focus()
   await admin.keyboard.press('End')
   await admin.getByRole('button', { name: 'Create session' }).click()
-  await admin.waitForURL(/\/ready$/)
-  await admin.getByRole('link', { name: 'Go to the session →' }).click()
   await admin.waitForURL(/\/start$/)
   await cells(admin).first().waitFor()
 

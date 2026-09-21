@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { CodeIcon } from './CodeIcon'
 
 interface RepositoryCardProps {
-  /** The repo's own name — the Welcome cards name them literally (§7 item 7). */
+  /** The repo's own name — the Welcome cards name them literally (§7 item 6). */
   name: string
   description: string
   /** A `.svg` imported from `@/assets/sprites`. */

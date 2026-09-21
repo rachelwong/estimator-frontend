@@ -13,9 +13,8 @@ import { cn } from '@/lib/utils'
 import { nameError } from '@/lib/validation'
 import type { ActionErrorData } from '@/types'
 
-// The Join screen (DESIGN.md §7). Only a heading, one input, the button and
-// the privacy note — nothing else. The input carries no visible label; its
-// placeholder and `aria-label` both say "Your name".
+// The Join screen (DESIGN.md §7). Only a heading, one labelled input, the
+// button and the privacy note — nothing else. The field reads as Create's does.
 export function JoinSessionPage() {
   const [name, setName] = useState('')
   const [touched, setTouched] = useState(false)
@@ -45,11 +44,14 @@ export function JoinSessionPage() {
 
           <Form method="post" className="flex flex-col gap-5 tablet:gap-6">
             <div className="flex flex-col gap-2">
+              <label htmlFor="name" className="text-[15px] font-extrabold">
+                Your name
+              </label>
               <Input
+                id="name"
                 name="name"
                 value={name}
-                placeholder="Your name"
-                aria-label="Your name"
+                placeholder="e.g. Rachel"
                 autoComplete="off"
                 onChange={(event) => setName(event.target.value)}
                 onBlur={() => setTouched(true)}

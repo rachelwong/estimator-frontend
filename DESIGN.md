@@ -132,17 +132,18 @@ beneath.
 
 ## 5. Layout
 
-|                        | Desktop         | Tablet | Mobile          |
-| ---------------------- | --------------- | ------ | --------------- |
-| Canvas width           | 1440            | 834    | 390             |
-| Page padding (Welcome) | 80              | 40     | 20              |
-| Header height          | 72 (Welcome 84) | 72     | 60 (Welcome 64) |
-| Active / Reveal window | 780             | 740    | 366             |
-| Create window          | 640             | 600    | 366             |
-| Join window            | 560             | 560    | 366             |
-| Error window           | 900             | 740    | 366             |
-| Square (Fibonacci 7×7) | 70              | 64     | 39              |
-| Square gap             | 4               | 4      | 4               |
+|                        | Desktop | Tablet | Mobile |
+| ---------------------- | ------- | ------ | ------ |
+| Canvas width           | 1440    | 834    | 390    |
+| Page padding (Welcome) | 80      | 40     | 20     |
+| Header height          | 84      | 72     | 64     |
+| Header padding         | 80      | 40     | 20     |
+| Active / Reveal window | 780     | 740    | 366    |
+| Create window          | 640     | 600    | 366    |
+| Join window            | 560     | 560    | 366    |
+| Error window           | 900     | 740    | 366    |
+| Square (Fibonacci 7×7) | 70      | 64     | 39     |
+| Square gap             | 4       | 4      | 4      |
 
 Square size for any Point system:
 `min(max, floor((available − (n − 1) × 4) / n))`, where `available` is 630 /
@@ -190,11 +191,11 @@ Area never shows in the Reveal. Touch gets no hover-dependent affordance.
 
 ### Labels in the Reveal
 
-| People on the Square | ≥56px Square                           | Small Square    |
-| -------------------- | -------------------------------------- | --------------- |
-| 0                    | —                                      | —               |
-| 1                    | the name, cut to 8 characters with "…" | first 2 letters |
-| 2+                   | "3" / "people" on two lines            | "×3"            |
+| People on the Square | ≥56px Square                                 | Small Square    |
+| -------------------- | -------------------------------------------- | --------------- |
+| 0                    | —                                            | —               |
+| 1                    | the name, cut to the Square's width with "…" | first 2 letters |
+| 2+                   | "3" / "people" on two lines                  | "×3"            |
 
 Silkscreen 11px (10px on small Squares).
 
@@ -232,7 +233,7 @@ Participants follow with a dashed chip and "Abstained" in `abstained` red.
 
 ### Welcome (`/welcome`)
 
-1. Header — logo, "How to play", "Why keep Selections private?", GitHub,
+1. Header — logo, "How to play", GitHub,
    "Start a session" (mobile: logo + Menu button).
 2. Hero on `page-top` — Silkscreen badge "Planning poker, minus the poker
    face", Bungee hero "Everyone plays a hand. / Nobody peeks." (second line in
@@ -243,20 +244,18 @@ Participants follow with a dashed chip and "Abstained" in `abstained` red.
    4×4 ordered dither) into cream, just before How to play.
 5. How to play — four cards LV.1–LV.4: Start a session / Pull up a chair /
    Hands down / The Reveal. 4 → 2 → 1 columns.
-6. Why keep Selections private? — Active and Reveal grids side by side
-   (stacked on tablet and mobile).
-7. Why I made this — placeholder note + two `page-top` repo cards
+6. Why I made this — placeholder note + two `page-top` repo cards
    (estimator-frontend, estimator-backend) each with "View on GitHub". Note left
    / cards right on desktop; cards side by side on tablet; stacked on mobile.
-8. House rules — six feature cards. 3 → 2 → 1 columns.
-9. CTA band in `accent` — "Round up the team." + Start a session, with pixel
+7. House rules — six feature cards. 3 → 2 → 1 columns.
+8. CTA band in `accent` — "Round up the team." + Start a session, with pixel
    characters.
-10. Footer.
+9. Footer.
 
 **Mobile menu:** the Menu button (3-bar icon) becomes a yellow "Close" button.
 An ink 45% backdrop covers the page below the header; a window titled "menu"
 drops in 12px from the edges with 60px rows (sprite + label + →) separated by
-2px dashed ink: How to play · Why keep Selections private? · Why I made this ·
+2px dashed ink: How to play · Why I made this ·
 Frontend on GitHub · Backend on GitHub, then a full-width Start a session.
 Tapping the backdrop closes it.
 
@@ -271,17 +270,15 @@ Window "new-session", chip "Admin".
 - Highest axis value: value in Bungee `accent` beside the label; pixel slider
   (10px track filled `accent`, 28px square white thumb with a 3px shadow);
   Silkscreen ticks beneath.
-- Create session (`selection`, full width).
-- Ready state: spade card mark, "Your session's ready", summary line
-  ("Fibonacci · highest value 13 · 7 × 7 Squares"), the link in a `crowd-0` box
-  with Copy link, then "Go to the session →" and "Change settings".
+- Create session (`selection`, full width). Success goes straight to the
+  Session, where the Admin's share bar holds the link. No ready screen.
 
 No grid preview.
 
 ### Join (`/:id/join`)
 
 Window "join · <session>", chip "Participant". Only: "Join session" heading,
-one input (placeholder and `aria-label` "Your name"), Join session button, and
+one input labelled "Your name" (placeholder "e.g. Rachel"), Join session button, and
 a `crowd-0` note: "Your Selection stays private until the Admin ends the
 session and the Reveal shows everyone's Square."
 
@@ -290,7 +287,7 @@ session and the Reveal shows everyone's Square."
 - Header: logo · Share control (per option below) · End session & reveal
   (Admin, `danger`). On mobile the End button moves to full width under the grid.
 - Window title "<session> · live", chip "Admin" / "Participant".
-- Heading "Pick your Square" → "Hand's down." once there's a Selection, with a
+- Heading "Make your Vote" → "Hand's down." once there's a Selection, with a
   one-line hint.
 - The grid.
 - No Participant count, no footer hint line.
@@ -339,8 +336,8 @@ only the copy changes.
 
 | Error                | Heading              | Body                                                                                                                                       | Primary         | Secondary       |
 | -------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | --------------- | --------------- |
-| Not found            | Session not found    | This link doesn't match a live session. Sessions live in memory, so a server restart or a mistyped link lands you here. Nothing was saved. | Start a session | Back to Welcome |
-| Connection lost      | Connection lost      | We can't reach the session right now. When you reconnect you'll join as a new Participant, so pick your Square again.                      | Try again       | Back to Welcome |
+| Not found            | Session not found    | This link doesn't match a live session. Sessions live in memory, so a server restart or a mistyped link lands you here. Nothing was saved. | Start a session | Back to Home    |
+| Connection lost      | Connection lost      | We can't reach the session right now. When you reconnect you'll join as a new Participant, so Make your Vote again.                        | Try again       | Back to Home    |
 | Something went wrong | Something went wrong | The session hit an error we didn't expect. Try again, or start a fresh session.                                                            | Try again       | Start a session |
 
 ### Loader

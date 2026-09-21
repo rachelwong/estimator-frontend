@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, useActionData, useLocation, useNavigation } from 'react-router'
+import { Form, useActionData, useNavigation } from 'react-router'
 import { PageLayout } from '@/components/PageLayout'
 import { PixelProgressBar } from '@/components/PixelProgressBar'
 import { PointSystemPicker } from '@/components/PointSystemPicker'
@@ -16,23 +16,17 @@ import {
 } from '@/constants'
 import { cn } from '@/lib/utils'
 import { nameError } from '@/lib/validation'
-import type { ActionErrorData, CreateFormDefaults } from '@/types'
+import type { ActionErrorData } from '@/types'
 import type { PointSystemType as PointSystemTypeValue } from '@/types'
 
 // The Create screen (DESIGN.md §7): window "new-session", your name, the point
 // system, the highest axis value, and Create session. No grid preview.
-//
-// "Change settings" on the ready screen comes back here with the point system
-// and maximum in location state. Every other way in starts blank.
 // Default export so router.tsx can lazy() it directly.
 export default function CreateSessionPage() {
-  const defaults = useLocation().state as CreateFormDefaults | null
   const [adminName, setAdminName] = useState('')
   const [touched, setTouched] = useState(false)
-  const [pointSystemType, setPointSystemType] = useState<PointSystemTypeValue>(
-    defaults?.pointSystemType ?? PointSystemType.NUMERICAL,
-  )
-  const [sliderMax, setSliderMax] = useState(defaults?.sliderMax ?? 0)
+  const [pointSystemType, setPointSystemType] = useState<PointSystemTypeValue>(PointSystemType.NUMERICAL)
+  const [sliderMax, setSliderMax] = useState(0)
 
   const navigation = useNavigation()
   const actionData = useActionData() as ActionErrorData | undefined

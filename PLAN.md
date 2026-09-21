@@ -103,7 +103,6 @@ linked. No component anywhere maps a status to a screen.
 | `/welcome` | `WelcomePage` | — |
 | `/new` | `CreateSessionPage` | — |
 | `/:sessionId` | — | Always redirects to `/join` |
-| `/:sessionId/ready` | `ReadySessionPage` | Unknown → `/not-found`, ended → `/ended`, no admin token → `/start` or `/join` |
 | `/:sessionId/join` | `JoinSessionPage` | Unknown → `/not-found`, ended → `/ended`, already connected → `/start` |
 | `/:sessionId/start` | `ActiveSessionPage` | Unknown → `/not-found`, ended → `/ended`, no identity → `/join` |
 | `/:sessionId/ended` | `EndedPage` | Unknown → `/not-found`, still open → `/start` or `/join` |
@@ -663,8 +662,9 @@ The creating Admin already has an identity, so no detour through `/join`.
 the URL changes. `/start` can still 404.
 
 > Since Fold and Flip Stage 7 the picker is two segmented buttons, the slider
-> spaces its values evenly, submit reads "Create session", and success lands
-> on a ready screen at `/:sessionId/ready` that links on to `/start`.
+> spaces its values evenly, and submit reads "Create session". Stage 7 also
+> added a ready screen at `/:sessionId/ready`; it was removed after design
+> feedback, so success lands on `/start` again, as above.
 
 ---
 

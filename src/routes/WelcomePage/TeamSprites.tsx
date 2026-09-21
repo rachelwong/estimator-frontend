@@ -9,7 +9,7 @@ import { Sprite } from '@/components/Sprite'
 import { SPRITE_SCATTER_CLASS } from '@/constants'
 import { cn } from '@/lib/utils'
 
-// The team in the closing band (§7 item 9), off the three artboards. Anchored
+// The team in the closing band (§7 item 8), off the three artboards. Anchored
 // to the right edge so they stay clear of the words at any width; three stand
 // on every size, and desktop adds a fourth with a second bubble and a mug.
 //

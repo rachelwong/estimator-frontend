@@ -1,14 +1,12 @@
-import { PageLayout } from '@/components/PageLayout'
-import { WELCOME_HEADER_CLASS } from '@/constants'
-import { CallToActionBand } from './CallToActionBand'
-import { DitherBand } from './DitherBand'
-import { HeroSection } from './HeroSection'
-import { HouseRulesSection } from './HouseRulesSection'
-import { HowToPlaySection } from './HowToPlaySection'
-import { WelcomeFooter } from './WelcomeFooter'
-import { WelcomeNavigation } from './WelcomeNavigation'
-import { WhyIMadeThisSection } from './WhyIMadeThisSection'
-import { WhyPrivateSection } from './WhyPrivateSection'
+import { PageLayout } from "@/components/PageLayout";
+import { CallToActionBand } from "./CallToActionBand";
+import { DitherBand } from "./DitherBand";
+import { HeroSection } from "./HeroSection";
+import { HouseRulesSection } from "./HouseRulesSection";
+import { HowToPlaySection } from "./HowToPlaySection";
+import { WelcomeFooter } from "./WelcomeFooter";
+import { WelcomeNavigation } from "./WelcomeNavigation";
+import { WhyIMadeThisSection } from "./WhyIMadeThisSection";
 
 // Home for creators (DESIGN.md §7): what Fold and Flip is, a live Reveal to
 // poke at, and a way in. Joiners arrive on /:id/join and never see it.
@@ -21,18 +19,13 @@ import { WhyPrivateSection } from './WhyPrivateSection'
 // sprites would otherwise ride in the entry chunk for every Join and Reveal.
 export default function WelcomePage() {
   return (
-    <PageLayout
-      headerClassName={WELCOME_HEADER_CLASS}
-      actions={<WelcomeNavigation />}
-      footer={<WelcomeFooter />}
-    >
+    <PageLayout actions={<WelcomeNavigation />} footer={<WelcomeFooter />}>
       <HeroSection />
       <DitherBand />
       <HowToPlaySection />
-      <WhyPrivateSection />
       <WhyIMadeThisSection />
       <HouseRulesSection />
       <CallToActionBand />
     </PageLayout>
-  )
+  );
 }
