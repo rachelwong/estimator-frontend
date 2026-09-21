@@ -699,6 +699,10 @@ an error page replaces the route it belongs to. On the top level that would
 replace `RootLayout` too, and the Fold and Flip header would disappear. One
 level down, only the page area is swapped for the error, and the header stays.
 
+> Since Fold and Flip Stage 7 every page renders its own `PageLayout`, header
+> included, so `AppError` is back on the top-level route and the extra route is
+> gone. The header no longer depends on where the error lands.
+
 `src/routes/loaders.ts` — `joinLoader`, `startLoader`, `endedLoader`, each doing
 its own checks per the routes table and calling `redirect()` rather than
 rendering a wrong-status page. No socket touched yet.

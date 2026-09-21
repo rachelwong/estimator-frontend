@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Form, useActionData, useLocation, useNavigation } from 'react-router'
+import { PageLayout } from '@/components/PageLayout'
 import { PixelProgressBar } from '@/components/PixelProgressBar'
 import { PointSystemPicker } from '@/components/PointSystemPicker'
 import { RangeSlider } from '@/components/RangeSlider'
@@ -51,68 +52,70 @@ export default function CreateSessionPage() {
   }
 
   return (
-    <main className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
-      <SpriteScatter />
+    <PageLayout>
+      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
+        <SpriteScatter />
 
-      <Window
-        title="new-session"
-        chip="Admin"
-        className={CREATE_WINDOW_CLASS}
-        bodyClassName={FORM_WINDOW_BODY_CLASS}
-      >
-        <div className="flex flex-col gap-1.5">
-          <h2 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[28px]">
-            New session
-          </h2>
-          <p className="text-[16px] leading-[1.45] text-text-muted">
-            You’ll be the Admin: you pick like everyone else, and you’re the one who ends the
-            session.
-          </p>
-        </div>
-
-        <Form method="post" className="flex flex-col gap-5 tablet:gap-6">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="adminName" className="text-[15px] font-extrabold">
-              Your name
-            </label>
-            <Input
-              id="adminName"
-              name="adminName"
-              value={adminName}
-              placeholder="e.g. Rachel"
-              autoComplete="off"
-              onChange={(event) => setAdminName(event.target.value)}
-              onBlur={() => setTouched(true)}
-              aria-invalid={touched && validationError !== null}
-            />
-            {touched && validationError && (
-              <p className="text-[14px] text-abstained">{validationError}</p>
-            )}
+        <Window
+          title="new-session"
+          chip="Admin"
+          className={CREATE_WINDOW_CLASS}
+          bodyClassName={FORM_WINDOW_BODY_CLASS}
+        >
+          <div className="flex flex-col gap-1.5">
+            <h2 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[28px]">
+              New session
+            </h2>
+            <p className="text-[16px] leading-[1.45] text-text-muted">
+              You’ll be the Admin: you pick like everyone else, and you’re the one who ends the
+              session.
+            </p>
           </div>
 
-          <PointSystemPicker value={pointSystemType} onChange={handlePointSystemChange} />
+          <Form method="post" className="flex flex-col gap-5 tablet:gap-6">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="adminName" className="text-[15px] font-extrabold">
+                Your name
+              </label>
+              <Input
+                id="adminName"
+                name="adminName"
+                value={adminName}
+                placeholder="e.g. Rachel"
+                autoComplete="off"
+                onChange={(event) => setAdminName(event.target.value)}
+                onBlur={() => setTouched(true)}
+                aria-invalid={touched && validationError !== null}
+              />
+              {touched && validationError && (
+                <p className="text-[14px] text-abstained">{validationError}</p>
+              )}
+            </div>
 
-          <RangeSlider
-            pointSystemType={pointSystemType}
-            value={sliderMax}
-            onChange={setSliderMax}
-          />
+            <PointSystemPicker value={pointSystemType} onChange={handlePointSystemChange} />
 
-          {actionData?.error && <p className="text-[14px] text-abstained">{actionData.error}</p>}
+            <RangeSlider
+              pointSystemType={pointSystemType}
+              value={sliderMax}
+              onChange={setSliderMax}
+            />
 
-          {/* Pressed, it carries the inline loader (§7) — held at full
-              strength rather than dimmed like a button that can't be used. */}
-          <Button
-            type="submit"
-            size="lg"
-            className={cn('w-full', isSubmitting && 'disabled:opacity-100')}
-            disabled={isSubmitting || !canSubmit}
-          >
-            {isSubmitting && <PixelProgressBar size={PixelBarSize.INLINE} />}
-            {isSubmitting ? 'Creating session…' : 'Create session'}
-          </Button>
-        </Form>
-      </Window>
-    </main>
+            {actionData?.error && <p className="text-[14px] text-abstained">{actionData.error}</p>}
+
+            {/* Pressed, it carries the inline loader (§7) — held at full
+                strength rather than dimmed like a button that can't be used. */}
+            <Button
+              type="submit"
+              size="lg"
+              className={cn('w-full', isSubmitting && 'disabled:opacity-100')}
+              disabled={isSubmitting || !canSubmit}
+            >
+              {isSubmitting && <PixelProgressBar size={PixelBarSize.INLINE} />}
+              {isSubmitting ? 'Creating session…' : 'Create session'}
+            </Button>
+          </Form>
+        </Window>
+      </div>
+    </PageLayout>
   )
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { createPortal } from 'react-dom'
 import { EstimationGrid } from '@/components/EstimationGrid'
+import { PageLayout } from '@/components/PageLayout'
 import { ShareLink } from '@/components/ShareLink'
 import { SpriteScatter } from '@/components/SpriteScatter'
 import { Window } from '@/components/Window'
@@ -14,8 +14,6 @@ import { WhoLandedWhere } from './WhoLandedWhere'
 interface RevealViewProps {
   session: GetSessionResponse
   viewer: RevealViewer
-  /** RootLayout's header slot — null until it mounts. */
-  headerSlot: HTMLElement | null
 }
 
 // The Reveal screen (DESIGN.md §7): the dark notice, the revealed grid, and
@@ -25,19 +23,16 @@ interface RevealViewProps {
 // "Start a new session" sits in the header from tablet up and full width at
 // the bottom on mobile, as End does on Active. Everyone gets it — the artboard
 // draws it for either role, and the Session it would start is a fresh one.
-export function RevealView({ session, viewer, headerSlot }: RevealViewProps) {
+export function RevealView({ session, viewer }: RevealViewProps) {
   const [hovered, setHovered] = useState<HoveredSquare | null>(null)
   const [pinned, setPinned] = useState<Selection | null>(null)
   const chip = viewer.isAdmin ? 'Admin' : viewer.hasJoined ? 'Participant' : undefined
 
   return (
-    <>
-      {headerSlot &&
-        createPortal(<StartSessionLink className="hidden text-[12px] tablet:inline-flex" />, headerSlot)}
-
+    <PageLayout actions={<StartSessionLink className="hidden text-[12px] tablet:inline-flex" />}>
       {viewer.isAdmin && <ShareLink sessionId={session.sessionId} />}
 
-      <main className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
+      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
         <SpriteScatter />
 
         <Window
@@ -79,7 +74,7 @@ export function RevealView({ session, viewer, headerSlot }: RevealViewProps) {
 
           <StartSessionLink className="h-[52px] w-full text-[14px] tablet:hidden" />
         </Window>
-      </main>
-    </>
+      </div>
+    </PageLayout>
   )
 }

@@ -1,6 +1,5 @@
 import { lazy } from 'react'
 import { createBrowserRouter, redirect } from 'react-router'
-import { AppHeader } from '@/components/AppHeader'
 import { LoadingWindow } from '@/components/LoadingWindow'
 import { RoutePath } from '@/constants'
 import { AppError } from '@/routes/AppError'
@@ -42,52 +41,42 @@ const EndedPage = lazy(() => import('@/routes/EndedPage'))
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,
-    // First load has no navigation to track, and is usually the cold start. It
-    // replaces RootLayout, so it brings its own header.
-    hydrateFallbackElement: (
-      <>
-        <AppHeader />
-        <LoadingWindow />
-      </>
-    ),
+    // First load has no navigation to track, and is usually the cold start.
+    hydrateFallbackElement: <LoadingWindow />,
+    // Replaces RootLayout, which is only loading states — AppError brings its
+    // own PageLayout, as every page does.
+    errorElement: <AppError />,
     children: [
+      { path: RoutePath.HOME, element: null, loader: () => redirect(RoutePath.WELCOME) },
+      { path: RoutePath.WELCOME, element: <WelcomePage /> },
+      { path: RoutePath.NEW, element: <CreateSessionPage />, action: createSessionAction },
+      { path: '/not-found', element: <NotFoundPage /> },
+      // Redirect-only. element: null, not omitted — this route renders while
+      // /join's loader runs, and an undefined element warns.
       {
-        // Pathless, so a failed page renders AppError inside RootLayout's
-        // Outlet and keeps the header. On the root route it would replace it.
-        errorElement: <AppError />,
-        children: [
-          { path: RoutePath.HOME, element: null, loader: () => redirect(RoutePath.WELCOME) },
-          { path: RoutePath.WELCOME, element: <WelcomePage /> },
-          { path: RoutePath.NEW, element: <CreateSessionPage />, action: createSessionAction },
-          { path: '/not-found', element: <NotFoundPage /> },
-          // Redirect-only. element: null, not omitted — this route renders while
-          // /join's loader runs, and an undefined element warns.
-          {
-            path: '/:sessionId',
-            element: null,
-            loader: ({ params }) => redirect(`/${params.sessionId}/join`),
-          },
-          {
-            path: '/:sessionId/join',
-            element: <JoinSessionPage />,
-            loader: joinLoader,
-            action: joinAction,
-          },
-          { path: '/:sessionId/ready', element: <ReadySessionPage />, loader: readyLoader },
-          { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
-          { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
-          // The stage sheets — tokens, sprites, primitives — dev builds only.
-          // Removed once the screens they stand in for exist.
-          ...(import.meta.env.DEV
-            ? [
-                { path: '/dev/tokens', element: <TokensPage /> },
-                { path: '/dev/sprites', element: <SpritesPage /> },
-                { path: '/dev/primitives', element: <PrimitivesPage /> },
-              ]
-            : []),
-          { path: '*', element: null, loader: () => redirect('/not-found') },
-        ],
+        path: '/:sessionId',
+        element: null,
+        loader: ({ params }) => redirect(`/${params.sessionId}/join`),
       },
+      {
+        path: '/:sessionId/join',
+        element: <JoinSessionPage />,
+        loader: joinLoader,
+        action: joinAction,
+      },
+      { path: '/:sessionId/ready', element: <ReadySessionPage />, loader: readyLoader },
+      { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
+      { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
+      // The stage sheets — tokens, sprites, primitives — dev builds only.
+      // Removed once the screens they stand in for exist.
+      ...(import.meta.env.DEV
+        ? [
+            { path: '/dev/tokens', element: <TokensPage /> },
+            { path: '/dev/sprites', element: <SpritesPage /> },
+            { path: '/dev/primitives', element: <PrimitivesPage /> },
+          ]
+        : []),
+      { path: '*', element: null, loader: () => redirect('/not-found') },
     ],
   },
 ])

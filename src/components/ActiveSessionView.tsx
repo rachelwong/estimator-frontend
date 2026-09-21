@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { createPortal } from 'react-dom'
 import { AdminControls } from '@/components/AdminControls'
 import { ErrorBanner } from '@/components/ErrorBanner'
 import { EstimationGrid } from '@/components/EstimationGrid'
+import { PageLayout } from '@/components/PageLayout'
 import { ShareLink } from '@/components/ShareLink'
 import { SpriteScatter } from '@/components/SpriteScatter'
 import { Window } from '@/components/Window'
@@ -12,8 +12,6 @@ import type { ActiveConnectionState, HoveredSquare, Selection } from '@/types'
 interface ActiveSessionViewProps {
   sessionId: string
   state: ActiveConnectionState
-  /** RootLayout's header slot — null until it mounts. */
-  headerSlot: HTMLElement | null
   onSelect: (selection: Selection) => void
   onDismissError: () => void
   // Present for the Admin only.
@@ -24,14 +22,12 @@ interface ActiveSessionViewProps {
 // the Admin is a Participant with one extra capability, so the difference is
 // the share bar, the End button and the chip.
 //
-// End sits in the header from tablet up — portalled into RootLayout's header
-// slot, so it stays this view's own element with this view's callback — and
-// moves to full width under the grid on mobile. Both are rendered and CSS shows
-// one, so the confirm dialog belongs to whichever the viewport draws.
+// End sits in the header from tablet up and moves to full width under the grid
+// on mobile. Both are rendered and CSS shows one, so the confirm dialog belongs
+// to whichever the viewport draws.
 export function ActiveSessionView({
   sessionId,
   state,
-  headerSlot,
   onSelect,
   onDismissError,
   onEndSession,
@@ -40,20 +36,19 @@ export function ActiveSessionView({
   const hasSelection = state.selection !== null
 
   return (
-    <>
-      {onEndSession &&
-        headerSlot &&
-        createPortal(
+    <PageLayout
+      actions={
+        onEndSession && (
           <AdminControls
             onEndSession={onEndSession}
             className="hidden text-[12px] tablet:inline-flex"
-          />,
-          headerSlot,
-        )}
-
+          />
+        )
+      }
+    >
       {onEndSession && <ShareLink sessionId={sessionId} />}
 
-      <main className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
+      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
         <SpriteScatter />
 
         <Window
@@ -91,7 +86,7 @@ export function ActiveSessionView({
             />
           )}
         </Window>
-      </main>
-    </>
+      </div>
+    </PageLayout>
   )
 }

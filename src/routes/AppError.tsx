@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useRevalidator, useRouteError } from 'react-router'
+import { PageLayout } from '@/components/PageLayout'
 import { Button } from '@/components/ui/button'
 import { describeError } from '@/utils'
 
@@ -18,13 +19,15 @@ export function AppError() {
   }, [error])
 
   return (
-    <main className="mx-auto grid max-w-md gap-4 px-6 py-10 text-center">
-      <h2 className="text-xl font-semibold">{title}</h2>
-      <p className="text-sm text-muted-foreground">{detail}</p>
+    <PageLayout>
+      <div className="mx-auto grid w-full max-w-md gap-4 px-6 py-10 text-center">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        <p className="text-sm text-muted-foreground">{detail}</p>
 
-      <Button onClick={() => revalidator.revalidate()} disabled={isRetrying}>
-        {isRetrying ? 'Retrying…' : 'Retry'}
-      </Button>
-    </main>
+        <Button onClick={() => revalidator.revalidate()} disabled={isRetrying}>
+          {isRetrying ? 'Retrying…' : 'Retry'}
+        </Button>
+      </div>
+    </PageLayout>
   )
 }
