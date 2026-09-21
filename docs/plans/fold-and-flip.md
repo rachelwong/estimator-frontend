@@ -535,6 +535,36 @@ inlined, against 12.71 kB as separate files plus a request each — the pixel
 path data is repetitive enough that one gzip stream compresses it far better
 than thirty do. A smaller bundle number there would mean more bytes on the wire.
 
+**Done.** All ten sections at 390 / 834 / 1440 with no page overflow, reduced
+motion on. The hero's Reveal window opens pinned on its crowded Square and
+doesn't scroll the page to get there. The phone's menu closes on a row, the
+backdrop, Esc or Close. Welcome is its own chunk (6.4 kB gzipped), and the entry
+dropped 89.6 → 85.4 kB gzipped. `npm run smoke` is 165/165, with a new `welcome`
+scenario.
+
+Where this stage went past or against the letter above:
+
+| Choice | Why |
+| --- | --- |
+| **`RevealWindow` pulled out of `RevealView`** — notice, heading, grid, chips and their shared hover and pin | Section 3 is "the real Reveal window". A copy would drift from the screen it stands for. `RevealView` keeps the page around it: share bar, sprites, Start a new session |
+| `EstimationGrid` skips scrolling to a Square that was pinned when it mounted | The hero opens pinned. On a phone, scrolling it into view would drag the page down to the demo on arrival |
+| `EstimationGrid` takes an optional `squareFit`, and the side-by-side grids cap at 50 / 48 / 36 | At the session windows' 70px, each half-width window overflowed at 1200px and scrolled sideways |
+| Both "Why keep Selections private?" grids take input | They're the real grid on a sample Session, so the left one moves and clears a Selection and the right one opens popovers. Nothing is sent anywhere |
+| Cards and sprite placements written out in JSX, not tables in `src/constants.ts` | A module's exports all land in one chunk. Sprite imports in `constants.ts` would put the Welcome art in the entry chunk that `lazy()` is there to keep it out of. `SpriteScatter` set the precedent |
+| The sample Session is in `src/constants.ts` as `WELCOME_DEMO_*` | It ships with the app, so it isn't a dev fixture |
+| The dither band is one 4×12 SVG pattern tile, generated from the Bayer matrix and three thresholds (2 / 8 / 14, which gives 7/8, 1/2 and 1/8 lavender, as decoded from the artboard) | It tiles at any width and nothing has to measure the page |
+| `--color-butter` (`#FFE8A8`) authored as a palette token | The one How to play tint that isn't already a token. The other three are white, `copied` and `crowd-0` |
+| House rules drop the Card shadow | As the artboard draws them. §4 lists House rules as a Card with a 6px shadow, so this is a deliberate departure from `DESIGN.md` |
+| Hero line reads "Teams who estimate together / ship together.", the second line in `accent` | Replaces §7's "Everyone plays a hand. / Nobody peeks." at your request |
+| Repo links point at `github.com/rachelwong/…`, the frontend's own remote | The handle was listed as open for Stage 10, but it could be read straight off the remote. The "Why I made this" copy is still a placeholder |
+| The footer's "Privacy" link is left out | There's no privacy page for it to link to |
+| Desktop nav reads "Why keep Selections private?", not the artboard's "Why hidden?" | §7 item 1 names it that way, and it fits at 1200px |
+| No window chips on the two comparison windows | Their titles already read `live` and `revealed`. Once the Session name came out of the titles, a matching chip said the same thing twice |
+| The hero line stays an `h2` | As in Stages 5 and 8, the `h1` pass waits for Stage 10 |
+
+The "Voting is closed" wording in the Reveal notice is kept as is, so the hero
+shows it too.
+
 ### Stage 10 — Copy, smoke tests, and a full pass
 
 - Final Welcome copy, "Why I made this", and the GitHub handle for both repo

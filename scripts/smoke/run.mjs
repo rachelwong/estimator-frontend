@@ -11,8 +11,9 @@ import { create } from './scenarios/create.mjs'
 import { join } from './scenarios/join.mjs'
 import { routing } from './scenarios/routing.mjs'
 import { session } from './scenarios/session.mjs'
+import { welcome } from './scenarios/welcome.mjs'
 
-const SCENARIOS = { create, routing, join, session }
+const SCENARIOS = { welcome, create, routing, join, session }
 
 const requested = process.argv.slice(2)
 const unknown = requested.filter((name) => !(name in SCENARIOS))

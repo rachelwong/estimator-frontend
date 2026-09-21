@@ -27,6 +27,7 @@ import type {
   LandedPerson,
   RevealPayload,
   Selection,
+  SquareFit,
   SquareHighlight as SquareHighlightValue,
   SquareLabelSize as SquareLabelSizeValue,
 } from '@/types'
@@ -56,9 +57,10 @@ export function squareFillClass(
   return inArea(square, selection) ? CROWD_CLASS[SELECTION_AREA_CROWD_STEP] : CROWD_CLASS[0]
 }
 
-// §5, floored at SQUARE_MIN_PX. Fibonacci's 7×7 gives 70 / 64 / 39.
-export function squareSize(count: number, breakpoint: Breakpoint): number {
-  const { available, max } = SQUARE_FIT[breakpoint]
+// §5, floored at SQUARE_MIN_PX. Fibonacci's 7×7 gives 70 / 64 / 39 at the
+// session windows' fit; a grid in a narrower frame passes its own.
+export function squareSize(count: number, breakpoint: Breakpoint, fit: SquareFit = SQUARE_FIT): number {
+  const { available, max } = fit[breakpoint]
   const fitted = Math.floor((available - (count - 1) * SQUARE_GAP_PX) / count)
 
   return Math.max(SQUARE_MIN_PX, Math.min(max, fitted))

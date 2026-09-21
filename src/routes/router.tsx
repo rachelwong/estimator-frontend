@@ -17,7 +17,6 @@ import {
 } from '@/routes/loaders'
 import { NotFoundPage } from '@/routes/NotFoundPage'
 import { RootLayout } from '@/routes/RootLayout'
-import { WelcomePage } from '@/routes/WelcomePage'
 
 // only-export-components wants the lazy() handles below in their own files, so
 // fast refresh can keep their state. There is none to keep here: this module
@@ -26,11 +25,13 @@ import { WelcomePage } from '@/routes/WelcomePage'
 
 // Code-split: each of these is a chunk the entry no longer carries. Create
 // and Ready are the Admin's path in, which nobody else walks; Active and
-// Ended share the estimation grid.
+// Ended share the estimation grid. Welcome carries a sample Reveal and some
+// twenty sprites that no other screen draws.
 // RootLayout's Suspense boundary covers them all while a chunk loads.
 //
-// Welcome, Join and NotFound stay eager above — all three are cold-start
-// landings, and none pulls anything the entry chunk doesn't already have.
+// Join and NotFound stay eager above — both are cold-start landings, and
+// neither pulls anything the entry chunk doesn't already have.
+const WelcomePage = lazy(() => import('@/routes/WelcomePage'))
 const CreateSessionPage = lazy(() => import('@/routes/CreateSessionPage'))
 const ReadySessionPage = lazy(() => import('@/routes/ReadySessionPage'))
 const ActiveSessionPage = lazy(() => import('@/routes/ActiveSessionPage'))

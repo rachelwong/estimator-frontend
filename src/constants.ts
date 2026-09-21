@@ -2,6 +2,8 @@
 // handful of values that come from the spec. Values only — the type derived
 // from each lives in src/types/constants.ts.
 
+import type { RevealPayload, Selection } from "@/types";
+
 // Static paths. Session paths are built from the id where they're used.
 export const RoutePath = {
   HOME: "/",
@@ -154,6 +156,15 @@ export const SQUARE_FIT = {
   [Breakpoint.MOBILE]: { available: 298, max: 39 },
   [Breakpoint.TABLET]: { available: 580, max: 64 },
   [Breakpoint.DESKTOP]: { available: 630, max: 70 },
+} as const;
+
+// The Welcome page's "Why keep Selections private?" grids (§7 item 6). Two
+// windows sit side by side on desktop, each in half the width a session window
+// gets, so their Squares cap smaller — 50 / 48 / 36, off the artboards.
+export const COMPARISON_SQUARE_FIT = {
+  [Breakpoint.MOBILE]: { available: 298, max: 36 },
+  [Breakpoint.TABLET]: { available: 580, max: 48 },
+  [Breakpoint.DESKTOP]: { available: 630, max: 50 },
 } as const;
 
 export const SQUARE_GAP_PX = 4;
@@ -367,6 +378,8 @@ export const LOGO_PERSPECTIVE_PX = 240;
 export const SPRITE_SCATTER_CLASS = {
   HIDDEN_BELOW_TABLET: "hidden tablet:block",
   HIDDEN_BELOW_DESKTOP: "hidden desktop:block",
+  HIDDEN_ON_DESKTOP: "desktop:hidden",
+  TABLET_ONLY: "hidden tablet:block desktop:hidden",
 } as const;
 
 // The three dots on the right of a Window's title bar, in the order they sit
@@ -421,3 +434,82 @@ export const PIXEL_BAR_CLASS = {
     blocks: "pixel-bar-blocks-inline",
   },
 } as const;
+
+// The Welcome page's in-page anchors (§7): the header nav and the mobile menu
+// link to them, and the sections carry them as ids.
+export const WelcomeSection = {
+  HOW_TO_PLAY: "how-to-play",
+  WHY_PRIVATE: "why-private",
+  WHY_I_MADE_THIS: "why-i-made-this",
+} as const;
+
+// A section the header links to lands below the sticky header rather than
+// under it — one margin per Welcome header height (§5: 64 / 72 / 84).
+export const WELCOME_ANCHOR_CLASS = "scroll-mt-16 tablet:scroll-mt-[72px] desktop:scroll-mt-[84px]";
+
+// Welcome's header is taller than every other screen's (§5), and its sides
+// widen to the page's 80px padding on desktop.
+export const WELCOME_HEADER_CLASS = "h-16 tablet:h-[72px] desktop:h-[84px] desktop:px-20";
+
+// The page's side padding (§5: 20 / 40 / 80), shared by every Welcome section.
+export const WELCOME_GUTTER_CLASS = "px-5 tablet:px-10 desktop:px-20";
+
+// Where the two repos live. The Welcome page's repo cards, header and menu
+// link to them (§7 item 7); the handle is the one the frontend's own remote
+// points at.
+export const REPOSITORY_URL = {
+  FRONTEND: "https://github.com/rachelwong/estimator-frontend",
+  BACKEND: "https://github.com/rachelwong/estimator-backend",
+} as const;
+
+// The band where the Welcome page's lavender top breaks into pixels over the
+// cream below (§7 item 4): a Bayer 4×4 ordered dither, one tile per 4×4 cells.
+// Each 4-row block keeps a cell where its matrix value reaches that block's
+// threshold — 7/8, then 1/2, then 1/8 of the cells, read off the artboard.
+export const DITHER_BAYER_MATRIX = [
+  [0, 8, 2, 10],
+  [12, 4, 14, 6],
+  [3, 11, 1, 9],
+  [15, 7, 13, 5],
+] as const;
+
+export const DITHER_BLOCK_THRESHOLDS = [2, 8, 14] as const;
+
+// One cell of the dither — 12 rows of them make the 144px band.
+export const DITHER_PIXEL_PX = 12;
+
+// The sample Session the Welcome page demonstrates with (§7 items 3 and 6).
+// Real data shapes, so the demos are the real grid and Reveal window rather
+// than pictures of them. Fibonacci to 13: a 7×7, the grid every artboard draws.
+export const WELCOME_DEMO_AXIS_VALUES: number[] = [0, 1, 2, 3, 5, 8, 13];
+
+export const WELCOME_DEMO_REVEAL: RevealPayload = {
+  squares: [
+    { time: 13, resource: 8, names: ["Kai"] },
+    { time: 8, resource: 5, names: ["Jim-2"] },
+    { time: 5, resource: 3, names: ["Mia", "Jim-1", "Noor"] },
+    { time: 5, resource: 2, names: ["Ben"] },
+    { time: 3, resource: 2, names: ["Priya"] },
+    { time: 5, resource: 1, names: ["Sam"] },
+  ],
+  abstained: ["Alex"],
+};
+
+// The hero's Reveal opens on the crowded Square, its popover already pinned.
+export const WELCOME_DEMO_PINNED: Selection = { time: 5, resource: 3 };
+
+// Where "While you pick" starts: a Selection with its Area around it.
+export const WELCOME_DEMO_SELECTION: Selection = { time: 8, resource: 5 };
+
+// The Welcome page's type scale (§3): a section heading — 27 / 36 / 44 — and a
+// card or sub heading — 17 / 19 / 20.
+export const WELCOME_SECTION_HEADING_CLASS =
+  "font-display text-[27px] leading-[1.05] text-ink tablet:text-[36px] desktop:text-[44px]";
+
+export const WELCOME_CARD_HEADING_CLASS =
+  "font-display text-[17px] leading-[1.1] text-ink tablet:text-[19px] desktop:text-[20px]";
+
+// The body of the two windows in "Why keep Selections private?": tighter than
+// the Window default, around a grid capped by COMPARISON_SQUARE_FIT.
+export const COMPARISON_WINDOW_BODY_CLASS =
+  "items-center gap-3 px-3.5 pt-3.5 pb-3.5 tablet:gap-3 tablet:px-6 tablet:pt-6 tablet:pb-6 desktop:px-6 desktop:pt-6 desktop:pb-6";

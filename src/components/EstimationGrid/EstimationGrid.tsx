@@ -10,7 +10,7 @@ import {
   SQUARE_GAP_PX,
 } from '@/constants'
 import { useBreakpoint, useEscapeKey } from '@/hooks'
-import type { GridMode as GridModeValue, HoveredSquare, RevealPayload, Selection } from '@/types'
+import type { GridMode as GridModeValue, HoveredSquare, RevealPayload, Selection, SquareFit } from '@/types'
 import {
   axisEmphasis,
   groupNames,
@@ -47,6 +47,8 @@ interface EstimationGridProps {
   /** Reveal only: the Square whose popover is open. */
   pinned?: Selection | null
   onPinnedChange?: (pinned: Selection | null) => void
+  /** How big the Squares may get. Defaults to the session windows' (§5). */
+  squareFit?: SquareFit
 }
 
 // Time runs left to right, Resources bottom to top — origin bottom-left:
@@ -76,6 +78,7 @@ export function EstimationGrid({
   onHoveredChange,
   pinned = null,
   onPinnedChange,
+  squareFit,
 }: EstimationGridProps) {
   // The Square that holds the Tab stop. Until one is touched, the Selection.
   const [cursor, setCursor] = useState<Selection | null>(null)
@@ -88,10 +91,15 @@ export function EstimationGrid({
   const cols = axisValues
   const namesBySquare = groupNames(reveal)
   const isInteractive = mode === GridMode.INTERACTIVE
-  const size = squareSize(axisValues.length, breakpoint)
+  const size = squareSize(axisValues.length, breakpoint, squareFit)
   const faceSize = labelSize(size)
-  const tabStop = cursor ?? selection ?? { time: axisValues[0], resource: axisValues[0] }
-  const tooltipSquare = hovered && !(pinned && isSameSquare(pinned, hovered.square)) ? hovered.square : null
+  const originSquare = { time: axisValues[0], resource: axisValues[0] }
+  const tabStop = cursor ?? selection ?? originSquare
+
+  // No tooltip over the pinned Square: its popover already says who's there.
+  const hoveredSquare = hovered?.square ?? null
+  const isHoveringPinned = hoveredSquare !== null && pinned !== null && isSameSquare(pinned, hoveredSquare)
+  const tooltipSquare = isHoveringPinned ? null : hoveredSquare
 
   const template = `repeat(${axisValues.length}, ${size}px)`
 
@@ -104,13 +112,20 @@ export function EstimationGrid({
   // A chip can pin a Square scrolled out of sight — on a phone, sideways in
   // the grid or up the page. Bring it back so its popover isn't opened blind.
   // A no-op for a Square clicked where it sits, which is already in view.
+  //
+  // Only a pin that changes, not one the grid mounts with: the Welcome page's
+  // demo opens pinned, and scrolling to it would drag a phone's page down to
+  // the demo on arrival.
   const pinnedSelector = pinned && squareSelector(pinned)
+  const scrolledSelectorRef = useRef(pinnedSelector)
   useEffect(() => {
-    if (pinnedSelector) {
+    if (pinnedSelector && pinnedSelector !== scrolledSelectorRef.current) {
       scrollerRef.current
         ?.querySelector(pinnedSelector)
         ?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
     }
+
+    scrolledSelectorRef.current = pinnedSelector
   }, [pinnedSelector])
 
   // Running: choose it. Revealed: toggle its popover.

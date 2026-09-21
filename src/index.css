@@ -29,6 +29,10 @@
        the palette already carries. */
     --color-chrome-green: #4cc38a;
 
+    /* The one How to play card tint the palette doesn't already carry (§2).
+       The other three are white, `copied` and `crowd-0`. */
+    --color-butter: #ffe8a8;
+
     /* Crowd ramp: how many people landed on a Square, never Time or Resources
        (§2). Text flips to white at crowd-3. */
     --color-crowd-0: #f2edff;

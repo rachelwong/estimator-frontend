@@ -67,12 +67,11 @@ interface DevCard {
   tintClass: string
 }
 
-// A Card wears a tint on the Welcome page (§2). Those two card-only hexes
-// arrive with Stage 9, so these stand in with palette tokens — the point here
-// is that the 3px edge and 6px shadow hold over any fill, not which fill.
+// A Card wears a tint on the Welcome page (§2) — the four How to play fills.
+// The point here is that the 3px edge and 6px shadow hold over any fill.
 export const DEV_CARDS: DevCard[] = [
   { title: 'LV.1', body: 'White — the default fill.', tintClass: 'bg-white' },
-  { title: 'LV.2', body: 'The top of the Welcome page.', tintClass: 'bg-page-top' },
+  { title: 'LV.2', body: 'The butter card tint.', tintClass: 'bg-butter' },
   { title: 'LV.3', body: 'The copied green.', tintClass: 'bg-copied' },
   { title: 'LV.4', body: 'The idle Square.', tintClass: 'bg-crowd-0' },
 ]

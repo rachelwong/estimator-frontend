@@ -14,10 +14,10 @@ export async function create({ browser, reporter }) {
   const name = page.getByLabel('Your name')
   const fibonacci = page.getByRole('button', { name: 'Fibonacci' })
 
-  // Home is the welcome page. Its button opens the form.
+  // Home is the welcome page. Its Start a session buttons open the form.
   await page.goto(APP)
   check('/ → /welcome', await landsOn(page, `${APP}/welcome`))
-  await page.getByRole('link', { name: 'Create a new session' }).click()
+  await page.getByRole('link', { name: 'Start a session' }).first().click()
   check('Welcome button → /new', await landsOn(page, `${APP}/new`))
 
   check('Create disabled with no name', await submit.isDisabled())
