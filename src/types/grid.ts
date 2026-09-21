@@ -7,3 +7,10 @@ export interface HoveredSquare {
   square: Selection
   source: HoverSource
 }
+
+// One chip in the Reveal's "who landed where": a name and the Square it
+// previews and pins.
+export interface LandedPerson {
+  name: string
+  square: Selection
+}

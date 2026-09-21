@@ -25,7 +25,9 @@ export type SessionConnectionState =
     }
   | { status: typeof SessionConnectionStatus.REJECTED; error: SessionError }
   | { status: typeof SessionConnectionStatus.DISCONNECTED }
-  | { status: typeof SessionConnectionStatus.ENDED }
+  // `selection` is the one held when the Session ended — what the Reveal marks
+  // as "Your Square". Null for someone who held none, or who connected after.
+  | { status: typeof SessionConnectionStatus.ENDED; selection: Selection | null }
 
 export type ConnectingConnectionState = Extract<
   SessionConnectionState,
@@ -56,11 +58,6 @@ export type SessionConnectionAction =
 // Who the socket identifies as once session-info arrives: a Participant by
 // name (`join`), or the Admin by stored token (`admin-auth`).
 export type SessionIdentity = { name: string } | { adminToken: string }
-
-// What joinAction hands back to JoinSessionPage when the join did not land.
-export interface JoinSessionActionData {
-  error: string
-}
 
 // One live connection to one Session, kept in lib/sessionConnectionRegistry.ts
 // so it survives the /join → /start navigation.

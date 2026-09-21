@@ -11,9 +11,16 @@ import { ApiError, createSession, getSession } from '@/lib/api'
 import {
   getOrCreateSessionConnection,
   hasLiveSessionConnection,
+  peekSessionConnection,
   removeSessionConnection,
 } from '@/lib/sessionConnectionRegistry'
-import type { GetSessionResponse, JoinSessionActionData, PointSystemType } from '@/types'
+import type {
+  ActionErrorData,
+  EndedLoaderData,
+  GetSessionResponse,
+  PointSystemType,
+  RevealViewer,
+} from '@/types'
 
 const NOT_FOUND_PATH = '/not-found'
 
@@ -99,7 +106,20 @@ export async function endedLoader({ params }: LoaderFunctionArgs) {
     return redirect(openSessionPath(sessionId))
   }
 
-  return session
+  return { session, viewer: revealViewer(sessionId) } satisfies EndedLoaderData
+}
+
+// Read, never opened: a connection here is the one that just watched the
+// Session end, and it is already closed.
+function revealViewer(sessionId: string): RevealViewer {
+  const state = peekSessionConnection(sessionId)?.getSnapshot()
+  const hasEnded = state?.status === SessionConnectionStatus.ENDED
+
+  return {
+    isAdmin: getAdminToken(sessionId) !== null,
+    hasJoined: hasEnded,
+    selection: hasEnded ? state.selection : null,
+  }
 }
 
 export async function joinAction({ params, request }: ActionFunctionArgs) {
@@ -121,14 +141,10 @@ export async function joinAction({ params, request }: ActionFunctionArgs) {
 
   // e.g. INVALID_NAME, or UNKNOWN_SESSION after a backend restart.
   if (state.status === SessionConnectionStatus.REJECTED) {
-    return { error: state.error.message } satisfies JoinSessionActionData
+    return { error: state.error.message } satisfies ActionErrorData
   }
 
-  return { error: 'Could not connect. Try again.' } satisfies JoinSessionActionData
-}
-
-export interface CreateSessionActionData {
-  error: string
+  return { error: 'Could not connect. Try again.' } satisfies ActionErrorData
 }
 
 export async function createSessionAction({ request }: ActionFunctionArgs) {
@@ -148,12 +164,12 @@ export async function createSessionAction({ request }: ActionFunctionArgs) {
     return redirect(`/${session.sessionId}/start`)
   } catch (error) {
     if (error instanceof ApiError) {
-      return { error: error.message }
+      return { error: error.message } satisfies ActionErrorData
     }
 
     // A sleeping backend fails here. Report it in place rather than throwing to
     // an error page, so the filled-in form survives the retry.
     console.error('createSession failed', error)
-    return { error: 'Could not reach the server. Try again.' }
+    return { error: 'Could not reach the server. Try again.' } satisfies ActionErrorData
   }
 }

@@ -1,4 +1,4 @@
-import { Fragment, useReducer, useRef, useState } from 'react'
+import { Fragment, useEffect, useReducer, useRef, useState } from 'react'
 import type { FocusEvent, KeyboardEvent, PointerEvent } from 'react'
 import {
   AXIS_LABEL,
@@ -18,6 +18,7 @@ import {
   labelSize,
   nextPinned,
   popoverTitle,
+  revealDelay,
   squareAriaLabel,
   squareFillClass,
   squareHighlight,
@@ -36,9 +37,16 @@ import { SquareTooltip } from './SquareTooltip'
 interface EstimationGridProps {
   axisValues: number[]
   mode: GridModeValue
+  /** Running: the Selection you hold. Revealed: the one you held, if known. */
   selection?: Selection | null
   reveal?: RevealPayload
   onSelect?: (selection: Selection) => void
+  /** Mouse over or keyboard focus: lifts the Square, shows its tooltip. */
+  hovered: HoveredSquare | null
+  onHoveredChange: (hovered: HoveredSquare | null) => void
+  /** Reveal only: the Square whose popover is open. */
+  pinned?: Selection | null
+  onPinnedChange?: (pinned: Selection | null) => void
 }
 
 // Time runs left to right, Resources bottom to top — origin bottom-left:
@@ -55,19 +63,22 @@ interface EstimationGridProps {
 //
 // One Tab stop for the whole grid (roving tabIndex); arrows move between
 // Squares, Enter/Space presses the focused one (§6).
+//
+// Hover and pin belong to the caller: the Reveal's "who landed where" chips
+// preview and pin a Square from outside the grid.
 export function EstimationGrid({
   axisValues,
   mode,
   selection = null,
   reveal,
   onSelect,
+  hovered,
+  onHoveredChange,
+  pinned = null,
+  onPinnedChange,
 }: EstimationGridProps) {
-  // Mouse over or keyboard focus: lifts the Square, shows its tooltip.
-  const [hovered, setHovered] = useState<HoveredSquare | null>(null)
   // The Square that holds the Tab stop. Until one is touched, the Selection.
   const [cursor, setCursor] = useState<Selection | null>(null)
-  // Reveal only: the Square whose popover is open.
-  const [pinned, setPinned] = useState<Selection | null>(null)
   // The tooltip and popover follow their Square as the grid scrolls sideways.
   const [, rerender] = useReducer((tick: number) => tick + 1, 0)
   const scrollerRef = useRef<HTMLDivElement>(null)
@@ -88,7 +99,19 @@ export function EstimationGrid({
     return namesBySquare.get(squareKey(square.time, square.resource)) ?? []
   }
 
-  useEscapeKey(pinned ? () => setPinned(null) : null)
+  useEscapeKey(pinned ? () => onPinnedChange?.(null) : null)
+
+  // A chip can pin a Square scrolled out of sight — on a phone, sideways in
+  // the grid or up the page. Bring it back so its popover isn't opened blind.
+  // A no-op for a Square clicked where it sits, which is already in view.
+  const pinnedSelector = pinned && squareSelector(pinned)
+  useEffect(() => {
+    if (pinnedSelector) {
+      scrollerRef.current
+        ?.querySelector(pinnedSelector)
+        ?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+    }
+  }, [pinnedSelector])
 
   // Running: choose it. Revealed: toggle its popover.
   function handleClick(square: Selection) {
@@ -99,7 +122,7 @@ export function EstimationGrid({
       return
     }
 
-    setPinned(nextPinned(pinned, square, namesAt(square)))
+    onPinnedChange?.(nextPinned(pinned, square, namesAt(square)))
   }
 
   // Mouse only: a tap fires pointerenter too, and would leave a lift stuck on.
@@ -108,19 +131,21 @@ export function EstimationGrid({
       return
     }
 
-    setHovered({ square, source: HoverSource.POINTER })
+    onHoveredChange({ square, source: HoverSource.POINTER })
   }
 
   function handleFocus(event: FocusEvent<HTMLButtonElement>, square: Selection) {
     setCursor(square)
 
     if (event.currentTarget.matches(FOCUS_VISIBLE_SELECTOR)) {
-      setHovered({ square, source: HoverSource.KEYBOARD })
+      onHoveredChange({ square, source: HoverSource.KEYBOARD })
     }
   }
 
   function handleBlur() {
-    setHovered((current) => (current?.source === HoverSource.KEYBOARD ? null : current))
+    if (hovered?.source === HoverSource.KEYBOARD) {
+      onHoveredChange(null)
+    }
   }
 
   // Arrows move focus to the neighbouring Square, held at the edges.
@@ -176,9 +201,11 @@ export function EstimationGrid({
             <div
               className="grid"
               style={{ gridTemplateColumns: template, gap: SQUARE_GAP_PX }}
-              onPointerLeave={() =>
-                setHovered((current) => (current?.source === HoverSource.POINTER ? null : current))
-              }
+              onPointerLeave={() => {
+                if (hovered?.source === HoverSource.POINTER) {
+                  onHoveredChange(null)
+                }
+              }}
             >
               {rows.map((resource) => (
                 <Fragment key={resource}>
@@ -199,6 +226,7 @@ export function EstimationGrid({
                         ariaLabel={squareAriaLabel(mode, square, selection, names)}
                         pressed={isInteractive ? Boolean(selection && isSameSquare(selection, square)) : undefined}
                         expanded={!isInteractive && names.length > 0 ? isPinned : undefined}
+                        revealDelay={isInteractive ? undefined : revealDelay(axisValues, square)}
                         tabIndex={isSameSquare(tabStop, square) ? 0 : -1}
                         onClick={() => handleClick(square)}
                         onPointerEnter={(event) => handlePointerEnter(event, square)}

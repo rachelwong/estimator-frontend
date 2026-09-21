@@ -424,6 +424,28 @@ Square, and adds "Your Square" (see Stage 4).
 *Done when:* the wave plays once on entry, a chip previews and pins its
 Square, and Area never appears here.
 
+**Done.** Windows measure 366 / 740 / 780 with Fibonacci 7×7 Squares at
+39 / 64 / 70, and an 11×11 Numerical grid floors at 28 on a phone and scrolls
+inside the window, with no page overflow. The wave starts at the origin and
+does not replay on hover or pin. Under reduced motion every Square has its
+final fill within 100ms. On a phone, a chip whose Square is off-screen scrolls
+it into view before opening the popover. `npm run smoke` is 125/125.
+
+Where this stage went past or against the letter above:
+
+| Choice | Why |
+| --- | --- |
+| **"Your Square" comes from the connection that watched the Session end.** `ENDED` now carries the Selection held at that moment, and `endedLoader` reads it off the registry | It's the only place in the client that knows who you were. The server never says, and adding that would mean a protocol change. So a refresh on `/ended` or a fresh visitor gets no ring. That's why `lib/sessionConnectionReducer.ts` has one more field, despite "What does not move" |
+| The window chip reads Admin (token held), Participant (this tab joined) or nothing | A fresh visitor from a shared link is neither, and calling them a Participant would be wrong |
+| **The Abstained list is part of "who landed where"**, not its own section | The artboard puts the dashed chips at the end of the same row. `AbstainedList` and `SessionStatusHeader` (the "Ended" chip) are deleted; the window title `revealed` says it now |
+| **"Start a new session" is shown to everyone**, not only the Admin | §7 says "Admin header offers", but the artboard draws it for both roles, and the old page gave it to everyone. The new Session is a fresh one either way. Header from tablet up, full width at the bottom on mobile, the same as End |
+| Share bar on the Reveal, **Admin only** | §7 draws the share option on Active and Reveal. Stage 5's Admin-only rule carries over. The link lands on `/join`, which forwards to `/ended` |
+| Clicking a chip again closes the popover | It matches the Square's own toggle, and `aria-expanded` on the chip stays truthful |
+| Pinning scrolls its Square into view | A chip can pin a Square scrolled sideways out of a phone's grid, or far up the page. A no-op for a Square clicked in place |
+| Reduced motion zeroes animation and transition **delays** too, globally | The wave staggers every Square by up to 2.8s on a 21×21. With only the durations collapsed, each Square sat blank through its delay and then snapped in, which is still a wave |
+| The notice has no `role="status"` | The artboard gives it one, but it is static content present on arrival, so there is nothing to announce |
+| Active and Reveal share `SESSION_WINDOW_CLASS` | One size in §5, one grid inside. Two copies of the class string would drift |
+
 ### Stage 7 — Create and Join
 
 - **Create:** segmented Numerical/Fibonacci buttons replacing the RadioGroup, the
@@ -473,6 +495,7 @@ than thirty do. A smaller bundle number there would mean more bytes on the wire.
   | `scenarios/routing.mjs:30,78,89` | `Product Poker` → `Fold and Flip` | **Done in Stage 2**, with the rename that broke it |
   | `scenarios/session.mjs:45,97,112,119,120` | `End session` → `End session & reveal` | **Done in Stage 5**, with the rename |
   | `lib.mjs`, `session.mjs`, `join.mjs`, `create.mjs` | Crowd ramp fill, popover, new grid DOM | **Done in Stage 4** |
+  | `session.mjs`, `join.mjs` | The "Ended" chip, the Abstained section, `Create new session` → `Start a new session` | **Done in Stage 6** |
 
   The rule the first row establishes: repair a smoke assertion in the stage that
   breaks it, not here. A suite left red across stages makes every intervening

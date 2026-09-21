@@ -4,6 +4,7 @@ import {
   CROWDED_SQUARE_MINIMUM,
   GridMode,
   HoverSource,
+  REVEAL_WAVE_STEP_MS,
   SELECTION_AREA_CROWD_STEP,
   SELECTION_LABEL,
   SELECTION_SQUARE_CLASS,
@@ -16,12 +17,14 @@ import {
   SquareHighlight,
   SquareLabelSize,
   TOOLTIP_NAME_MAX_CHARS,
+  YOUR_SQUARE_CLASS,
 } from '@/constants'
 import type {
   AxisValueEmphasis as AxisValueEmphasisValue,
   Breakpoint,
   GridMode as GridModeValue,
   HoveredSquare,
+  LandedPerson,
   RevealPayload,
   Selection,
   SquareHighlight as SquareHighlightValue,
@@ -29,7 +32,8 @@ import type {
 } from '@/types'
 
 // Interactive: `selection` yellow for your own Selection, crowd-1 across its
-// Area. Readonly: the crowd ramp by headcount, no Areas.
+// Area. Readonly: the crowd ramp by headcount, no Areas, and a ring on the
+// Square you held when it ended.
 export function squareFillClass(
   mode: GridModeValue,
   square: Selection,
@@ -37,7 +41,8 @@ export function squareFillClass(
   names: string[],
 ): string {
   if (mode === GridMode.READONLY) {
-    return CROWD_CLASS[Math.min(names.length, CROWD_CLASS.length - 1)]
+    const crowd = CROWD_CLASS[Math.min(names.length, CROWD_CLASS.length - 1)]
+    return selection && isSameSquare(square, selection) ? `${crowd} ${YOUR_SQUARE_CLASS}` : crowd
   }
 
   if (!selection) {
@@ -94,8 +99,8 @@ export function squareLabel(
   return isFull ? `${names.length}\npeople` : `×${names.length}`
 }
 
-// "Time 5, resources 3", then who is there in the Reveal, or whether it is
-// your Selection while the Session runs.
+// "Time 5, resources 3", then who is there in the Reveal, then whether it is
+// your Selection — the one you hold, or in the Reveal the one you held.
 export function squareAriaLabel(
   mode: GridModeValue,
   square: Selection,
@@ -103,12 +108,24 @@ export function squareAriaLabel(
   names: string[],
 ): string {
   const position = `Time ${square.time}, resources ${square.resource}`
+  const who = mode === GridMode.READONLY ? `, ${names.length > 0 ? names.join(', ') : 'nobody'}` : ''
+  const yours = selection && isSameSquare(square, selection) ? ', your Selection' : ''
 
-  if (mode === GridMode.READONLY) {
-    return `${position}, ${names.length > 0 ? names.join(', ') : 'nobody'}`
-  }
+  return `${position}${who}${yours}`
+}
 
-  return selection && isSameSquare(square, selection) ? `${position}, your Selection` : position
+// When a revealed Square starts arriving (§8): one step per diagonal from the
+// origin, so the wave runs bottom-left to top-right.
+export function revealDelay(axisValues: number[], square: Selection): number {
+  return (axisValues.indexOf(square.time) + axisValues.indexOf(square.resource)) * REVEAL_WAVE_STEP_MS
+}
+
+// Everyone with a Square, in the order the Reveal lists them — the chips in
+// "who landed where" (§6).
+export function landedPeople(reveal?: RevealPayload): LandedPerson[] {
+  return (reveal?.squares ?? []).flatMap(({ time, resource, names }) =>
+    names.map((name) => ({ name, square: { time, resource } })),
+  )
 }
 
 // Running: "Time 5 · Resources 3". Revealed: "T5 · R3 · Mia", or a count and a

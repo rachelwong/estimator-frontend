@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PointSystemType } from '@/constants'
 import { isPointSystemType, nameError } from '@/lib/validation'
-import type { CreateSessionActionData } from '@/routes/loaders'
+import type { ActionErrorData } from '@/types'
 import type { PointSystemType as PointSystemTypeValue } from '@/types'
 
 // Default export so router.tsx can lazy() it directly.
@@ -19,7 +19,7 @@ export default function CreateSessionPage() {
   const [sliderMax, setSliderMax] = useState(0)
 
   const navigation = useNavigation()
-  const actionData = useActionData() as CreateSessionActionData | undefined
+  const actionData = useActionData() as ActionErrorData | undefined
 
   const validationError = nameError(adminName)
   const isSubmitting = navigation.state === 'submitting'

@@ -254,6 +254,23 @@ export const FLOAT_OFFSET_PX = 12;
 // The popover's name bullets alternate between these two (§6).
 export const POPOVER_BULLET_CLASS = ['bg-selection', 'bg-crowd-2'] as const;
 
+// "Your Square" in the Reveal (§6): a 3px `selection` ring inset 7px, drawn
+// over whatever crowd fill the Square has.
+export const YOUR_SQUARE_CLASS = 'outline-3 outline-solid outline-selection -outline-offset-7';
+
+// The Reveal's diagonal wave (§8): each Square starts this much later than
+// the one before it on the diagonal — (time index + resources index) × step.
+// About 1.5s end to end on a 7×7.
+export const REVEAL_WAVE_STEP_MS = 70;
+
+// The Active and Reveal windows are one size (§5), and hold the same grid.
+// The body is tighter than the Window default on mobile: a Fibonacci 7×7 at
+// 39px needs 335px, and the default padding leaves 328.
+export const SESSION_WINDOW_CLASS = {
+  window: 'w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[780px]',
+  body: 'gap-3.5 px-3 pt-2.5 pb-3.5 desktop:px-9 desktop:pt-7',
+} as const;
+
 // Only keyboard focus counts as hover. A tap focuses a button too, and would
 // leave a lifted Square and its tooltip stuck on a touch screen.
 export const FOCUS_VISIBLE_SELECTOR = ':focus-visible';

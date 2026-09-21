@@ -208,7 +208,7 @@ export type SessionConnectionState =
     }
   | { status: typeof SessionConnectionStatus.REJECTED; error: SessionError }
   | { status: typeof SessionConnectionStatus.DISCONNECTED }
-  | { status: typeof SessionConnectionStatus.ENDED };
+  | { status: typeof SessionConnectionStatus.ENDED; selection: Selection | null };
 ```
 
 ### Why `connecting` holds a nullable point system
@@ -437,11 +437,13 @@ const cols = axisValues;                // Time, low at left
 | interactive | inside your Selection's Area | `crowd-1` | — |
 | interactive | otherwise | `crowd-0` | — |
 | readonly | by headcount, capped at 4 | `crowd-0`…`crowd-4` | name, or "N people" / "×N" |
+| readonly | the Square you held when it ended | + 3px `selection` ring | as above |
 
 Hover (mouse) and keyboard focus lift the Square and show a one-line
 tooltip. With a mouse on the running grid, the hovered Area gets an `accent`
 overlay. On the Reveal, clicking a Square someone landed on pins a popover
 listing every name; the same Square or Esc closes it. Touch gets no hover.
+Revealed Squares arrive in a diagonal wave from the origin, once.
 Squares are sized by breakpoint (§5), floored at `SQUARE_MIN_PX`, and a grid
 too wide for that scrolls sideways. See [grid-area.md](docs/features/grid-area.md).
 
@@ -450,9 +452,14 @@ too wide for that scrolls sideways. See [grid-area.md](docs/features/grid-area.m
 interface EstimationGridProps {
   axisValues: number[];
   mode: GridMode;
-  selection?: Selection | null;
+  selection?: Selection | null;   // readonly: the one you held, if known
   reveal?: RevealPayload;
   onSelect?: (selection: Selection) => void;
+  // Owned by the caller, so the Reveal's chips can preview and pin a Square.
+  hovered: HoveredSquare | null;
+  onHoveredChange: (hovered: HoveredSquare | null) => void;
+  pinned?: Selection | null;
+  onPinnedChange?: (pinned: Selection | null) => void;
 }
 ```
 
@@ -845,10 +852,14 @@ two Admin tabs do not live-sync, which is expected (decision #20).
 `src/routes/EndedPage.tsx` gets its real content from `useLoaderData()`. No
 socket — REST already has the whole Reveal.
 
-- `EstimationGrid` in readonly mode, names per Square, `+N more` past three.
-- `AbstainedList` — a `Badge` per name, flex-wrapped.
-- `SessionStatusHeader` — `Badge` reading "Ended".
-- "Create new session" — back to `/`, carrying nothing over.
+Restyled by Fold and Flip Stage 6 ([plan](docs/plans/fold-and-flip.md)):
+`RevealView` in a `revealed` window — the dark notice, `EstimationGrid` in
+readonly mode, and "who landed where" chips with the Abstained in dashed chips
+at the end. "Start a new session" goes to `/new`, carrying nothing over.
+
+`endedLoader` also reports what this tab still knows about who is looking —
+an admin token, and the Selection its connection held when the Session ended
+(`ENDED` carries it). A refresh or a fresh visitor has no Selection to mark.
 
 **Done when**: a brand-new visitor to an ended Session sees the Reveal with no
 name prompt and no socket in the network tab; names sit in the Squares they

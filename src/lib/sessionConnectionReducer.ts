@@ -48,7 +48,7 @@ function nextStateWhileConnecting(
     // (decision #22b).
     case SessionAction.SESSION_INFO_RECEIVED: {
       if (action.ended) {
-        return { status: SessionConnectionStatus.ENDED }
+        return { status: SessionConnectionStatus.ENDED, selection: null }
       }
 
       return { ...state, pointSystem: action.pointSystem }
@@ -103,8 +103,9 @@ function nextStateWhileActive(
       return { ...state, error: null }
     }
 
+    // The Selection rides along so the Reveal can mark it.
     case SessionAction.SESSION_ENDED: {
-      return { status: SessionConnectionStatus.ENDED }
+      return { status: SessionConnectionStatus.ENDED, selection: state.selection }
     }
 
     case SessionAction.DISCONNECTED: {

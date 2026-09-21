@@ -18,6 +18,8 @@ interface GridCellProps {
   pressed?: boolean
   // Reveal only, on a Square someone landed on: whether its popover is open.
   expanded?: boolean
+  // Reveal only: when this Square's part of the arriving wave starts (§8).
+  revealDelay?: number
   // Roving: 0 on the one Square Tab lands on, −1 on the rest.
   tabIndex: number
   onClick: () => void
@@ -40,6 +42,7 @@ export function GridCell({
   ariaLabel,
   pressed,
   expanded,
+  revealDelay,
   tabIndex,
   onClick,
   onPointerEnter,
@@ -60,8 +63,9 @@ export function GridCell({
         fillClass,
         SQUARE_LABEL_SIZE_CLASS[labelSize],
         SQUARE_HIGHLIGHT_CLASS[highlight],
+        revealDelay !== undefined && 'animate-reveal-in',
       )}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: size, animationDelay: revealDelay === undefined ? undefined : `${revealDelay}ms` }}
       onClick={onClick}
       onPointerEnter={onPointerEnter}
       onFocus={onFocus}

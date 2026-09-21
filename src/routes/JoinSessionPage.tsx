@@ -3,14 +3,14 @@ import { Form, useActionData, useNavigation } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { nameError } from '@/lib/validation'
-import type { JoinSessionActionData } from '@/types'
+import type { ActionErrorData } from '@/types'
 
 export function JoinSessionPage() {
   const [name, setName] = useState('')
   const [touched, setTouched] = useState(false)
 
   const navigation = useNavigation()
-  const actionData = useActionData() as JoinSessionActionData | undefined
+  const actionData = useActionData() as ActionErrorData | undefined
 
   // Checked here so "Jim Bob" never reaches the wire. The server's
   // INVALID_NAME stays the backstop.

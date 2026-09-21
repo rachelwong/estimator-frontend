@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AdminControls } from '@/components/AdminControls'
 import { ErrorBanner } from '@/components/ErrorBanner'
@@ -5,8 +6,8 @@ import { EstimationGrid } from '@/components/EstimationGrid'
 import { ShareLink } from '@/components/ShareLink'
 import { SpriteScatter } from '@/components/SpriteScatter'
 import { Window } from '@/components/Window'
-import { GridMode } from '@/constants'
-import type { ActiveConnectionState, Selection } from '@/types'
+import { GridMode, SESSION_WINDOW_CLASS } from '@/constants'
+import type { ActiveConnectionState, HoveredSquare, Selection } from '@/types'
 
 interface ActiveSessionViewProps {
   sessionId: string
@@ -35,6 +36,7 @@ export function ActiveSessionView({
   onDismissError,
   onEndSession,
 }: ActiveSessionViewProps) {
+  const [hovered, setHovered] = useState<HoveredSquare | null>(null)
   const hasSelection = state.selection !== null
 
   return (
@@ -54,13 +56,11 @@ export function ActiveSessionView({
       <main className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
         <SpriteScatter />
 
-        {/* Tighter than the Window default on mobile: a Fibonacci 7×7 at 39px
-            needs 335px, and the default padding leaves 328. */}
         <Window
           title="live"
           chip={state.isAdmin ? 'Admin' : 'Participant'}
-          className="w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[780px]"
-          bodyClassName="gap-3.5 px-3 pt-2.5 pb-3.5 desktop:px-9 desktop:pt-7"
+          className={SESSION_WINDOW_CLASS.window}
+          bodyClassName={SESSION_WINDOW_CLASS.body}
         >
           <div className="flex flex-col gap-1.5">
             <h2 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
@@ -80,6 +80,8 @@ export function ActiveSessionView({
             mode={GridMode.INTERACTIVE}
             selection={state.selection}
             onSelect={onSelect}
+            hovered={hovered}
+            onHoveredChange={setHovered}
           />
 
           {onEndSession && (

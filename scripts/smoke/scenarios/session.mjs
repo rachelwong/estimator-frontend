@@ -123,8 +123,26 @@ export async function session({ browser, reporter }) {
     check(`${label} moved to /ended`, await landsOn(page, /\/ended$/))
   }
   check('No error banner after ending', (await admin.getByRole('alert').count()) === 0)
-  await fay.getByText('Ended', { exact: true }).waitFor()
+  await fay.getByRole('heading', { name: 'The Reveal' }).waitFor()
   check('Live Participant sees own name in Reveal', (await squareAriaLabel(fay, 4, 1)).includes('Fay'))
+
+  // "Your Square": the tab that watched the Session end still knows its
+  // Selection. The Admin cleared theirs, so has none to mark.
+  check('Your Square is marked for Fay',
+    (await squareAriaLabel(fay, 4, 1)) === 'Time 4, resources 1, Fay, your Selection')
+  check('Your Square wears the ring', (await squareClasses(fay, 4, 1)).includes('outline-selection'))
+  check('Only one Square is yours', (await fay.locator('main [data-square][class*="outline-selection"]').count()) === 1)
+  check('Admin with no Selection has no Square',
+    (await admin.locator('main [data-square][class*="outline-selection"]').count()) === 0)
+  check('Participant chip on the Reveal', await fay.getByText('Participant', { exact: true }).isVisible())
+  check('Admin chip on the Reveal', await admin.getByText('Admin', { exact: true }).isVisible())
+  check('Admin keeps the share link', await admin.getByLabel('Session link').isVisible())
+  check('Participant has no share link on the Reveal', (await fay.getByLabel('Session link').count()) === 0)
+
+  await fay.reload()
+  await fay.getByRole('heading', { name: 'The Reveal' }).waitFor()
+  check('A refresh forgets Your Square',
+    (await fay.locator('main [data-square][class*="outline-selection"]').count()) === 0)
 
   sockets.close()
 
@@ -138,13 +156,17 @@ export async function session({ browser, reporter }) {
 
   await fresh.goto(`${APP}/${sessionId}`)
   await fresh.waitForURL(/\/ended$/)
-  await fresh.getByText('Ended', { exact: true }).waitFor()
+  await fresh.getByRole('heading', { name: 'The Reveal' }).waitFor()
   await fresh.waitForTimeout(500)
 
   check('Fresh visitor redirected to /ended', fresh.url().endsWith(`/${sessionId}/ended`))
   check('No name prompt', (await fresh.locator('input[name="name"]').count()) === 0)
   check('No socket opened', socketTraffic.length === 0, socketTraffic.join(', '))
-  check('Status badge reads Ended', await fresh.getByText('Ended', { exact: true }).isVisible())
+  check('Window reads revealed', await fresh.getByText('revealed', { exact: true }).isVisible())
+  check('Notice says Voting is closed', await fresh.getByText('Voting is closed').isVisible())
+  check('A fresh visitor has no role chip',
+    (await fresh.getByText(/^(Admin|Participant)$/).count()) === 0)
+  check('A fresh visitor has no Square', !(await squareAriaLabel(fresh, 4, 1)).includes('your Selection'))
   // 21×21 at desktop width floors every Square at SQUARE_MIN_PX, so faces
   // are compact: initials and "×N". The aria-label carries the full story.
   check('Crowded Square counts the people', (await cellText(fresh, 2, 3)) === '×4')
@@ -183,17 +205,63 @@ export async function session({ browser, reporter }) {
   await fresh.waitForTimeout(200)
   check('An empty Square opens nothing', (await fresh.getByRole('dialog').count()) === 0)
 
+  // --- Who landed where ------------------------------------------------------
+  const chips = fresh.getByRole('list').last().getByRole('listitem')
+  const landed = await fresh.getByRole('list').last().getByRole('button').allInnerTexts()
+  check('Every picker has a chip', landed.sort().join() === 'Bob,Cat,Dan,Eli,Fay', landed.join())
+
   // Ada cleared hers, Zed never picked.
-  const abstained = await fresh.locator('section', { hasText: 'Abstained' }).innerText()
-  check('Ada (cleared) is Abstained', abstained.includes('Ada'))
-  check('Zed (never picked) is Abstained', abstained.includes('Zed'))
-  check('Pickers are not Abstained', !['Bob', 'Fay'].some((n) => abstained.includes(n)))
+  const abstained = await chips.filter({ hasText: 'Abstained' }).allInnerTexts()
+  const abstainedNames = abstained.map((text) => text.replace('Abstained', '').trim()).sort()
+  check('Ada (cleared) and Zed (never picked) are Abstained', abstainedNames.join() === 'Ada,Zed', abstainedNames.join())
+
+  await fresh.getByRole('button', { name: 'Bob', exact: true }).hover()
+  const chipTooltip = await fresh.getByRole('tooltip').innerText()
+  check('Hovering a chip previews its Square', chipTooltip === 'T2 · R3 · 4 people · click for names', chipTooltip)
+  check('The previewed Square lifts', (await squareClasses(fresh, 2, 3)).includes('shadow-px'))
+
+  const fayChip = fresh.getByRole('button', { name: 'Fay', exact: true })
+  await fayChip.click()
+  const pinnedNames = await fresh.getByRole('dialog').locator('li').allInnerTexts()
+  check('Clicking a chip pins its popover', pinnedNames.join() === 'Fay', pinnedNames.join())
+  check('The chip says it is expanded', (await fayChip.getAttribute('aria-expanded')) === 'true')
+  await fayChip.click()
+  await fresh.getByRole('dialog').waitFor({ state: 'detached' })
+  check('Clicking it again closes the popover', true)
+
+  // --- Area never appears, and the wave plays once ---------------------------
+  await hoverCell(fresh, 3, 3)
+  check('No Area preview in the Reveal',
+    (await fresh.locator('main [data-square][class*="shadow-area-preview"]').count()) === 0)
+
+  const delays = await cells(fresh).evaluateAll((elements) => elements.map((el) => el.style.animationDelay))
+  check('Every Square is part of the wave', delays.every((delay) => delay.endsWith('ms')))
+  check('The wave starts at the origin', (await cell0Delay(fresh)) === '0ms')
+  // A 21×21 wave runs about 3.5s. Let it land, then hover and pin: neither
+  // may start it again.
+  await cells(fresh).evaluateAll((elements) =>
+    Promise.all(elements.flatMap((el) => el.getAnimations().map((animation) => animation.finished))),
+  )
+  await hoverCell(fresh, 2, 3)
+  await openSquarePopover(fresh, 4, 1)
+  const replayed = await cells(fresh).evaluateAll(
+    (elements) => elements.filter((el) => el.getAnimations().some((a) => a.animationName === 'ffRevealIn')).length,
+  )
+  check('Hover and pin do not replay the wave', replayed === 0, `${replayed} replaying`)
 
   await fresh.mouse.move(0, 0)
   await fresh.screenshot({ path: `${SHOTS}/reveal.png`, fullPage: true })
 
-  await fresh.getByRole('link', { name: 'Create new session' }).click()
+  await fresh.getByRole('link', { name: 'Start a new session' }).click()
   await fresh.waitForURL(`${APP}/new`)
-  check('Create new session goes to /new', true)
+  check('Start a new session goes to /new', true)
   check('Create form starts empty', (await fresh.getByLabel('Provide your name').inputValue()) === '')
+}
+
+// The Square at the origin — bottom-left, so the last row's first.
+async function cell0Delay(page) {
+  return cells(page).evaluateAll((elements) => {
+    const length = Math.sqrt(elements.length)
+    return elements[(length - 1) * length].style.animationDelay
+  })
 }

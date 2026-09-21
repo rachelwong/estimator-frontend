@@ -73,6 +73,10 @@
        which leaves the bar full and still rather than mid-step. */
     --animate-pixel-bar-large: ffBar 1.6s steps(8) infinite;
     --animate-pixel-bar-inline: ffBar 1.6s steps(5) infinite;
+
+    /* The Reveal's diagonal wave (§8). `backwards` holds each Square at the
+       first keyframe through its delay, which GridCell sets per Square. */
+    --animate-reveal-in: ffRevealIn 700ms ease-out backwards;
 }
 
 /* The logo cycle (DESIGN.md §8). The outer element shakes, the inner one
@@ -110,6 +114,25 @@
     96%,
     100% {
         transform: rotateY(360deg);
+    }
+}
+
+/* A revealed Square arriving (§8): idle and blank, then lifted in crowd-2,
+   then its own fill and label. No 100% keyframe, so each Square animates to
+   its own final styles; and the declaration never changes afterwards, so a
+   hover or popover re-render doesn't replay it. */
+@keyframes ffRevealIn {
+    0% {
+        background: var(--color-crowd-0);
+        color: transparent;
+        transform: none;
+        box-shadow: none;
+    }
+    45% {
+        background: var(--color-crowd-2);
+        color: transparent;
+        transform: translate(-2px, -2px);
+        box-shadow: 3px 3px 0 var(--color-ink);
     }
 }
 
@@ -201,14 +224,18 @@
   /* §8: reduced motion switches off every animation and transition in the
      app, not a list of named ones — so an animation added in a later stage is
      covered the day it lands rather than the day someone remembers it. Resting
-     transforms are untouched, which is how the logo stays tilted and still. */
+     transforms are untouched, which is how the logo stays tilted and still.
+     Delays go too: the Reveal's wave staggers every Square, and a Square
+     held blank through its delay would still be a wave, just a jerky one. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
       scroll-behavior: auto !important;
     }
   }
