@@ -4,6 +4,8 @@ interface SpriteProps {
   /** A `.svg` imported from `@/assets/sprites` — Vite inlines each one as a data URI. */
   source: string
   className?: string
+  /** Hover, or a tap on touch. Only the closing band's crowd listens. */
+  onPointerEnter?: () => void
 }
 
 // One pixel-art sprite (DESIGN.md §9). A plain <img>: the sprites ship as SVG
@@ -14,6 +16,14 @@ interface SpriteProps {
 // accessibility tree; aria-hidden says the same thing to anything that reads
 // the DOM instead, and neither can be forgotten at a call site because the
 // wrapper is the only way a sprite gets rendered.
-export function Sprite({ source, className }: SpriteProps) {
-  return <img src={source} alt="" aria-hidden="true" className={cn('sprite-pixels', className)} />
+export function Sprite({ source, className, onPointerEnter }: SpriteProps) {
+  return (
+    <img
+      src={source}
+      alt=""
+      aria-hidden="true"
+      className={cn('sprite-pixels', className)}
+      onPointerEnter={onPointerEnter}
+    />
+  )
 }

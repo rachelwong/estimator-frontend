@@ -51,14 +51,14 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
               href={REPOSITORY_URL.FRONTEND}
               sprite={laptop}
               label="Frontend on GitHub"
-              sublabel="estimator-frontend"
+              sublabel="react, typescript, tailwindcss, socket.io"
               onClick={onClose}
             />
             <MenuRow
               href={REPOSITORY_URL.BACKEND}
               sprite={server}
               label="Backend on GitHub"
-              sublabel="estimator-backend"
+              sublabel="node.js, websockets"
               onClick={onClose}
             />
           </ul>

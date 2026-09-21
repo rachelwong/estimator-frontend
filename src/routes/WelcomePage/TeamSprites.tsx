@@ -8,9 +8,14 @@ import personTwo from '@/assets/sprites/p2.svg'
 import { Sprite } from '@/components/Sprite'
 import { SPRITE_SCATTER_CLASS } from '@/constants'
 import { cn } from '@/lib/utils'
+import type { CrowdRemark } from '@/types'
+import { CrowdChatterBubble } from './CrowdChatterBubble'
 
 interface TeamSpritesProps {
   isGathered: boolean
+  // The line someone in the crowd is saying, if any (the easter egg).
+  remark: CrowdRemark | null
+  onCharacterPointerEnter: () => void
 }
 
 // The team in the closing band (§7 item 8), off the three artboards. Anchored
@@ -21,14 +26,18 @@ interface TeamSpritesProps {
 // Until the band is in view they wait below its bottom edge (a fixed distance
 // taller than the band, so even the high bubbles start out of sight); once
 // gathered they slide up, staggered so the crowd arrives one by one, and stay.
-export function TeamSprites({ isGathered }: TeamSpritesProps) {
+//
+// The people — not the bubbles or the mug — take the pointer back from the
+// layer, so hovering or tapping one has the crowd say something.
+export function TeamSprites({ isGathered, remark, onCharacterPointerEnter }: TeamSpritesProps) {
   const arrival = cn('transition-transform duration-500 ease-out', !isGathered && 'translate-y-[360px]')
 
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
       <Sprite
         source={personTwo}
-        className={cn(arrival, 'delay-100', 'sprite-sticker absolute top-[220px] right-[138px] h-[92px] w-auto rotate-[4deg] tablet:top-[250px] tablet:right-[238px] tablet:h-[115px] desktop:top-[150px] desktop:right-[290px] desktop:h-[138px]')}
+        onPointerEnter={onCharacterPointerEnter}
+        className={cn('pointer-events-auto', arrival, 'delay-100', 'sprite-sticker absolute top-[220px] right-[138px] h-[92px] w-auto rotate-[4deg] tablet:top-[250px] tablet:right-[238px] tablet:h-[115px] desktop:top-[150px] desktop:right-[290px] desktop:h-[138px]')}
       />
       <Sprite
         source={speechBubble}
@@ -36,16 +45,19 @@ export function TeamSprites({ isGathered }: TeamSpritesProps) {
       />
       <Sprite
         source={personSix}
-        className={cn(arrival, 'delay-200', 'sprite-sticker absolute top-[212px] right-12 h-[92px] w-auto rotate-[-3deg] tablet:top-[230px] tablet:right-[138px] tablet:h-[115px] desktop:top-[110px] desktop:right-[170px] desktop:h-[138px]')}
+        onPointerEnter={onCharacterPointerEnter}
+        className={cn('pointer-events-auto', arrival, 'delay-200', 'sprite-sticker absolute top-[212px] right-12 h-[92px] w-auto rotate-[-3deg] tablet:top-[230px] tablet:right-[138px] tablet:h-[115px] desktop:top-[110px] desktop:right-[170px] desktop:h-[138px]')}
       />
       <Sprite
         source={personThree}
-        className={cn(arrival, 'delay-0', 'sprite-sticker absolute top-[226px] -right-3 h-[92px] w-auto rotate-[5deg] tablet:top-[260px] tablet:right-[38px] tablet:h-[115px] desktop:top-40 desktop:right-[50px] desktop:h-[138px]')}
+        onPointerEnter={onCharacterPointerEnter}
+        className={cn('pointer-events-auto', arrival, 'delay-0', 'sprite-sticker absolute top-[226px] -right-3 h-[92px] w-auto rotate-[5deg] tablet:top-[260px] tablet:right-[38px] tablet:h-[115px] desktop:top-40 desktop:right-[50px] desktop:h-[138px]')}
       />
 
       <Sprite
         source={personFour}
-        className={cn(SPRITE_SCATTER_CLASS.HIDDEN_BELOW_DESKTOP, arrival, 'delay-300', 'sprite-sticker absolute top-[120px] right-[410px] h-[138px] w-auto rotate-[-6deg]')}
+        onPointerEnter={onCharacterPointerEnter}
+        className={cn('pointer-events-auto', SPRITE_SCATTER_CLASS.HIDDEN_BELOW_DESKTOP, arrival, 'delay-300', 'sprite-sticker absolute top-[120px] right-[410px] h-[138px] w-auto rotate-[-6deg]')}
       />
       <Sprite
         source={speechBubbleQuestion}
@@ -55,6 +67,8 @@ export function TeamSprites({ isGathered }: TeamSpritesProps) {
         source={mug}
         className={cn(SPRITE_SCATTER_CLASS.HIDDEN_BELOW_DESKTOP, arrival, 'delay-[600ms]', 'sprite-sticker absolute top-[90px] -right-8 h-[52px] w-auto rotate-[10deg]')}
       />
+
+      {remark && <CrowdChatterBubble key={remark.id} line={remark.line} jitter={remark.jitter} tilt={remark.tilt} />}
     </div>
   )
 }

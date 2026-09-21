@@ -141,6 +141,35 @@
   }
 }
 
+/* A line from the closing band's crowd (the easter egg): up from below the
+   band into view, a hold, then on up and out through the top. The first and
+   last sixth are the 300ms slides; the middle is the 1.2s hold. The easing
+   applies per keyframe gap, so each slide eases in and out on its own. It animates
+   `translate` rather than `transform` so it can start from the resting
+   offset `crowd-chatter` sets, below the band, where it's also left once
+   the animation ends. */
+@keyframes ffChatter {
+  0% {
+    translate: 0 var(--crowd-chatter-travel);
+  }
+  16.667%,
+  83.333% {
+    translate: 0 0;
+  }
+  100% {
+    translate: 0 calc(-1 * var(--crowd-chatter-travel));
+  }
+}
+
+/* The same line under reduced motion: in place from the first frame to the
+   last, so it still appears and goes rather than never being seen. */
+@keyframes ffChatterStill {
+  from,
+  to {
+    translate: 0 0;
+  }
+}
+
 /* The loader (§7). The fill grows; `steps()` on the animation is what turns a
    smooth width into whole blocks. */
 @keyframes ffBar {
@@ -212,6 +241,48 @@
   &:focus-visible {
     outline: 3px solid var(--color-ink);
     outline-offset: 8px;
+  }
+}
+
+/* Where the crowd's line sits in the closing band (the easter egg): in the gap
+   between the headline and the crowd, at each board's spot, moved across the
+   gap by --chatter-jitter (0–1, a new one each time). The jitter only reaches
+   as far as the room the band has past the line's own width, which is none at
+   the narrowest widths. Measured against the band's gathered crowd:
+   - mobile (M2): under the button, 136px wide so it wraps to 2–3 lines. The
+     crowd starts 197px from the right edge; 20 + 136 + 197 = 353.
+   - tablet (T1): right of the headline, one line up to ~230px, from 28px off
+     the right edge. The headline ends 341px in; 28 + 230 + 365 = 623.
+   - desktop: right of the button and under the headline, one line, from
+     247px in. The crowd starts 501px from the right; 247 + 230 + 517 = 994.
+   It slides the band's full height, so it starts below the bottom edge and
+   ends above the top one wherever it sits.
+   It's also tilted by --chatter-tilt (-1–1, a new one each time), at most 3deg
+   either way so the words stay easy to read. `rotate` is its own property, so
+   the tilt holds steady while the slide animates `translate`.
+   Its hard offset shadow is the band's own accent deepened with a little ink,
+   so it reads as a shade of the band rather than the usual ink drop. */
+@utility crowd-chatter {
+  --crowd-chatter-travel: 330px;
+  --crowd-chatter-duration: 1800ms;
+  top: 172px;
+  left: calc(20px + var(--chatter-jitter) * max(0px, 100% - 353px));
+  translate: 0 var(--crowd-chatter-travel);
+  rotate: calc(var(--chatter-tilt) * 3deg);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--color-accent) 65%, var(--color-ink));
+  will-change: translate;
+  animation: ffChatter var(--crowd-chatter-duration) ease-in-out;
+
+  @variant tablet {
+    top: 118px;
+    left: auto;
+    right: calc(28px + var(--chatter-jitter) * max(0px, 100% - 623px));
+  }
+
+  @variant desktop {
+    top: 164px;
+    left: calc(247px + var(--chatter-jitter) * max(0px, 100% - 994px));
+    right: auto;
   }
 }
 
@@ -299,6 +370,14 @@
       transition-duration: 0.01ms !important;
       transition-delay: 0ms !important;
       scroll-behavior: auto !important;
+    }
+
+    /* The one exception: the crowd's line exists only for as long as its
+       animation runs, so collapsing it would mean never seeing the line.
+       It keeps its full duration and swaps the slides for standing still. */
+    .crowd-chatter {
+      animation-name: ffChatterStill !important;
+      animation-duration: var(--crowd-chatter-duration) !important;
     }
   }
 }

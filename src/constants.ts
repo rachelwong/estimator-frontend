@@ -508,3 +508,43 @@ export const WELCOME_SECTION_HEADING_CLASS =
 
 export const WELCOME_CARD_HEADING_CLASS =
   "font-display text-[17px] leading-[1.1] text-ink tablet:text-[19px] desktop:text-[20px]";
+
+// What the crowd in the closing band says when someone hovers one of them — the
+// easter egg. A random line each time, never the same one twice running. Keep
+// each to about 28 characters: tablet and desktop set it on one line in the gap
+// between the headline and the crowd, and a longer one runs into the words.
+export const CROWD_CHATTER_LINES = [
+  "I’m a 3. Fight me.",
+  "Who put this on a 21?",
+  "Does that include testing?",
+  "Scope creep says hi.",
+  "Refill before the Reveal.",
+  "Gentle reminder: it's hard.",
+  "Merge conflicts? Add 3.",
+  "I'm with whoever's lowest.",
+  "I'm going big. Sorry.",
+  "Consensus? In this economy?",
+  "Edge cases entered the chat.",
+  "That's future me's problem.",
+  "Velocity? Never heard of it.",
+  "Pretty sure it's a 2. Ish.",
+  "I estimate in naps.",
+  "Coffee first, numbers later.",
+  "Refill before the Reveal.",
+  "Is this before or after QA?",
+  "Can I phone a senior dev?",
+  "Nobody say 'just'.",
+  "Outlier and proud.",
+  "The Reveal is my cardio.",
+  "I changed my mind. Again.",
+  "Same Square? Great minds.",
+  "That's a spike, not a story.",
+  "Did anyone read the ticket?",
+  "The Admin has spoken.",
+  "Legacy code? Add a zero.",
+  "Is 'it depends' a Vote?",
+] as const;
+
+// The least a crowd line leans, as a share of its 3deg maximum (set in
+// `crowd-chatter`), so every remark visibly tilts — about 1.2deg at least.
+export const CROWD_CHATTER_MIN_TILT = 0.4;
