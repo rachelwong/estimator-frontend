@@ -1,6 +1,6 @@
+import avatar from "@/assets/sprites/avatar2.svg";
 import gridPick from "@/assets/sprites/grid-pick.svg";
 import gridReveal from "@/assets/sprites/grid-reveal.svg";
-import personFour from "@/assets/sprites/p4.svg";
 import sessionStart from "@/assets/sprites/session-start.svg";
 import {
   WELCOME_ANCHOR_CLASS,
@@ -84,7 +84,7 @@ export function HowToUseSection() {
         <HowToUseCard
           level={4}
           title="Talk it through"
-          sprite={personFour}
+          sprite={avatar}
           tintClass="bg-crowd-0"
         >
           The hard part. Talk through the highest and lowest votes. Ask the hard
