@@ -1,15 +1,15 @@
-import cardBack from '@/assets/sprites/cardback.svg'
-import cardFace from '@/assets/sprites/cardface.svg'
-import laptop from '@/assets/sprites/laptop.svg'
-import personFour from '@/assets/sprites/p4.svg'
+import gridPick from "@/assets/sprites/grid-pick.svg";
+import gridReveal from "@/assets/sprites/grid-reveal.svg";
+import personFour from "@/assets/sprites/p4.svg";
+import sessionStart from "@/assets/sprites/session-start.svg";
 import {
   WELCOME_ANCHOR_CLASS,
   WELCOME_GUTTER_CLASS,
   WELCOME_SECTION_HEADING_CLASS,
   WelcomeSection,
-} from '@/constants'
-import { cn } from '@/lib/utils'
-import { HowToUseCard } from './HowToUseCard'
+} from "@/constants";
+import { cn } from "@/lib/utils";
+import { HowToUseCard } from "./HowToUseCard";
 
 // Four cards, LV.1 to LV.4, one per step of a Session (§7 item 5): four across
 // on desktop, two on tablet, one on a phone. Written out rather than mapped
@@ -18,27 +18,80 @@ export function HowToUseSection() {
   return (
     <section
       id={WelcomeSection.HOW_TO_USE}
-      className={cn('flex flex-col gap-7 pt-8 tablet:gap-10 tablet:pt-12', WELCOME_GUTTER_CLASS, WELCOME_ANCHOR_CLASS)}
+      className={cn(
+        "flex flex-col gap-7 pt-8 tablet:gap-10 tablet:pt-12",
+        WELCOME_GUTTER_CLASS,
+        WELCOME_ANCHOR_CLASS,
+      )}
     >
-      <h2 className={cn(WELCOME_SECTION_HEADING_CLASS, 'text-center')}>How to use</h2>
-
+      <h2 className={cn(WELCOME_SECTION_HEADING_CLASS, "text-center")}>
+        How to use
+      </h2>
+      <div className="max-w-4xl mx-auto text-center flex flex-col gap-y-6">
+        <p className="text-[16px]">
+          {" "}
+          Estimation is hard. Teams have to weigh up unknowns, dependencies and
+          effort so product owners and businesses can make calls that affect
+          everyone, and too often the first number callout or the loudest voices
+          becomes the answer. <br />
+          <strong>Fold & Flip</strong> is planning poker tool that keeps every
+          estimate hidden until the reveal, so you hear what the entire team
+          actually thinks. Every story point estimate on the grid is a function
+          of <strong>time</strong> and <strong>resources</strong> (or effort),
+          relative to other tasks or tickets in queue.
+        </p>
+      </div>
       <ol className="grid gap-5 tablet:grid-cols-2 tablet:gap-7 desktop:grid-cols-4">
-        <HowToUseCard level={1} title="Start a session" sprite={laptop} tintClass="bg-white">
-          Choose a Point system, Numerical or Fibonacci, set the highest axis value and share the
-          link.
+        <HowToUseCard
+          level={1}
+          title="Start a session"
+          sprite={sessionStart}
+          tintClass="bg-white"
+        >
+          Call out what you're estimating -- a Jira ticket, a feature, or a new
+          design. <br />
+          Choose a Point system (Numerical or{" "}
+          <a
+            href="https://www.atlassian.com/agile/project-management/fibonacci-story-points"
+            target="_blank"
+          >
+            Fibonacci
+          </a>
+          ) to set the maximum number of story points you can allocate towards a
+          feature or a ticket.
+          <br />
+          Share the link with the team.
         </HowToUseCard>
-        <HowToUseCard level={2} title="Pull up a chair" sprite={personFour} tintClass="bg-butter">
-          Everyone joins with just a name. No accounts, nothing to install.
+        <HowToUseCard
+          level={2}
+          title="Cards down"
+          sprite={gridPick}
+          tintClass="bg-butter"
+        >
+          Everyone selects a square on the points grid, with time on one axis
+          and resources (or effort) on the other. Nobody sees anyone else's
+          vote.
         </HowToUseCard>
-        <HowToUseCard level={3} title="Hands down" sprite={cardBack} tintClass="bg-copied">
-          Pick a Square. Pick another to move it, or the same one to clear it. Nobody else can see
-          it.
+        <HowToUseCard
+          level={3}
+          title="The Flip"
+          sprite={gridReveal}
+          tintClass="bg-copied"
+        >
+          Once admin has confirmed everyone has voted, the session is ended. All
+          the votes are revealed, including anyone who might have abstained.
         </HowToUseCard>
-        <HowToUseCard level={4} title="The Reveal" sprite={cardFace} tintClass="bg-crowd-0">
-          The Admin ends the session. Every Square shows who landed there; anyone without a
-          Selection is Abstained.
+        <HowToUseCard
+          level={4}
+          title="Talk it through"
+          sprite={personFour}
+          tintClass="bg-crowd-0"
+        >
+          The hard part. Talk through the highest and lowest votes. Ask the hard
+          questions to flag uncertainties, dependencies earlier. <br />
+          <strong>And start another session for the next task.</strong>
         </HowToUseCard>
       </ol>
     </section>
-  )
+  );
 }

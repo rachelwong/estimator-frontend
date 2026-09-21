@@ -50,9 +50,16 @@ export function WhyIMadeThisSection() {
 
       <div className="flex flex-col gap-[18px] border-[3px] border-ink bg-white p-[18px] shadow-px-card tablet:px-[22px] tablet:py-5 desktop:flex-row desktop:items-center desktop:justify-between desktop:gap-6 desktop:py-[18px]">
         <div className="flex flex-col gap-1.5">
-          <span className="font-label text-[12px]">read the source</span>
+          <span className="font-label text-[12px]">the tools & process</span>
           <span className="text-[16px] font-bold">
-            <PlaceholderCopy>— [Your name], [your role]</PlaceholderCopy>
+            <PlaceholderCopy>
+              Estimation is hard. Teams have to weigh up unknowns, dependencies
+              and effort so product owners can make calls that affect everyone,
+              and too often the first number or the loudest voices becomes the
+              answer. Fold & Flip is planning poker tool that keeps every
+              estimate hidden until the reveal, so you hear what the entire team
+              actually thinks.
+            </PlaceholderCopy>
           </span>
         </div>
 

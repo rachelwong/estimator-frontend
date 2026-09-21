@@ -1,21 +1,21 @@
-import { lazy } from 'react'
-import { createBrowserRouter, redirect } from 'react-router'
-import { LoadingWindow } from '@/components/LoadingWindow'
-import { RoutePath } from '@/constants'
-import { AppError } from '@/routes/AppError'
-import { PrimitivesPage } from '@/routes/dev/PrimitivesPage'
-import { SpritesPage } from '@/routes/dev/SpritesPage'
-import { TokensPage } from '@/routes/dev/TokensPage'
-import { JoinSessionPage } from '@/routes/JoinSessionPage'
+import { LoadingWindow } from "@/components/LoadingWindow";
+import { RoutePath } from "@/constants";
+import { AppError } from "@/routes/AppError";
+import { PrimitivesPage } from "@/routes/dev/PrimitivesPage";
+import { SpritesPage } from "@/routes/dev/SpritesPage";
+import { TokensPage } from "@/routes/dev/TokensPage";
+import { JoinSessionPage } from "@/routes/JoinSessionPage";
 import {
   createSessionAction,
   endedLoader,
   joinAction,
   joinLoader,
   startLoader,
-} from '@/routes/loaders'
-import { NotFoundPage } from '@/routes/NotFoundPage'
-import { RootLayout } from '@/routes/RootLayout'
+} from "@/routes/loaders";
+import { NotFoundPage } from "@/routes/NotFoundPage";
+import { RootLayout } from "@/routes/RootLayout";
+import { lazy } from "react";
+import { createBrowserRouter, redirect } from "react-router";
 
 // only-export-components wants the lazy() handles below in their own files, so
 // fast refresh can keep their state. There is none to keep here: this module
@@ -30,10 +30,10 @@ import { RootLayout } from '@/routes/RootLayout'
 //
 // Join and NotFound stay eager above — both are cold-start landings, and
 // neither pulls anything the entry chunk doesn't already have.
-const WelcomePage = lazy(() => import('@/routes/WelcomePage'))
-const CreateSessionPage = lazy(() => import('@/routes/CreateSessionPage'))
-const ActiveSessionPage = lazy(() => import('@/routes/ActiveSessionPage'))
-const EndedPage = lazy(() => import('@/routes/EndedPage'))
+const WelcomePage = lazy(() => import("@/routes/WelcomePage"));
+const CreateSessionPage = lazy(() => import("@/routes/CreateSessionPage"));
+const ActiveSessionPage = lazy(() => import("@/routes/ActiveSessionPage"));
+const EndedPage = lazy(() => import("@/routes/EndedPage"));
 
 // One route per session status. Loaders redirect a wrong-status visit, so no
 // page ever maps a status to a screen. See PLAN.md "Routes".
@@ -46,35 +46,51 @@ export const router = createBrowserRouter([
     // own PageLayout, as every page does.
     errorElement: <AppError />,
     children: [
-      { path: RoutePath.HOME, element: null, loader: () => redirect(RoutePath.WELCOME) },
+      {
+        path: RoutePath.HOME,
+        element: null,
+        loader: () => redirect(RoutePath.WELCOME),
+      },
       { path: RoutePath.WELCOME, element: <WelcomePage /> },
-      { path: RoutePath.NEW, element: <CreateSessionPage />, action: createSessionAction },
-      { path: '/not-found', element: <NotFoundPage /> },
+      {
+        path: RoutePath.NEW,
+        element: <CreateSessionPage />,
+        action: createSessionAction,
+      },
+      { path: "/not-found", element: <NotFoundPage /> },
       // Redirect-only. element: null, not omitted — this route renders while
       // /join's loader runs, and an undefined element warns.
       {
-        path: '/:sessionId',
+        path: "/:sessionId",
         element: null,
         loader: ({ params }) => redirect(`/${params.sessionId}/join`),
       },
       {
-        path: '/:sessionId/join',
+        path: "/:sessionId/join",
         element: <JoinSessionPage />,
         loader: joinLoader,
         action: joinAction,
       },
-      { path: '/:sessionId/start', element: <ActiveSessionPage />, loader: startLoader },
-      { path: '/:sessionId/ended', element: <EndedPage />, loader: endedLoader },
+      {
+        path: "/:sessionId/start",
+        element: <ActiveSessionPage />,
+        loader: startLoader,
+      },
+      {
+        path: "/:sessionId/ended",
+        element: <EndedPage />,
+        loader: endedLoader,
+      },
       // The stage sheets — tokens, sprites, primitives — dev builds only.
       // Removed once the screens they stand in for exist.
       ...(import.meta.env.DEV
         ? [
-            { path: '/dev/tokens', element: <TokensPage /> },
-            { path: '/dev/sprites', element: <SpritesPage /> },
-            { path: '/dev/primitives', element: <PrimitivesPage /> },
+            { path: "/dev/tokens", element: <TokensPage /> },
+            { path: "/dev/sprites", element: <SpritesPage /> },
+            { path: "/dev/primitives", element: <PrimitivesPage /> },
           ]
         : []),
-      { path: '*', element: null, loader: () => redirect('/not-found') },
+      { path: "*", element: null, loader: () => redirect("/not-found") },
     ],
   },
-])
+]);
