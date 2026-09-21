@@ -467,9 +467,10 @@ export const REPOSITORY_URL = {
 } as const;
 
 // The band where the Welcome page's lavender top breaks into pixels over the
-// cream below (§7 item 4): a Bayer 4×4 ordered dither, one tile per 4×4 cells.
-// Each 4-row block keeps a cell where its matrix value reaches that block's
-// threshold — 7/8, then 1/2, then 1/8 of the cells, read off the artboard.
+// cream below (§7 item 4) as a glow: a Bayer 4×4 ordered dither where the cells
+// of each matrix value fill their own half-ellipse hung from the band's top
+// centre — the higher the value, the shallower its ellipse — so the lavender
+// thins out towards an elliptical edge, deepest in the middle.
 export const DITHER_BAYER_MATRIX = [
   [0, 8, 2, 10],
   [12, 4, 14, 6],
@@ -477,10 +478,15 @@ export const DITHER_BAYER_MATRIX = [
   [15, 7, 13, 5],
 ] as const;
 
-export const DITHER_BLOCK_THRESHOLDS = [2, 8, 14] as const;
+// One cell of the dither.
+export const DITHER_PIXEL_PX = 2;
 
-// One cell of the dither — 12 rows of them make the 96px band.
-export const DITHER_PIXEL_PX = 8;
+// How far the glow reaches below the lavender at its centre.
+export const DITHER_GLOW_DEPTH_PX = 160;
+
+// The glow's half-width as a share of the band's — past 50% so the sides
+// still fade a little way down rather than cutting off at the top.
+export const DITHER_GLOW_RADIUS_PERCENT = 60;
 
 // The sample Session the Welcome page demonstrates with (§7 item 3).
 // Real data shapes, so the demo is the real Reveal window rather

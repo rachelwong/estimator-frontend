@@ -240,8 +240,10 @@ Participants follow with a dashed chip and "Abstained" in `abstained` red.
    `accent`), paragraph, Start a session + How to use.
 3. Hero demo — the real Reveal window (notice, heading, grid with a lifted
    Square and open popover, "who landed where" chips), 780px max.
-4. Pixel-dither band — `page-top` breaks into 8px pixels over 12 rows (Bayer
-   4×4 ordered dither) into cream, just before How to use.
+4. Pixel-dither glow — `page-top` breaks into 2px pixels (Bayer 4×4 ordered
+   dither) that glow down into cream: 160px deep at the centre, shallower
+   towards the sides along a half-ellipse 120% of the page wide, just before
+   How to use.
 5. How to use — four cards LV.1–LV.4: Start a session / Pull up a chair /
    Hands down / The Reveal. 4 → 2 → 1 columns.
 6. Why I made this — a zine spread. Heading on a 3px ink rule with the
