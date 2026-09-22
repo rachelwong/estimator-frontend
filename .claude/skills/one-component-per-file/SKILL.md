@@ -13,7 +13,7 @@ A `.tsx` file is the component, its `XyzProps` interface, and imports. Every oth
 | Sub-component | its own file in the parent's folder (below) | `./Child` |
 | Non-component JSX config (e.g. the router) | its own `.tsx` beside its consumers (`src/routes/router.tsx`) | its path |
 
-A component-scoped constant (`MAX_VISIBLE_NAMES`, `CELL_CLASS`) still goes in `src/constants.ts`, with a comment naming what it's for. Closures inside the component body (`handleSelect`) are part of the component and stay put.
+A component-scoped constant (`MAX_VISIBLE_NAMES`) still goes in `src/constants.ts`, with a comment naming what it's for. **Tailwind class strings are the exception** — they stay inline in the `className` they apply to, and repeated *elements* become components instead; see `component-over-shared-class-constant`. Closures inside the component body (`handleSelect`) are part of the component and stay put.
 
 **Exempt:** `src/components/ui/` is shadcn-generated (`buttonVariants` beside `Button`, etc.). Leave those files as shadcn writes them, so `npx shadcn add` can regenerate them. They're also excluded from oxlint in `.oxlintrc.json`.
 
