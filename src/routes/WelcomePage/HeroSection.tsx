@@ -36,10 +36,11 @@ export function HeroSection() {
           <span className="text-accent">ship together</span>
         </h1>
 
-        <p className="max-w-[600px] text-[18px] leading-[1.5] text-text-muted tablet:text-[21px]">
-          Estimate story points as a team without anchoring. Share a link, pick
-          your square on the Time × Resources grid in private, then reveal
-          together and talk through what it takes to ship.
+        <p className="max-w-[600px] leading-[1.5] text-text-muted text-[18px] leading-[1.5] tablet:text-[21px]">
+          A visual tool for estimating story points as a team without anchoring.
+          Share a session link, pick your estimate on the <br />
+          Time × Resources grid in private, then reveal together and <br />
+          talk through what it takes to ship.
         </p>
 
         <div className="flex w-full flex-col gap-4 pt-1.5 tablet:w-auto tablet:flex-row">

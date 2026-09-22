@@ -16,13 +16,14 @@ export function HowToUseSection() {
       className="flex flex-col gap-7 px-5 pt-8 scroll-mt-16 tablet:gap-10 tablet:px-10 tablet:pt-12 tablet:scroll-mt-[72px] desktop:px-20 desktop:scroll-mt-[84px]"
     >
       <WelcomeSectionHeading text="How to use" />
-      <div className="max-w-4xl mx-auto text-center flex flex-col gap-y-6 text-[12px] leading-[1.6] text-text-muted tablet:text-[18px]">
+      <div className="max-w-4xl mx-auto text-center flex flex-col gap-y-6 text-[18px] leading-[1.5] text-text-muted tablet:text-[18px]">
         <p>
           {" "}
           Estimation is hard. Teams have to weigh up unknowns, dependencies and
           effort so that product owners, team leads and businesses can make
-          calls that affect everyone. All too often the first number callout or
-          the loudest voices becomes the answer. <br />
+          calls that affect everyone. <br />
+          All too often the first number callout or the loudest voices becomes
+          the answer. <br />
           <strong>Fold & Flip</strong> is an ice-breaker/planning-poker tool
           that gives every team member a chance to estimate. It keeps every
           estimate hidden until the reveal, so you hear what the entire team
@@ -30,7 +31,8 @@ export function HowToUseSection() {
           of <strong>time</strong> and <strong>resources</strong> (or effort),
           relative to other tasks or tickets in queue.
           <br />
-          It's a conversation starter, not a line in the sand.
+          Estimating story points is a conversation starter, not a line in the
+          sand.
         </p>
       </div>
       <ol className="grid gap-5 tablet:grid-cols-2 tablet:gap-7 desktop:grid-cols-4">
