@@ -375,10 +375,6 @@ export const FOCUS_VISIBLE_SELECTOR = ":focus-visible";
 // get no hover preview — a tap would leave it stuck on.
 export const MOUSE_POINTER_TYPE = "mouse";
 
-// A missing session is an expected answer from GET /sessions/:id, not a
-// failure, so lib/api.ts checks for this status by name.
-export const HTTP_NOT_FOUND = 404;
-
 // The values the logo card flips to (DESIGN.md §1). The first eight Fibonacci
 // numbers, but declared here rather than sliced off FIBONACCI_SEQUENCE: that
 // one is the point system the server validates against, and the logo must not
