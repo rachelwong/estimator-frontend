@@ -4,26 +4,17 @@ import ruleChange from "@/assets/sprites/rule-change.svg";
 import ruleKept from "@/assets/sprites/rule-kept.svg";
 import ruleLink from "@/assets/sprites/rule-link.svg";
 import ruleLive from "@/assets/sprites/rule-live.svg";
-import {
-  WELCOME_GUTTER_CLASS,
-  WELCOME_SECTION_HEADING_CLASS,
-} from "@/constants";
-import { cn } from "@/lib/utils";
 import { HouseRule } from "./HouseRule";
+import { WelcomeSectionHeading } from "./WelcomeSectionHeading";
 
 // House rules (§7 item 7): six things worth knowing before a first Session.
 // Three across on desktop, two on tablet, one on a phone.
 export function HouseRulesSection() {
   return (
     <section
-      className={cn(
-        "flex flex-col gap-6 pt-20 tablet:gap-9 tablet:pt-[110px]",
-        WELCOME_GUTTER_CLASS,
-      )}
+      className="flex flex-col gap-6 px-5 pt-20 tablet:gap-9 tablet:px-10 tablet:pt-[110px] desktop:px-20"
     >
-      <h2 className={cn(WELCOME_SECTION_HEADING_CLASS, "text-center")}>
-        House rules
-      </h2>
+      <WelcomeSectionHeading text="House rules" />
 
       <ul className="grid gap-4 tablet:grid-cols-2 tablet:gap-6 desktop:grid-cols-3">
         <HouseRule

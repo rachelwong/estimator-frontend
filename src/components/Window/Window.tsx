@@ -1,18 +1,18 @@
 import type { ReactNode } from 'react'
 import { Chip } from '@/components/Chip'
+import { WINDOW_VARIANT_CLASS } from '@/constants'
 import { cn } from '@/lib/utils'
+import type { WindowVariant } from '@/types'
 import { WindowChrome } from './WindowChrome'
 
 interface WindowProps {
   /** Silkscreen, lower case, one or two words: `live`, `revealed`, `new-session`. */
   title: string
+  /** Which screen this is framing — it settles the width and the body padding. */
+  variant: WindowVariant
   /** The status chip beside the chrome — "Admin", "Participant", "error". */
   chip?: string
   children: ReactNode
-  /** Width, and anything else about where the window sits on its page. */
-  className?: string
-  /** Overrides the body's padding and gap, for a screen whose artboard differs. */
-  bodyClassName?: string
 }
 
 // The frame around every working surface (DESIGN.md §4): 3px ink edge, an 8px
@@ -24,11 +24,16 @@ interface WindowProps {
 // navigate through for a decoration. The heading inside it is what a screen
 // reader has always had to go on.
 //
-// Width belongs to the caller — the design gives each screen its own (§5), and
-// a window that chose its own would have to know which screen it was on.
-export function Window({ title, chip, children, className, bodyClassName }: WindowProps) {
+// The design gives each screen its own width and body padding (§5), so the
+// window is told which screen it is framing and reads both off WINDOW_VARIANT_CLASS.
+// No caller passes classes in: none of them varies what it would pass.
+export function Window({ title, variant, chip, children }: WindowProps) {
+  const variantClass = WINDOW_VARIANT_CLASS[variant]
+
   return (
-    <section className={cn('border-[3px] border-ink bg-white shadow-px-window', className)}>
+    <section
+      className={cn('border-[3px] border-ink bg-white shadow-px-window', variantClass.window)}
+    >
       <div className="flex h-11 items-center justify-between gap-2.5 border-b-[3px] border-ink bg-accent px-3.5 font-label text-[12px] text-white">
         <span className="truncate">{title}</span>
 
@@ -41,11 +46,11 @@ export function Window({ title, chip, children, className, bodyClassName }: Wind
       {/* One set of paddings by default. The artboards vary them by a few pixels
           per screen — 28/36/36 on Active against 32/40/36 on Join — with nothing
           in §5 to reconcile them, so the wider pair wins. A screen whose content
-          doesn't fit that overrides it through bodyClassName. */}
+          doesn't fit that says so in its WINDOW_VARIANT_CLASS body. */}
       <div
         className={cn(
           'flex flex-col gap-5 px-4 pt-[18px] pb-5 tablet:gap-[18px] tablet:px-7 tablet:pt-5 tablet:pb-7 desktop:px-10 desktop:pt-8 desktop:pb-9',
-          bodyClassName,
+          variantClass.body,
         )}
       >
         {children}

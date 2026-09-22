@@ -21,11 +21,14 @@ import {
   SquareHighlight,
   SquareLabelSize,
   WebSocketEvent,
+  WindowVariant,
 } from '../constants'
 
 export type PointSystemType = (typeof PointSystemType)[keyof typeof PointSystemType]
 
 export type GridMode = (typeof GridMode)[keyof typeof GridMode]
+
+export type WindowVariant = (typeof WindowVariant)[keyof typeof WindowVariant]
 
 export type Breakpoint = (typeof Breakpoint)[keyof typeof Breakpoint]
 

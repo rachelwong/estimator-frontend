@@ -14,7 +14,7 @@ interface MakerNoteProps {
 export function MakerNote({ label, text, className }: MakerNoteProps) {
   return (
     <div className={cn("flex flex-col gap-3.5", className)}>
-      <div className="border-b-[3px] border-accent pb-2.5">
+      <div className="pb-1">
         <span className="font-label text-[13px]">{label}</span>
       </div>
 

@@ -1,6 +1,5 @@
 import { Card } from "@/components/Card";
 import { Sprite } from "@/components/Sprite";
-import { WELCOME_CARD_HEADING_CLASS } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
@@ -41,7 +40,13 @@ export function HowToUseCard({
           <Sprite source={sprite} className="h-auto w-[52px] tablet:w-16" />
         </div>
 
-        <h3 className={WELCOME_CARD_HEADING_CLASS}>{title}</h3>
+        <h3
+          className={
+            "font-display text-[17px] leading-[1.1] text-ink tablet:text-[19px] desktop:text-[20px]"
+          }
+        >
+          {title}
+        </h3>
         <p className="text-[16px] leading-[1.55] text-text-muted">{children}</p>
       </Card>
     </li>

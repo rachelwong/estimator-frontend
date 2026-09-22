@@ -8,7 +8,7 @@ import { SpriteScatter } from '@/components/SpriteScatter'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Window } from '@/components/Window'
-import { FORM_WINDOW_BODY_CLASS, JOIN_WINDOW_CLASS, PixelBarSize } from '@/constants'
+import { PixelBarSize, WindowVariant } from '@/constants'
 import { cn } from '@/lib/utils'
 import { nameError } from '@/lib/validation'
 import type { ActionErrorData } from '@/types'
@@ -34,9 +34,8 @@ export function JoinSessionPage() {
 
         <Window
           title="join"
+          variant={WindowVariant.JOIN}
           chip="Participant"
-          className={JOIN_WINDOW_CLASS}
-          bodyClassName={FORM_WINDOW_BODY_CLASS}
         >
           <h1 className="font-display text-[22px] leading-[1.05] text-ink tablet:text-[30px]">
             Join session

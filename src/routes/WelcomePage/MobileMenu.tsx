@@ -3,7 +3,7 @@ import laptop from "@/assets/sprites/laptop.svg";
 import personFour from "@/assets/sprites/p4.svg";
 import server from "@/assets/sprites/server.svg";
 import { Window } from "@/components/Window";
-import { REPOSITORY_URL, WelcomeSection } from "@/constants";
+import { REPOSITORY_URL, WelcomeSection, WindowVariant } from "@/constants";
 import { MenuRow } from "./MenuRow";
 import { StartSessionButton } from "./StartSessionButton";
 
@@ -33,7 +33,7 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
         aria-label="Menu"
         className="fixed inset-x-3 top-[76px] max-h-[calc(100dvh-88px)] overflow-y-auto"
       >
-        <Window title="menu" bodyClassName="gap-0 px-4 pt-1.5 pb-[18px]">
+        <Window title="menu" variant={WindowVariant.MENU}>
           <ul>
             <MenuRow
               href={`#${WelcomeSection.HOW_TO_USE}`}

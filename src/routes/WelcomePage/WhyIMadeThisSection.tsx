@@ -1,14 +1,8 @@
 import { Button } from "@/components/ui/button";
-import {
-  REPOSITORY_URL,
-  WELCOME_ANCHOR_CLASS,
-  WELCOME_GUTTER_CLASS,
-  WELCOME_SECTION_HEADING_CLASS,
-  WelcomeSection,
-} from "@/constants";
-import { cn } from "@/lib/utils";
+import { REPOSITORY_URL, WelcomeSection } from "@/constants";
 import { CodeIcon } from "./CodeIcon";
 import { MakerNote } from "./MakerNote";
+import { WelcomeSectionHeading } from "./WelcomeSectionHeading";
 
 // Why I made this (§7 item 6), a zine spread: the heading on an ink rule, three
 // notes split by ink rules, then a "read the source" bar with the sign-off and
@@ -19,14 +13,10 @@ export function WhyIMadeThisSection() {
   return (
     <section
       id={WelcomeSection.WHY_I_MADE_THIS}
-      className={cn(
-        "flex flex-col gap-7 pt-20 tablet:gap-8 tablet:pt-[110px] desktop:gap-9",
-        WELCOME_GUTTER_CLASS,
-        WELCOME_ANCHOR_CLASS,
-      )}
+      className="flex flex-col gap-7 px-5 pt-20 scroll-mt-16 tablet:gap-8 tablet:px-10 tablet:pt-[110px] tablet:scroll-mt-[72px] desktop:gap-9 desktop:px-20 desktop:scroll-mt-[84px]"
     >
-      <div className="flex flex-col gap-2.5 border-b-[3px] border-ink pb-3.5 tablet:flex-row tablet:flex-wrap tablet:items-end tablet:justify-between tablet:gap-x-6 tablet:gap-y-3 tablet:pb-4 desktop:pb-[18px]">
-        <h2 className={WELCOME_SECTION_HEADING_CLASS}>Why I made this</h2>
+      <div className="pb-3.5 tablet:pb-4 desktop:pb-[18px]">
+        <WelcomeSectionHeading text="Why I made this" />
       </div>
 
       <div className="grid gap-7 tablet:grid-cols-2 tablet:gap-0 desktop:grid-cols-3">
@@ -48,15 +38,15 @@ In my experience, a few things make estimates less reliable:<br/>
         />
         <MakerNote
           label="the idea"
-          text="There's plenty of formal literature on agile, estimation and Scrum. I deliberately avoided reading those or referring to existing estimation tools, because I wanted to build something that addressed what I'd personally observed in previous roles.
+          text="There's plenty of formal literature on <a href='https://agilemanifesto.org/' target='_blank'>agile</a>, <a href='https://www.atlassian.com/blog/developers/planning-poker-sane-healthy' target='_blank'>estimation</a> and <a href='https://www.atlassian.com/agile/scrum' target='_blank'>Scrum</a>. I deliberately avoided reading those or referring to existing estimation tools on the market, because I wanted to build something that addressed what I'd personally observed in previous teams.
 <br/><br/>
-I wanted a tool that invites every team member to contribute visibly and meaningfully, makes room for discussion when it's needed, and brings the team into alignment. A story point is a good-faith rough estimate, not a binding guarantee. <br/><br/>The points isn't important. The resulting conversation & discussion is."
+I want to create a tool that invites every team member to contribute visibly and meaningfully to estimating down a piece of work, makes room for discussion when it's needed, and brings everyone on the team into alignment. A story point is a good-faith rough estimate, not a binding guarantee."
           className="tablet:pb-7 tablet:pl-7 desktop:border-r-2 desktop:border-ink desktop:px-9 desktop:pb-0"
         />
         <MakerNote
           label="the build"
           text="
-          I used this project to explore two things I'd shelved for 'later': back-end development and Claude Code. I've documented my process in detail in each repo's README. In a nutshell, I seeded the project with a <a className='link' href='https://miro.com/app/board/uXjVH-RcLGw=/?share_link_id=902798596342'>Miro board of storyboards</a> and a <a className='link' href='https://app.notion.com/p/rachelwong/Estimator-3bb375d34b3480548d26edd98dcc8a11?source=copy_link'>Notion doc</a>. I've used interview-style prompts and <a href='https://github.com/mattpocock/skills' className='link'>Matt Pocock's grilling skills</a>. Each stage is effectively a pull request: I review it, make manual changes, grill it, and commit manually. And make more manual changes as I see fit. <br /><br/>Claude-driven design can be fun, but I would still reach for a human designer for good taste. 
+          I used this project to explore two things I'd shelved for 'later': back-end development and Claude Code. I've documented my process in detail in each repo's README. In a nutshell, I seeded the project with a <a className='link' href='https://miro.com/app/board/uXjVH-RcLGw=/?share_link_id=902798596342'>Miro board of storyboards</a> and a <a className='link' href='https://app.notion.com/p/rachelwong/Estimator-3bb375d34b3480548d26edd98dcc8a11?source=copy_link'>Notion doc</a>. I've used interview-style prompts and <a href='https://github.com/mattpocock/skills' className='link'>Matt Pocock's grilling skills</a>. Each stage is effectively a pull request: I review it, make manual changes, grill it, and commit manually. And make more manual changes for code quality. <br /><br/>Claude-driven design can be fun, but I would still reach for a human designer for good taste. 
 I haven't yet figured out the best way to use AI; still to come.
           "
           className="tablet:col-span-2 tablet:border-t-2 tablet:border-ink tablet:pt-7 desktop:col-span-1 desktop:border-t-0 desktop:pt-0 desktop:pl-9"

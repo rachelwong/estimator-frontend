@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { EstimationGrid } from '@/components/EstimationGrid'
 import { Window } from '@/components/Window'
-import { GridMode, SESSION_WINDOW_CLASS } from '@/constants'
+import { GridMode, WindowVariant } from '@/constants'
 import type { HoveredSquare, RevealPayload, Selection } from '@/types'
 import { landedPeople } from '@/utils'
 import { RevealNotice } from './RevealNotice'
@@ -50,9 +50,8 @@ export function RevealWindow({
   return (
     <Window
       title="revealed"
+      variant={WindowVariant.SESSION}
       chip={chip}
-      className={SESSION_WINDOW_CLASS.window}
-      bodyClassName={SESSION_WINDOW_CLASS.body}
     >
       <RevealNotice />
 

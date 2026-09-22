@@ -4,10 +4,8 @@ import {
   WELCOME_DEMO_AXIS_VALUES,
   WELCOME_DEMO_PINNED,
   WELCOME_DEMO_REVEAL,
-  WELCOME_GUTTER_CLASS,
   WelcomeSection,
 } from "@/constants";
-import { cn } from "@/lib/utils";
 import { DemoSprites } from "./DemoSprites";
 import { HeroSprites } from "./HeroSprites";
 import { StartSessionButton } from "./StartSessionButton";
@@ -23,16 +21,11 @@ import { StartSessionButton } from "./StartSessionButton";
 export function HeroSection() {
   return (
     <div className="bg-page-top pb-16 tablet:pb-24">
-      <section
-        className={cn(
-          "relative isolate flex flex-col items-center gap-[18px] pt-12 text-center tablet:gap-6 tablet:pt-[84px]",
-          WELCOME_GUTTER_CLASS,
-        )}
-      >
+      <section className="relative isolate flex flex-col items-center gap-[18px] px-5 pt-12 text-center tablet:gap-6 tablet:px-10 tablet:pt-[84px] desktop:px-20">
         <HeroSprites />
 
         <span className="border-2 border-ink bg-white px-3 py-1.5 font-label text-[12px] tablet:text-[14px]">
-          Planning poker, without the poker face
+          Planning poker for agile product teams
         </span>
 
         <h1 className="max-w-[1000px] font-display text-[36px] leading-none text-ink tablet:text-[58px] desktop:text-[78px]">

@@ -5,7 +5,7 @@ import { PageLayout } from "@/components/PageLayout";
 import { ShareLink } from "@/components/ShareLink";
 import { SpriteScatter } from "@/components/SpriteScatter";
 import { Window } from "@/components/Window";
-import { GridMode, SESSION_WINDOW_CLASS } from "@/constants";
+import { GridMode, WindowVariant } from "@/constants";
 import type { ActiveConnectionState, HoveredSquare, Selection } from "@/types";
 import { useState } from "react";
 
@@ -53,9 +53,8 @@ export function ActiveSessionView({
 
         <Window
           title="live"
+          variant={WindowVariant.SESSION}
           chip={state.isAdmin ? "Admin" : "Participant"}
-          className={SESSION_WINDOW_CLASS.window}
-          bodyClassName={SESSION_WINDOW_CLASS.body}
         >
           <div className="flex flex-col gap-1.5">
             <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">

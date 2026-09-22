@@ -261,30 +261,54 @@ export const REVEAL_WAVE_STEP_MS = 70;
 // box sitting on a sub-pixel edge can report 0.998 and never reach it.
 export const FULLY_IN_VIEW_RATIO = 0.99;
 
-// The Active and Reveal windows are one size (§5), and hold the same grid.
-// The body is tighter than the Window default on mobile: a Fibonacci 7×7 at
-// 39px needs 335px, and the default padding leaves 328.
-export const SESSION_WINDOW_CLASS = {
-  window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[780px]",
-  body: "gap-3.5 px-3 pt-2.5 pb-3.5 desktop:px-9 desktop:pt-7",
+// Which screen a Window is framing. The design gives each its own width (§5),
+// so the Window asks for the screen rather than for a class string.
+export const WindowVariant = {
+  SESSION: "session",
+  CREATE: "create",
+  JOIN: "join",
+  ERROR: "error",
+  MENU: "menu",
+  LOADING: "loading",
 } as const;
 
-// The Create and Join windows (§5): narrower than a session's, since they hold
-// a form rather than a grid. Both use the artboards' wider body from tablet up
-// — 32/40/36 around a 24px gap — where the Window default is tuned tighter.
-export const CREATE_WINDOW_CLASS =
-  "w-full max-w-[366px] tablet:max-w-[600px] desktop:max-w-[640px]";
-
-export const JOIN_WINDOW_CLASS = "w-full max-w-[366px] tablet:max-w-[560px]";
-
-export const FORM_WINDOW_BODY_CLASS =
-  "tablet:gap-6 tablet:px-10 tablet:pt-8 tablet:pb-9";
-
-// The error window (§5, §7): the widest of the screens, since the broken grid
-// sits beside the words from tablet up. On a phone it stacks above them.
-export const ERROR_WINDOW_CLASS = {
-  window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[900px]",
-  body: "gap-6 px-[18px] pt-5 pb-5 tablet:flex-row tablet:items-center tablet:gap-10 tablet:px-9 tablet:pt-10 tablet:pb-10 desktop:gap-14 desktop:px-12 desktop:pt-10 desktop:pb-10",
+// What each screen's Window measures (§5), and the body padding where its
+// artboard differs from the Window default. An empty string takes the default:
+// loading and the menu sit in an element that already sizes them, and loading's
+// body is the default one.
+export const WINDOW_VARIANT_CLASS = {
+  // Active and Reveal are one size, and hold the same grid. Their body is
+  // tighter than the default on mobile: a Fibonacci 7×7 at 39px needs 335px,
+  // and the default padding leaves 328.
+  [WindowVariant.SESSION]: {
+    window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[780px]",
+    body: "gap-3.5 px-3 pt-2.5 pb-3.5 desktop:px-9 desktop:pt-7",
+  },
+  // Create and Join are narrower than a session's, since they hold a form
+  // rather than a grid. Both take the artboards' wider body from tablet up —
+  // 32/40/36 around a 24px gap — where the default is tuned tighter.
+  [WindowVariant.CREATE]: {
+    window: "w-full max-w-[366px] tablet:max-w-[600px] desktop:max-w-[640px]",
+    body: "tablet:gap-6 tablet:px-10 tablet:pt-8 tablet:pb-9",
+  },
+  [WindowVariant.JOIN]: {
+    window: "w-full max-w-[366px] tablet:max-w-[560px]",
+    body: "tablet:gap-6 tablet:px-10 tablet:pt-8 tablet:pb-9",
+  },
+  // The widest of the screens (§5, §7): the broken grid sits beside the words
+  // from tablet up. On a phone it stacks above them.
+  [WindowVariant.ERROR]: {
+    window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[900px]",
+    body: "gap-6 px-[18px] pt-5 pb-5 tablet:flex-row tablet:items-center tablet:gap-10 tablet:px-9 tablet:pt-10 tablet:pb-10 desktop:gap-14 desktop:px-12 desktop:pt-10 desktop:pb-10",
+  },
+  [WindowVariant.MENU]: {
+    window: "",
+    body: "gap-0 px-4 pt-1.5 pb-[18px]",
+  },
+  [WindowVariant.LOADING]: {
+    window: "",
+    body: "",
+  },
 } as const;
 
 // One layout for every error, only the words change (§7). The label is both
@@ -448,14 +472,6 @@ export const WelcomeSection = {
   WHY_I_MADE_THIS: "why-i-made-this",
 } as const;
 
-// A section the header links to lands below the sticky header rather than
-// under it — one margin per header height (§5: 64 / 72 / 84).
-export const WELCOME_ANCHOR_CLASS =
-  "scroll-mt-16 tablet:scroll-mt-[72px] desktop:scroll-mt-[84px]";
-
-// The page's side padding (§5: 20 / 40 / 80), shared by every Welcome section.
-export const WELCOME_GUTTER_CLASS = "px-5 tablet:px-10 desktop:px-20";
-
 // Where the two repos live. Why I made this, the Welcome header and menu
 // link to them (§7 item 6); the handle is the one the frontend's own remote
 // points at.
@@ -506,14 +522,6 @@ export const WELCOME_DEMO_REVEAL: RevealPayload = {
 
 // The hero's Reveal opens on the crowded Square, its popover already pinned.
 export const WELCOME_DEMO_PINNED: Selection = { time: 5, resource: 3 };
-
-// The Welcome page's type scale (§3): a section heading — 27 / 36 / 44 — and a
-// card or sub heading — 17 / 19 / 20.
-export const WELCOME_SECTION_HEADING_CLASS =
-  "font-display text-[27px] leading-[1.05] text-ink tablet:text-[36px] desktop:text-[44px]";
-
-export const WELCOME_CARD_HEADING_CLASS =
-  "font-display text-[17px] leading-[1.1] text-ink tablet:text-[19px] desktop:text-[20px]";
 
 // What the crowd in the closing band says when someone hovers one of them — the
 // easter egg. A random line each time, never the same one twice running. Keep

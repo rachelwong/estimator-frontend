@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { PageLayout } from '@/components/PageLayout'
 import { SpriteScatter } from '@/components/SpriteScatter'
 import { Window } from '@/components/Window'
-import { ERROR_WINDOW_CLASS } from '@/constants'
+import { WindowVariant } from '@/constants'
 import type { ErrorScreenCopy } from '@/types'
 import { BrokenGrid } from './BrokenGrid'
 
@@ -29,9 +29,8 @@ export function ErrorScreen({ copy, actions, footer }: ErrorScreenProps) {
 
         <Window
           title={copy.label}
+          variant={WindowVariant.ERROR}
           chip="error"
-          className={ERROR_WINDOW_CLASS.window}
-          bodyClassName={ERROR_WINDOW_CLASS.body}
         >
           <BrokenGrid />
 

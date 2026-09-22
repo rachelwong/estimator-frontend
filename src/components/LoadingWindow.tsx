@@ -1,7 +1,7 @@
 import { PageLayout } from '@/components/PageLayout'
 import { PixelProgressBar } from '@/components/PixelProgressBar'
 import { Window } from '@/components/Window'
-import { LOADING_NOTICE_DELAY_MS } from '@/constants'
+import { LOADING_NOTICE_DELAY_MS, WindowVariant } from '@/constants'
 import { useDelayedVisibility } from '@/hooks'
 
 // The large loader (DESIGN.md §7): the 220px bar centred in its own window,
@@ -20,7 +20,7 @@ export function LoadingWindow() {
     <PageLayout>
       {isVisible && (
         <div className="mx-auto w-full max-w-[366px] px-5 py-10 tablet:max-w-[420px]">
-          <Window title="loading">
+          <Window title="loading" variant={WindowVariant.LOADING}>
             <div
               role="status"
               className="flex min-h-[150px] flex-col items-center justify-center gap-6"

@@ -2,14 +2,9 @@ import avatar from "@/assets/sprites/avatar2.svg";
 import gridPick from "@/assets/sprites/grid-pick.svg";
 import gridReveal from "@/assets/sprites/grid-reveal.svg";
 import sessionStart from "@/assets/sprites/session-start.svg";
-import {
-  WELCOME_ANCHOR_CLASS,
-  WELCOME_GUTTER_CLASS,
-  WELCOME_SECTION_HEADING_CLASS,
-  WelcomeSection,
-} from "@/constants";
-import { cn } from "@/lib/utils";
+import { WelcomeSection } from "@/constants";
 import { HowToUseCard } from "./HowToUseCard";
+import { WelcomeSectionHeading } from "./WelcomeSectionHeading";
 
 // Four cards, LV.1 to LV.4, one per step of a Session (§7 item 5): four across
 // on desktop, two on tablet, one on a phone. Written out rather than mapped
@@ -18,15 +13,9 @@ export function HowToUseSection() {
   return (
     <section
       id={WelcomeSection.HOW_TO_USE}
-      className={cn(
-        "flex flex-col gap-7 pt-8 tablet:gap-10 tablet:pt-12",
-        WELCOME_GUTTER_CLASS,
-        WELCOME_ANCHOR_CLASS,
-      )}
+      className="flex flex-col gap-7 px-5 pt-8 scroll-mt-16 tablet:gap-10 tablet:px-10 tablet:pt-12 tablet:scroll-mt-[72px] desktop:px-20 desktop:scroll-mt-[84px]"
     >
-      <h2 className={cn(WELCOME_SECTION_HEADING_CLASS, "text-center")}>
-        How to use
-      </h2>
+      <WelcomeSectionHeading text="How to use" />
       <div className="max-w-4xl mx-auto text-center flex flex-col gap-y-6 text-[12px] leading-[1.6] text-text-muted tablet:text-[18px]">
         <p>
           {" "}

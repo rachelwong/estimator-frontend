@@ -6,12 +6,7 @@ import { SpriteScatter } from "@/components/SpriteScatter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Window } from "@/components/Window";
-import {
-  CREATE_WINDOW_CLASS,
-  FORM_WINDOW_BODY_CLASS,
-  PixelBarSize,
-  PointSystemType,
-} from "@/constants";
+import { PixelBarSize, PointSystemType, WindowVariant } from "@/constants";
 import { cn } from "@/lib/utils";
 import { nameError } from "@/lib/validation";
 import type {
@@ -56,9 +51,8 @@ export default function CreateSessionPage() {
 
         <Window
           title="new-session"
+          variant={WindowVariant.CREATE}
           chip="Admin"
-          className={CREATE_WINDOW_CLASS}
-          bodyClassName={FORM_WINDOW_BODY_CLASS}
         >
           <div className="flex flex-col gap-1.5">
             <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[28px]">
