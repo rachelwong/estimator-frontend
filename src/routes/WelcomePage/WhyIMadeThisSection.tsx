@@ -22,7 +22,7 @@ export function WhyIMadeThisSection() {
       <div className="grid gap-7 tablet:grid-cols-2 tablet:gap-0 desktop:grid-cols-3">
         <MakerNote
           label="the experience"
-          text="This side project was inspired by the agile ceremonies, ideation workshops and stand-ups I've been part of at work. Estimation is hard, yet many decisions that shape a product team hinge on it.
+          text="This side project was inspired by the agile ceremonies, ideation workshops and stand-ups I've been part of at work. Estimation is hard, yet many decisions that shape a product team hinge upon it.
 <br/><br/>
 In my experience, a few things make estimates less reliable:<br/>
 <ul className='list-disc my-2 pl-4'>
@@ -38,9 +38,9 @@ In my experience, a few things make estimates less reliable:<br/>
         />
         <MakerNote
           label="the idea"
-          text="There's plenty of formal literature on <a href='https://agilemanifesto.org/' target='_blank'>agile</a>, <a href='https://www.atlassian.com/blog/developers/planning-poker-sane-healthy' target='_blank'>estimation</a> and <a href='https://www.atlassian.com/agile/scrum' target='_blank'>Scrum</a>. I deliberately avoided reading those or referring to existing estimation tools on the market, because I wanted to build something that addressed what I'd personally observed in previous teams.
+          text="There's plenty of formal literature on <a href='https://agilemanifesto.org/' target='_blank' className='link'>agile</a>, <a className='link' href='https://www.atlassian.com/blog/developers/planning-poker-sane-healthy' target='_blank'>estimation</a> and <a className='link' href='https://www.atlassian.com/agile/scrum' target='_blank'>Scrum</a>. I deliberately avoided reading those or referring to existing estimation tools on the market, because I wanted to build something that addressed what I'd personally observed in previous teams.
 <br/><br/>
-I want to create a tool that invites every team member to contribute visibly and meaningfully to estimating down a piece of work, makes room for discussion when it's needed, and brings everyone on the team into alignment. A story point is a good-faith rough estimate, not a binding guarantee."
+I want to create a tool that invites every team member to contribute visibly and meaningfully to estimating, makes room for discussion when it's needed, and brings everyone into alignment. A story point is a good-faith rough estimate, not a binding guarantee."
           className="tablet:pb-7 tablet:pl-7 desktop:border-r-2 desktop:border-ink desktop:px-9 desktop:pb-0"
         />
         <MakerNote
