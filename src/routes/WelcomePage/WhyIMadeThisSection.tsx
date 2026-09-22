@@ -50,7 +50,7 @@ In my experience, a few things make estimates less reliable:<br/>
           label="the idea"
           text="There's plenty of formal literature on agile, estimation and Scrum. I deliberately avoided reading those or referring to existing estimation tools, because I wanted to build something that addressed what I'd personally observed in previous roles.
 <br/><br/>
-I wanted a tool that invites every team member to contribute visibly and meaningfully, makes room for discussion when it's needed, and brings the team into alignment. A story point is a good-faith rough estimate, not a binding guarantee."
+I wanted a tool that invites every team member to contribute visibly and meaningfully, makes room for discussion when it's needed, and brings the team into alignment. A story point is a good-faith rough estimate, not a binding guarantee. <br/><br/>The points isn't important. The resulting conversation & discussion is."
           className="tablet:pb-7 tablet:pl-7 desktop:border-r-2 desktop:border-ink desktop:px-9 desktop:pb-0"
         />
         <MakerNote
