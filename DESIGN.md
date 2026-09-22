@@ -468,9 +468,12 @@ Option C, "Pixel progress bar" (canvas: Spec · Loader options).
 `CONTEXT.md` is binding. In the UI:
 
 - Use: Session, Participant, Admin, Point system, Axis values, Square,
-  Selection, Area, Reveal, Abstained.
-- Never: estimate/voting, player, dealer, host, results, tally, cell, choice.
-  Crowds are "3 people", not "3 votes".
+  Selection, Estimate, Area, Reveal, Abstained.
+- Estimate and Selection are the same thing. **Estimate is the display term**
+  — prefer it in copy the Participant reads; Selection stays for the mechanics
+  of holding and clearing a Square, and for code.
+- Never: vote/voting, player, dealer, host, results, tally, cell, choice.
+  Crowds are "3 people", not "3 estimates".
 - Time and Resources are labels, not units — no hours or days anywhere.
 - Poker is metaphor for headlines only ("Everyone plays a hand", "Hands
   down"); functional labels use the CONTEXT terms.

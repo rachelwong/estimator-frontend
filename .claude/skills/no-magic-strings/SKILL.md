@@ -12,9 +12,9 @@ Don't declare a string union and then retype its members as literals at every co
 ```ts
 // src/constants.ts
 export const SessionConnectionStatus = {
-  CONNECTING: 'connecting',
-  ACTIVE: 'active',
-  ENDED: 'ended',
+  CONNECTING: "connecting",
+  ACTIVE: "active",
+  ENDED: "ended",
 } as const;
 ```
 
@@ -22,8 +22,9 @@ export const SessionConnectionStatus = {
 
 ```ts
 // src/types/constants.ts
-import { SessionConnectionStatus } from '../constants';
-export type SessionConnectionStatus = (typeof SessionConnectionStatus)[keyof typeof SessionConnectionStatus];
+import { SessionConnectionStatus } from "../constants";
+export type SessionConnectionStatus =
+  (typeof SessionConnectionStatus)[keyof typeof SessionConnectionStatus];
 ```
 
 (The value import and the type declaration don't collide despite the identical name — values and types occupy separate namespaces in TypeScript.) Then reference `SessionConnectionStatus.ACTIVE`, never `'active'`, in application code — as a discriminated-union tag, in comparisons (`state.status === SessionConnectionStatus.ACTIVE`), and as arguments; import the value from `constants.ts` where you need the runtime value, and the type from `types/constants.ts` where you only need it as a type annotation.
@@ -36,7 +37,7 @@ This applies even when the literal already looks constant-ish (`'notFound'`) —
 
 ## Keys are ALL_CAPS
 
-`PointSystemType`'s members are `NUMERICAL`/`FIBONACCI`, not `Numerical`/`Fibonacci` — a deliberate frontend preference, chosen even though it means this repo's key casing no longer matches the backend's own `PointSystemType`/`ErrorCode` (which use `PascalCase` keys). The *shape* (const object + derived type) still mirrors the backend; only the casing of the keys differs. Don't "fix" this by matching the backend's casing, and don't go change the backend's already-shipped code to match this repo either — the two are independently-versioned repos with no shared import path (see below), so there's no requirement that their casing agree, only that each repo is internally consistent.
+`PointSystemType`'s members are `NUMERICAL`/`FIBONACCI`, not `Numerical`/`Fibonacci` — a deliberate frontend preference, chosen even though it means this repo's key casing no longer matches the backend's own `PointSystemType`/`ErrorCode` (which use `PascalCase` keys). The _shape_ (const object + derived type) still mirrors the backend; only the casing of the keys differs. Don't "fix" this by matching the backend's casing, and don't go change the backend's already-shipped code to match this repo either — the two are independently-versioned repos with no shared import path (see below), so there's no requirement that their casing agree, only that each repo is internally consistent.
 
 ## One dedicated file per half, not one const-object-and-type pair per consumer
 
@@ -48,21 +49,21 @@ A number that encodes a domain decision — a threshold, a limit, a boundary —
 
 ```ts
 // src/constants.ts
-export const CROWDED_SQUARE_MINIMUM = 2
+export const CROWDED_SQUARE_MINIMUM = 2;
 ```
 
-**Why, given a number can't be typo'd**: the argument for the string constants is partly typo-safety, and that argument doesn't transfer — `2` is hard to get wrong. The reason to name a number is different and worse: one rule tends to get written several *different ways*, and nothing connects them. When `CROWDED_SQUARE_MINIMUM` was introduced, that single rule — the headcount at which a Square stops being one person's and becomes a crowd — was already spelled four times in three forms:
+**Why, given a number can't be typo'd**: the argument for the string constants is partly typo-safety, and that argument doesn't transfer — `2` is hard to get wrong. The reason to name a number is different and worse: one rule tends to get written several _different ways_, and nothing connects them. When `CROWDED_SQUARE_MINIMUM` was introduced, that single rule — the headcount at which a Square stops being one person's and becomes a crowd — was already spelled four times in three forms:
 
-| Spelling | Where | What it decides |
-| --- | --- | --- |
-| `names.length === 1` | `utils/grid.ts` | someone's colour, or grey |
-| `names.length - 2` | `utils/grid.ts` | *which* grey |
-| `names.length === 1` | `SquareLabel.tsx` | a name, or "N votes" |
-| `names.length < 2` | `GridCell.tsx` | whether the Square opens |
+| Spelling             | Where             | What it decides           |
+| -------------------- | ----------------- | ------------------------- |
+| `names.length === 1` | `utils/grid.ts`   | someone's colour, or grey |
+| `names.length - 2`   | `utils/grid.ts`   | _which_ grey              |
+| `names.length === 1` | `SquareLabel.tsx` | a name, or "N estimates"  |
+| `names.length < 2`   | `GridCell.tsx`    | whether the Square opens  |
 
 Changing the rule meant finding all four by eye, and two of them don't contain the digit at all.
 
-**So search for the behaviour, not the digit.** The off-by-one restatements (`=== 1` where the rule is `< 2`, `> 0` where the rule is `>= 1`) are the ones that hide from grep, and they're usually in a different file from the arithmetic that made you notice the number. Before you finish, ask what *else* changes at this boundary — the label, the affordance, the styling — and check those call sites too. A constant that only replaces the literal you happened to be looking at has done the cosmetic half of the job.
+**So search for the behaviour, not the digit.** The off-by-one restatements (`=== 1` where the rule is `< 2`, `> 0` where the rule is `>= 1`) are the ones that hide from grep, and they're usually in a different file from the arithmetic that made you notice the number. Before you finish, ask what _else_ changes at this boundary — the label, the affordance, the styling — and check those call sites too. A constant that only replaces the literal you happened to be looking at has done the cosmetic half of the job.
 
 **What stays inline**: arithmetic that follows from the data rather than from a decision. `array.length - 1` for the last index, a `/ 2` that means "half", `0` and `1` as identity values — naming those adds indirection and explains nothing. The test is whether the number could be revisited: if someone could reasonably decide a Square is crowded at three people, that's a rule; if the number is forced by the maths, it's arithmetic.
 

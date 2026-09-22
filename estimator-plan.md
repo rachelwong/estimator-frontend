@@ -26,7 +26,7 @@ This is a greenfield build. Per the user's ask, it will live as **two separate t
 8. **Language**: TypeScript, both repos.
 9. **Deployment**: concrete services chosen now — **Vercel** (frontend, free tier) and **Render** (backend, free tier "Web Service," supports long-lived WebSockets without a credit card).
 10. **Vote changing**: confirmed by the spec's own text ("they can change that selection by clicking on another square") — a participant can click a different square any time before reveal to move their vote. Clicking the _currently-selected_ square again clears it back to no selection (voluntary un-vote, not otherwise specified but symmetric with "abstained = no selection at reveal"). Server-side this is just reassigning (or nulling) `participant.selection` — no new backend concept, just needed calling out explicitly since the plan's component/handler text didn't previously say changing/clearing was intentional rather than unhandled.
-11. **Orphaned votes on refresh**: accepted as a known risk, not engineered around. A refresh creates a new participant record (per decision #7); the prior record's vote, if any, is **not** removed and still counts in the final reveal under the old, now-orphaned name. If that person votes again under their new (possibly suffixed) name, they can end up counted twice. This is a direct consequence of decision #7 (no reconnect identity) — fixing it would mean tracking identity across reconnects, which contradicts that decision, so it's left as-is and documented rather than hidden in a Verification-section aside.
+11. **Orphaned estimates on refresh**: accepted as a known risk, not engineered around. A refresh creates a new participant record (per decision #7); the prior record's vote, if any, is **not** removed and still counts in the final reveal under the old, now-orphaned name. If that person estimates again under their new (possibly suffixed) name, they can end up counted twice. This is a direct consequence of decision #7 (no reconnect identity) — fixing it would mean tracking identity across reconnects, which contradicts that decision, so it's left as-is and documented rather than hidden in a Verification-section aside.
 12. **Abstained scope**: "Abstained" means "joined at some point and had no selection recorded by reveal time" — there's no server-side tracking of live-vs-disconnected sockets for this purpose. A participant who joined and closed their tab without voting still appears in Abstained, indistinguishable from someone who stayed connected and chose not to vote.
 13. **WS error UX**: a custom lightweight dismissible banner component (not a shadcn `toast`/`sonner` primitive) renders on any `error` WS event the client receives — covers both adversarial cases (forged admin token) and legitimate races (a stale `select-square` arriving just after the admin ends the session).
 14. **Session TTL**: none. Sessions live in the in-memory Map indefinitely; only a server restart (Render's free-tier spin-down, or a manual redeploy) clears them — consistent with the already-accepted in-memory/no-persistence tradeoffs.
@@ -45,7 +45,7 @@ Reviewed via the Miro MCP server (113 items across 3 static screen mockups: admi
 
 **Confirms existing plan decisions**:
 
-- The admin's view shows its own interactive grid (same Time/Resources axes as the non-admin view) with an "End session" button in its header — visually confirms the design assumption that the admin is a normal participant who also votes, with an added end-session capability.
+- The admin's view shows its own interactive grid (same Time/Resources axes as the non-admin view) with an "End session" button in its header — visually confirms the design assumption that the admin is a normal participant who also estimates, with an added end-session capability.
 - The ended-session view shows names placed inside the squares they selected (example names: James, Mary, John, Jim) and a separate line below the grid ("Abstained: Henry") — matches the planned reveal payload shape and `AbstainedList` component.
 
 **Reviewed against the wireframe's literal wording, deliberately kept as-is (confirmed with user)**:
@@ -302,7 +302,7 @@ The app runs identically on localhost and deployed — same `server.ts`/`app.ts`
 
 - Numerical max=10 → 11×11 grid; fibonacci slider=64 → exactly `[0,1,2,3,5,8,13,21,34,55]`; fibonacci slider=10 → `[0,1,2,3,5,8]`; slider=0 → degenerate 1×1 grid.
 - Three "Jim" joins → `Jim`, `Jim-1`, `Jim-2`.
-- Second participant tab cannot see the first's selection or even that anyone has voted.
+- Second participant tab cannot see the first's selection or even that anyone has estimated.
 - Refresh mid-session → re-prompted for name; prior vote survives server-side under the old (now orphaned) name — expected, not a bug (decision #11).
 - Click a different square before reveal → highlight moves, no duplicate entry at reveal; click the _same_ already-selected square again → clears back to no selection (decision #10 — counts as Abstained if reveal happens right after).
 - Admin opens the same session link in a second tab, or just refreshes their own tab, after already selecting a square → grid immediately shows the existing selection, not blank (decision #19).
@@ -322,6 +322,6 @@ The app runs identically on localhost and deployed — same `server.ts`/`app.ts`
 
 - `estimator-backend/src/sessionStore.ts` — core in-memory state machine everything else depends on.
 - `estimator-backend/src/server.ts` — shared-port `http.Server` with the Socket.IO server attached on top (the correctness point for Render's single-port constraint).
-- `estimator-backend/src/ws/handlers.ts` — enforces the hidden-votes-until-reveal invariant and admin-token re-validation.
+- `estimator-backend/src/ws/handlers.ts` — enforces the hidden-estimates-until-reveal invariant and admin-token re-validation.
 - `estimator-frontend/src/hooks/useSessionSocket.ts` — WS lifecycle and the admin/participant/ended branching driving `SessionPage`.
 - `estimator-backend/render.yaml`, `estimator-frontend/vercel.json` — without these, SPA routing and free-tier WS deployment don't work.

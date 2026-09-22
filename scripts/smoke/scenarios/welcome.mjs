@@ -48,7 +48,7 @@ export async function welcome({ browser, reporter }) {
   );
   check(
     "Demo is the real Reveal window",
-    await desktop.getByText("Voting is closed").isVisible(),
+    await desktop.getByText("Estimating is closed").isVisible(),
   );
 
   // The hero demo is the first grid on the page.
@@ -72,11 +72,11 @@ export async function welcome({ browser, reporter }) {
   // Header link lands its section below the sticky header, not under it.
   await desktop
     .getByRole("navigation", { name: "Main" })
-    .getByRole("link", { name: "How to play" })
+    .getByRole("link", { name: "How to use" })
     .click();
   check(
-    "How to play link sets the hash",
-    await landsOn(desktop, `${APP}/welcome#how-to-play`),
+    "How to use link sets the hash",
+    await landsOn(desktop, `${APP}/welcome#how-to-use`),
   );
   // The link slides rather than jumps, so measure once the page stops moving.
   const scrollStart = await desktop.evaluate(() => window.scrollY);
@@ -89,18 +89,18 @@ export async function welcome({ browser, reporter }) {
   );
   const scrollEnd = await desktop.evaluate(() => window.scrollY);
   check(
-    "How to play slides rather than jumps",
+    "How to use slides rather than jumps",
     scrollEnd > scrollStart,
     `${scrollStart} → ${scrollEnd}`,
   );
   const headingTop = await desktop
-    .getByRole("heading", { name: "How to play", level: 2 })
+    .getByRole("heading", { name: "How to use", level: 2 })
     .evaluate((el) => el.getBoundingClientRect().top);
   const headerBottom = await desktop
     .locator("header")
     .evaluate((el) => el.getBoundingClientRect().bottom);
   check(
-    "How to play lands below the header",
+    "How to use lands below the header",
     headingTop >= headerBottom,
     `heading ${headingTop}, header ${headerBottom}`,
   );
@@ -108,18 +108,11 @@ export async function welcome({ browser, reporter }) {
   check(
     "Repo cards link to both repos",
     (await desktop
-      .getByRole("link", { name: "View estimator-frontend on GitHub" })
+      .getByRole("link", { name: "Frontend on GitHub" })
       .getAttribute("href")) === FRONTEND_REPO &&
       (await desktop
-        .getByRole("link", { name: "View estimator-backend on GitHub" })
+        .getByRole("link", { name: "Backend on GitHub" })
         .getAttribute("href")) === BACKEND_REPO,
-  );
-  check(
-    "Placeholder copy is marked",
-    await desktop
-      .getByText(/^\[Placeholder:/)
-      .first()
-      .isVisible(),
   );
 
   // --- No sideways scroll at any size ----------------------------------------

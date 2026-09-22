@@ -90,7 +90,7 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
 - a share link allows admin-user to give to other users (participants) to join in the session
 - both admin and participant users can select a square on the grid that best represent the time and resource sizing for a given task/feature
 - participants can abstain from selecting
-- admin user can end the session, upon which no more voting is allowed. All users are redirected to the end session screen where everyone can see everyone's selections.
+- admin user can end the session, upon which no more estimating is allowed. All users are redirected to the end session screen where everyone can see everyone's selections.
 
 ### Tech stack
 

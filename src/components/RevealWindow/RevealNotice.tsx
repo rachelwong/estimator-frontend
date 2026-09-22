@@ -9,7 +9,7 @@ export function RevealNotice() {
       <Sprite source={spade} className="size-[22px] shrink-0" />
 
       <div className="flex flex-col gap-1">
-        <strong className="text-[15px]">Voting is closed</strong>
+        <strong className="text-[15px]">Estimating is closed</strong>
         <p className="text-[14px] leading-[1.45] text-on-ink-muted">
           The Admin ended this session, so every Estimate is locked in. Pick a
           Square to see who landed there.

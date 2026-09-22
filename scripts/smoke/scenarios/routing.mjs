@@ -110,7 +110,7 @@ export async function routing({ browser, reporter }) {
   check("Slow first load shows loading notice", await notice.isVisible());
   check(
     "Header shows while loading",
-    await slow.getByText("Fold and Flip").isVisible(),
+    await slow.getByText("Fold & Flip").isVisible(),
   );
   await slow.getByRole("heading", { name: "Join session" }).waitFor();
   check(
@@ -137,7 +137,7 @@ export async function routing({ browser, reporter }) {
   );
   check(
     "Error screen keeps header",
-    await down.getByText("Fold and Flip").isVisible(),
+    await down.getByText("Fold & Flip").isVisible(),
   );
 
   await down.unroute(`${API}/sessions/*`);

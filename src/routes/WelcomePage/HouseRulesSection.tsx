@@ -20,7 +20,7 @@ export function HouseRulesSection() {
         <HouseRule
           sprite={ruleLive}
           title="Live, but private"
-          description="The session updates in real time, but nobody sees any Votes until the Reveal."
+          description="The session updates in real time, but nobody sees any Estimates until the Reveal."
         />
         <HouseRule
           sprite={avatarFour}

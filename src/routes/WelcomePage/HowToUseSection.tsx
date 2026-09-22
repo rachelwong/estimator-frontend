@@ -65,9 +65,9 @@ export function HowToUseSection() {
           sprite={gridPick}
           tintClass="bg-butter"
         >
-          Everyone selects a square on the points grid, with time on one axis
-          and resources (or effort) on the other. Nobody sees anyone else's
-          estimate.
+          Everyone selects a square on the points grid, with time on the
+          horizontal axis and resources (or effort) on the vertical axis. Nobody
+          sees anyone else's estimate.
         </HowToUseCard>
         <HowToUseCard
           level={3}
@@ -75,8 +75,9 @@ export function HowToUseSection() {
           sprite={gridReveal}
           tintClass="bg-copied"
         >
-          Once admin has confirmed everyone has voted, the session is ended. All
-          the votes are revealed, including anyone who might have abstained.
+          Once admin has confirmed everyone has estimated, the session is ended.
+          All the estimates are revealed, including anyone who might have
+          abstained.
         </HowToUseCard>
         <HowToUseCard
           level={4}
@@ -84,8 +85,8 @@ export function HowToUseSection() {
           sprite={avatar}
           tintClass="bg-crowd-0"
         >
-          The hard part. Talk through the highest and lowest votes. Ask the hard
-          questions to flag uncertainties, dependencies earlier. <br />
+          The hard part. Talk through the highest and lowest estimates. Ask the
+          hard questions to flag uncertainties, dependencies earlier. <br />
           <strong>And start another session for the next task.</strong>
         </HowToUseCard>
       </ol>

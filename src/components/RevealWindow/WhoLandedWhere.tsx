@@ -45,7 +45,7 @@ export function WhoLandedWhere({
   return (
     <section className="flex flex-col gap-2.5 border-t-2 border-dashed border-ink pt-3.5">
       <Heading className="font-label text-[11px] font-normal">
-        your votes
+        your estimates
       </Heading>
 
       <ul className="flex flex-wrap gap-2">

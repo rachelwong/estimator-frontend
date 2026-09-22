@@ -44,16 +44,20 @@ _Avoid_: Ticks, steps, options
 One cell of the grid. Means a pairing of a Time value and a Resources value.
 _Avoid_: Cell, box, tile, point
 
-**Selection**:
+**Selection**, also **Estimate**:
 The one Square a Participant is currently holding, or none. Picking a different
-Square moves it. Picking the same Square again clears it.
-_Avoid_: choice, guess, answer
+Square moves it. Picking the same Square again clears it. Two names for the same
+thing: **Estimate is the display term** — what the UI says to a Participant
+("Make your Estimate", "your estimates", "Estimating is closed") — and Selection
+is the structural one, used in code, in the data model, and in copy about the
+mechanics of holding and clearing a Square ("clear your selection").
+_Avoid_: choice, guess, answer, vote
 
 **Area**:
 Every Square from the origin up to and including a given Square — the Time ×
 Resources the Square stands for. Shown for the Selection and for the Square
 under the pointer, never in the Reveal.
-_Avoid_: Region, range, footprint, estimate
+_Avoid_: Region, range, footprint
 
 ### The ending
 
@@ -65,12 +69,16 @@ _Avoid_: Results, summary, outcome, tally
 **Abstained**:
 The Participants who joined but had no Selection when the Session ended. Someone
 who left early and someone who stayed and chose nothing look the same here.
-_Avoid_: Skipped, passed, no estimate, idle
+_Avoid_: Skipped, passed, idle
 
 ## Notes
 
-- **Selection, not estimate.** "Estimate" suggests counting and a winner. Nothing is
-  counted or scored here — the Reveal just shows where people landed, and the
-  team talks it over.
+- **Estimate is what people see, Selection is what the code calls it.** They
+  name the same thing, so never put both in one sentence as if they differed.
+  Whichever word is used, nothing is counted or scored — the Reveal just shows
+  where people landed, and the team talks it over.
+- **Never vote.** Not the noun, not the verb, not "voting". It frames the
+  Reveal as a tally with a winner, which is the one reading this tool exists to
+  avoid.
 - **Time and Resources are labels, not units.** Neither document says whether
   Time means hours or days. The team decides between themselves.

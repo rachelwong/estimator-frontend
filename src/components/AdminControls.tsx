@@ -37,7 +37,7 @@ export function AdminControls({ onEndSession, className }: AdminControlsProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>End this session?</AlertDialogTitle>
           <AlertDialogDescription>
-            Everyone can see everyone's estimate votes. No more changes.
+            All estimates are revealed to everyone. No more changes.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
