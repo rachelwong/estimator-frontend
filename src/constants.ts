@@ -381,15 +381,6 @@ export const MOUSE_POINTER_TYPE = "mouse";
 // change shape the day the point system does.
 export const LOGO_CARD_VALUES = [0, 1, 2, 3, 5, 8, 13, 21] as const;
 
-// Where the mark rests between shakes (§1). The keyframes pass through this
-// angle too, but it lives on the element so the tilt survives reduced motion,
-// which strips the animation and leaves the resting transform alone.
-export const LOGO_REST_ROTATION = "rotate(-8deg)";
-
-// Depth for the flip. Without it rotateY reads as a horizontal squash rather
-// than a card turning over (§8).
-export const LOGO_PERSPECTIVE_PX = 240;
-
 // The decorative cast around the window (§9). Each entry is one sprite and the
 // literal classes that place it — `cn build` and Tailwind's scanner only see
 // classes written in source, so these can never be assembled from a position.
