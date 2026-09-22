@@ -27,8 +27,8 @@ export function HowToUseSection() {
       <h2 className={cn(WELCOME_SECTION_HEADING_CLASS, "text-center")}>
         How to use
       </h2>
-      <div className="max-w-4xl mx-auto text-center flex flex-col gap-y-6">
-        <p className="text-[16px]">
+      <div className="max-w-4xl mx-auto text-center flex flex-col gap-y-6 text-[12px] leading-[1.6] text-text-muted tablet:text-[18px]">
+        <p>
           {" "}
           Estimation is hard. Teams have to weigh up unknowns, dependencies and
           effort so that product owners, team leads and businesses can make
