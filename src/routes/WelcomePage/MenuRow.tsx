@@ -7,16 +7,19 @@ interface MenuRowProps {
   label: string
   /** A Silkscreen line under the label — the repo's name on the GitHub rows. */
   sublabel?: string
+  /** For a row that leaves the app and shouldn't take the session with it. */
+  opensInNewTab?: boolean
   onClick: () => void
 }
 
 // One 60px row of the phone's menu (§7): a sprite, the label, and an arrow,
 // over a 2px dashed ink rule.
-export function MenuRow({ href, sprite, label, sublabel, onClick }: MenuRowProps) {
+export function MenuRow({ href, sprite, label, sublabel, opensInNewTab, onClick }: MenuRowProps) {
   return (
     <li>
       <a
         href={href}
+        target={opensInNewTab ? '_blank' : undefined}
         className="flex min-h-[60px] items-center justify-between gap-3 border-b-2 border-dashed border-ink px-1 py-2 text-ink outline-none focus-visible:outline-[3px] focus-visible:outline-ink"
         onClick={onClick}
       >

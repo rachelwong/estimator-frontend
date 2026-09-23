@@ -459,15 +459,39 @@ export const WelcomeSection = {
   WHY_I_MADE_THIS: "why-i-made-this",
 } as const;
 
-// Where the two repos live. Why I made this, the Welcome header and menu
-// link to them (§7 item 6); the handle is the one the frontend's own remote
-// points at.
+// Every link that leaves the app. Why I made this, the Welcome header and menu
+// link to the two repos (§7 item 6); the handle is the one the frontend's own
+// remote points at. The footer signs off with the portfolio, and the header's
+// Feedback tile opens LinkedIn.
 export const REPOSITORY_URL = {
   FRONTEND: "https://github.com/rachelwong/estimator-frontend",
   BACKEND: "https://github.com/rachelwong/estimator-backend",
   MAIN: "https://github.com/rachelwong",
   PORTFOLIO: "https://www.rachelwong.dev/",
+  LINKEDIN: "https://www.linkedin.com/in/rachwong",
 } as const;
+
+// The burst behind the header's Feedback tile (artboard "Nav bug button",
+// option D6): fourteen pixels thrown outwards, each turning as it goes. The
+// trajectories are the artboard's own, so the burst is lopsided rather than a
+// tidy ring. One keyframe animates all fourteen — each piece hands its own
+// distance and turn to `--confetti-x`, `--confetti-y` and `--confetti-turn`.
+export const FEEDBACK_CONFETTI_PIECES = [
+  { size: 7, color: "var(--color-selection)", x: 0, y: -34, turn: 0 },
+  { size: 5, color: "var(--color-danger)", x: 25, y: -33, turn: 47 },
+  { size: 5, color: "var(--color-accent)", x: 38, y: -30, turn: 94 },
+  { size: 7, color: "var(--color-crowd-1)", x: 37, y: -1, turn: 141 },
+  { size: 5, color: "var(--color-chrome-green)", x: 43, y: 10, turn: 188 },
+  { size: 5, color: "var(--color-ink)", x: 33, y: 39, turn: 235 },
+  { size: 7, color: "var(--color-crowd-2)", x: 17, y: 36, turn: 282 },
+  { size: 5, color: "var(--color-selection)", x: -9, y: 46, turn: 329 },
+  { size: 5, color: "var(--color-danger)", x: -16, y: 32, turn: 16 },
+  { size: 7, color: "var(--color-accent)", x: -38, y: 20, turn: 63 },
+  { size: 5, color: "var(--color-crowd-1)", x: -49, y: 11, turn: 110 },
+  { size: 5, color: "var(--color-chrome-green)", x: -36, y: -16, turn: 157 },
+  { size: 7, color: "var(--color-ink)", x: -36, y: -29, turn: 204 },
+  { size: 5, color: "var(--color-crowd-2)", x: -9, y: -34, turn: 251 },
+] as const;
 
 // The band where the Welcome page's lavender top breaks into pixels over the
 // cream below (§7 item 4) as a glow: a Bayer 4×4 ordered dither where the cells

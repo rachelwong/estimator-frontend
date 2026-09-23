@@ -19,7 +19,11 @@ import { WhyIMadeThisSection } from "./WhyIMadeThisSection";
 // sprites would otherwise ride in the entry chunk for every Join and Reveal.
 export default function WelcomePage() {
   return (
-    <PageLayout actions={<WelcomeNavigation />} footer={<SiteFooter />}>
+    <PageLayout
+      actions={<WelcomeNavigation />}
+      footer={<SiteFooter />}
+      hasOwnFeedbackButton
+    >
       <HeroSection />
       <DitherBand />
       <HowToUseSection />

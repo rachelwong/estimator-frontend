@@ -1,6 +1,7 @@
+import avatarFour from "@/assets/sprites/avatar4.svg";
+import bug from "@/assets/sprites/bug.svg";
 import cardBack from "@/assets/sprites/cardback.svg";
 import laptop from "@/assets/sprites/laptop.svg";
-import personFour from "@/assets/sprites/p4.svg";
 import server from "@/assets/sprites/server.svg";
 import { Window } from "@/components/Window";
 import { REPOSITORY_URL, WelcomeSection, WindowVariant } from "@/constants";
@@ -43,22 +44,31 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
             />
             <MenuRow
               href={`#${WelcomeSection.WHY_I_MADE_THIS}`}
-              sprite={personFour}
+              sprite={avatarFour}
               label="Why I made this"
               onClick={onClose}
             />
             <MenuRow
               href={REPOSITORY_URL.FRONTEND}
               sprite={laptop}
-              label="Frontend on GitHub"
-              sublabel="react, typescript, tailwindcss, socket.io"
+              label="Frontend"
+              sublabel="Github repository"
               onClick={onClose}
             />
             <MenuRow
               href={REPOSITORY_URL.BACKEND}
               sprite={server}
-              label="Backend on GitHub"
-              sublabel="node.js, websockets"
+              label="Backend"
+              sublabel="Github repository"
+              onClick={onClose}
+            />
+            {/* The header's Feedback tile has no room beside the Menu button on
+                a phone, so on Welcome it moves in here (§7 "Mobile menu"). */}
+            <MenuRow
+              href={REPOSITORY_URL.LINKEDIN}
+              sprite={bug}
+              label="Feedback"
+              opensInNewTab
               onClick={onClose}
             />
           </ul>

@@ -1,3 +1,4 @@
+import { FeedbackButton } from "@/components/FeedbackButton";
 import { REPOSITORY_URL, WelcomeSection } from "@/constants";
 import { useEscapeKey } from "@/hooks";
 import { cn } from "@/lib/utils";
@@ -7,8 +8,12 @@ import { MobileMenu } from "./MobileMenu";
 import { StartSessionButton } from "./StartSessionButton";
 
 // Welcome's side of the header (§7 item 1). Desktop links to How to use, the
-// repo and the Create form; tablet keeps How to use and the button; a
-// phone swaps them all for a Menu button that opens the menu window.
+// repo, Feedback and the Create form; tablet keeps How to use, Feedback and the
+// button; a phone swaps them all for a Menu button that opens the menu window.
+//
+// The Feedback tile is placed here rather than left to PageLayout because it
+// belongs next to Start a session — and being inside this nav is also what
+// hides it on a phone, where the menu carries its own Feedback row instead.
 export function WelcomeNavigation() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
@@ -34,6 +39,7 @@ export function WelcomeNavigation() {
         >
           GitHub
         </a>
+        <FeedbackButton />
         <StartSessionButton className="text-[12px]" />
       </nav>
 
