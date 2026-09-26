@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { MouseEvent, ReactNode } from 'react'
 import { Link } from 'react-router'
 import { FeedbackButton } from '@/components/FeedbackButton'
 import { LogoLockup } from '@/components/LogoLockup'
@@ -16,6 +16,11 @@ interface PageLayoutProps {
    * nav, next to Start a session.
    */
   hasOwnFeedbackButton?: boolean
+  /**
+   * For a screen that wants the logo link to do something other than go to
+   * Welcome. Welcome does: the logo link there already points at the open page.
+   */
+  onLogoLinkClick?: (event: MouseEvent<HTMLAnchorElement>) => void
 }
 
 // Every screen's frame (DESIGN.md §5, §7): the white bar stuck to the top — the
@@ -31,14 +36,14 @@ interface PageLayoutProps {
 //
 // z-20 keeps the header above what scrolls under it: the share bar at z-10, and
 // the grid's tooltip and popover, which stay inside their page's stacking context.
-export function PageLayout({ actions, children, footer, hasOwnFeedbackButton }: PageLayoutProps) {
+export function PageLayout({ actions, children, footer, hasOwnFeedbackButton, onLogoLinkClick }: PageLayoutProps) {
   return (
     <div className="flex min-h-dvh flex-col">
       {/* The Feedback tile throws confetti well past its own 44px, and it sits
           at the right edge on a phone — so the bar clips sideways and stays
           open downwards, where the confetti and the tile's label belong. */}
       <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-4 overflow-x-clip border-b-[3px] border-ink bg-white px-5 tablet:h-[72px] tablet:px-10 desktop:h-[84px] desktop:px-20">
-        <Link to={RoutePath.WELCOME} aria-label="Fold and Flip home">
+        <Link to={RoutePath.WELCOME} aria-label="Fold and Flip home" onClick={onLogoLinkClick}>
           <LogoLockup />
         </Link>
 
