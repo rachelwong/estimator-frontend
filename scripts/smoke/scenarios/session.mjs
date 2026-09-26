@@ -64,7 +64,7 @@ export async function session({ browser, reporter }) {
   const clipboard = await admin.evaluate(() => navigator.clipboard.readText());
   check("Copy puts link on clipboard", clipboard === shareUrl);
 
-  // --- Admin Selection survives refresh; a second tab does not live-sync -----
+  // --- Admin Selection survives refresh; a second tab live-syncs ------------
   await selectSquare(admin, 0, 0);
   check("Admin selection shows", sameSquares(await chosen(admin), [[0, 0]]));
 
@@ -79,16 +79,15 @@ export async function session({ browser, reporter }) {
   check("Second Admin tab shows Selection", true);
 
   await selectSquare(admin, 1, 0);
-  await adminTab2.waitForTimeout(500);
-  check(
-    "Second Admin tab does not live-sync",
-    sameSquares(await chosen(adminTab2), [[0, 0]]),
-  );
+  await waitForChosen(adminTab2, [[1, 0]]);
+  check("Second Admin tab live-syncs", true);
 
-  // Clicking the same Square clears it, so Ada ends up Abstained.
-  await clickCell(admin, 1, 0);
+  // Cleared from the tab that didn't pick it: both tabs clear, so Ada ends up
+  // Abstained.
+  await clickCell(adminTab2, 1, 0);
+  await waitForChosen(adminTab2, []);
   await waitForChosen(admin, []);
-  check("Same Square clears Selection", true);
+  check("Same Square clears Selection in both tabs", true);
 
   // --- Keyboard: one Tab stop, arrows move, Enter selects ---------------------
   check(
