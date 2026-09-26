@@ -459,10 +459,10 @@ export const WelcomeSection = {
   WHY_I_MADE_THIS: "why-i-made-this",
 } as const;
 
-// Every link that leaves the app. Why I made this, the Welcome header and menu
-// link to the two repos (§7 item 6); the handle is the one the frontend's own
-// remote points at. The footer signs off with the portfolio, and the header's
-// Feedback tile opens LinkedIn.
+// Every link that leaves the app. Why I made this links to the two repos (§7
+// item 6); the handle is the one the frontend's own remote points at. The
+// footer signs off with the portfolio, and the header's Feedback tile opens
+// LinkedIn.
 export const REPOSITORY_URL = {
   FRONTEND: "https://github.com/rachelwong/estimator-frontend",
   BACKEND: "https://github.com/rachelwong/estimator-backend",

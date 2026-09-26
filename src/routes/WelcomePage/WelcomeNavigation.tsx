@@ -1,5 +1,5 @@
 import { FeedbackButton } from "@/components/FeedbackButton";
-import { REPOSITORY_URL, WelcomeSection } from "@/constants";
+import { WelcomeSection } from "@/constants";
 import { useEscapeKey } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useId, useState } from "react";
@@ -33,9 +33,8 @@ export function WelcomeNavigation() {
           How to use
         </a>
         <a
-          href={REPOSITORY_URL.FRONTEND}
+          href={`#${WelcomeSection.WHY_I_MADE_THIS}`}
           className="hidden hover:text-text-subtle desktop:inline"
-          target="_blank"
         >
           GitHub
         </a>

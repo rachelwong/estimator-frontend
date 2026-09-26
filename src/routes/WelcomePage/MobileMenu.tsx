@@ -2,7 +2,6 @@ import avatarFour from "@/assets/sprites/avatar4.svg";
 import bug from "@/assets/sprites/bug.svg";
 import cardBack from "@/assets/sprites/cardback.svg";
 import laptop from "@/assets/sprites/laptop.svg";
-import server from "@/assets/sprites/server.svg";
 import { Window } from "@/components/Window";
 import { REPOSITORY_URL, WelcomeSection, WindowVariant } from "@/constants";
 import { MenuRow } from "./MenuRow";
@@ -49,17 +48,10 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
               onClick={onClose}
             />
             <MenuRow
-              href={REPOSITORY_URL.FRONTEND}
+              href={`#${WelcomeSection.WHY_I_MADE_THIS}`}
               sprite={laptop}
-              label="Frontend"
-              sublabel="Github repository"
-              onClick={onClose}
-            />
-            <MenuRow
-              href={REPOSITORY_URL.BACKEND}
-              sprite={server}
-              label="Backend"
-              sublabel="Github repository"
+              label="GitHub"
+              sublabel="Frontend & backend repositories"
               onClick={onClose}
             />
             {/* The header's Feedback tile has no room beside the Menu button on
