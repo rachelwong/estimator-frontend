@@ -80,7 +80,6 @@ export interface ServerToClientEvents {
     name: string
     selection: Selection | null
   }) => void
-  [WebSocketEvent.SELECTION_ACKNOWLEDGED]: (payload: Selection) => void
   // Sent to every tab of the one participant. null means cleared.
   [WebSocketEvent.SELECTION_CHANGED]: (payload: Selection | null) => void
   [WebSocketEvent.SESSION_ENDED]: (payload: RevealPayload) => void
