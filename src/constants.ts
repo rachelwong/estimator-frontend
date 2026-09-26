@@ -82,6 +82,7 @@ export const WebSocketEvent = {
   JOINED: "joined",
   ADMIN_ACKNOWLEDGED: "admin-acknowledged",
   SELECTION_ACKNOWLEDGED: "selection-acknowledged",
+  SELECTION_CHANGED: "selection-changed",
   SESSION_ENDED: "session-ended",
   ERROR: "error",
 } as const;

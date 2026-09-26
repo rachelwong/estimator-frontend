@@ -11,7 +11,6 @@ import { SessionAction, SessionConnectionStatus } from '@/constants'
 import type {
   ActiveConnectionState,
   ConnectingConnectionState,
-  Selection,
   SessionConnectionAction,
   SessionConnectionState,
 } from '@/types'
@@ -91,8 +90,9 @@ function nextStateWhileActive(
   action: SessionConnectionAction,
 ): SessionConnectionState {
   switch (action.type) {
+    // The server sends the outcome, so it is stored as-is.
     case SessionAction.SELECTION_ACKED: {
-      return { ...state, selection: toggleSelection(state.selection, action.square), error: null }
+      return { ...state, selection: action.selection, error: null }
     }
 
     case SessionAction.ERROR_RECEIVED: {
@@ -115,13 +115,4 @@ function nextStateWhileActive(
       return state
     }
   }
-}
-
-// The ack echoes the requested Square, not the result, so re-apply the
-// server's toggle (decision #10): same Square clears, another moves it.
-// Safe because selection only moves on an ack — never optimistically.
-function toggleSelection(current: Selection | null, square: Selection): Selection | null {
-  const isSame = current?.time === square.time && current?.resource === square.resource
-
-  return isSame ? null : square
 }

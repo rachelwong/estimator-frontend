@@ -128,8 +128,8 @@ function createSessionConnectionStore(
     dispatch({ type: SessionAction.IDENTITY_ACKED, isAdmin: true, selection })
   })
 
-  socket.on(WebSocketEvent.SELECTION_ACKNOWLEDGED, (square) => {
-    dispatch({ type: SessionAction.SELECTION_ACKED, square })
+  socket.on(WebSocketEvent.SELECTION_CHANGED, (selection) => {
+    dispatch({ type: SessionAction.SELECTION_ACKED, selection })
   })
 
   // The Reveal payload is dropped — /ended refetches it over REST.

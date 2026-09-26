@@ -51,7 +51,7 @@ export type SessionConnectionAction =
       ended: boolean
     }
   | { type: typeof SessionAction.IDENTITY_ACKED; isAdmin: boolean; selection: Selection | null }
-  | { type: typeof SessionAction.SELECTION_ACKED; square: Selection }
+  | { type: typeof SessionAction.SELECTION_ACKED; selection: Selection | null }
   | { type: typeof SessionAction.ERROR_RECEIVED; error: SessionError }
   | { type: typeof SessionAction.ERROR_DISMISSED }
   | { type: typeof SessionAction.DISCONNECTED }
