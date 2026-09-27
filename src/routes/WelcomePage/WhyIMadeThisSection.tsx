@@ -18,6 +18,27 @@ export function WhyIMadeThisSection() {
       <div className="pb-3.5 tablet:pb-4 desktop:pb-[18px]">
         <WelcomeSectionHeading text="Why I made this" />
       </div>
+      <div className="grid gap-3.5 tablet:grid-cols-2 tablet:gap-4 desktop:flex mx-auto">
+        <Button
+          asChild
+          className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
+        >
+          <a href={REPOSITORY_URL.FRONTEND} target="_blank">
+            <CodeIcon />
+            Frontend on GitHub
+          </a>
+        </Button>
+        <Button
+          asChild
+          variant="secondary"
+          className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
+        >
+          <a href={REPOSITORY_URL.BACKEND} target="_blank">
+            <CodeIcon />
+            Backend on GitHub
+          </a>
+        </Button>
+      </div>
 
       <div className="grid gap-7 tablet:grid-cols-2 tablet:gap-0 desktop:grid-cols-3">
         <MakerNote
@@ -51,44 +72,6 @@ I haven't yet figured out the best way to use AI; still to come.
           "
           className="tablet:col-span-2 tablet:border-t-2 tablet:border-ink tablet:pt-7 desktop:col-span-1 desktop:border-t-0 desktop:pt-0 desktop:pl-9"
         />
-      </div>
-
-      <div className="flex flex-col gap-[18px] border-[3px] border-ink bg-white p-[18px] shadow-px-card tablet:px-[22px] tablet:py-5 desktop:flex-row desktop:items-center desktop:justify-between desktop:gap-6 desktop:py-[18px]">
-        <div className="flex flex-col">
-          <span className="font-label text-[12px] mb-1.5">
-            the tools & process
-          </span>
-          <span className="text-[16px] font-bold">
-            Front-end: React, TypeScript, TailwindCSS, Socket.io, Playwright,
-            Vercel
-          </span>
-          <span className="text-[16px] font-bold">
-            Back-end: Node.js, TypeScript, Websockets, Render
-          </span>
-          <span className="text-[16px] font-bold">AI: Claude Code</span>
-        </div>
-
-        <div className="grid gap-3.5 tablet:grid-cols-2 tablet:gap-4 desktop:flex">
-          <Button
-            asChild
-            className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
-          >
-            <a href={REPOSITORY_URL.FRONTEND} target="_blank">
-              <CodeIcon />
-              Frontend on GitHub
-            </a>
-          </Button>
-          <Button
-            asChild
-            variant="secondary"
-            className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
-          >
-            <a href={REPOSITORY_URL.BACKEND} target="_blank">
-              <CodeIcon />
-              Backend on GitHub
-            </a>
-          </Button>
-        </div>
       </div>
     </section>
   );
