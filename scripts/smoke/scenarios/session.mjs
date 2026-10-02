@@ -209,8 +209,8 @@ export async function session({ browser, reporter }) {
     await admin.getByText("Admin", { exact: true }).isVisible(),
   );
   check(
-    "Admin keeps the share link",
-    await admin.getByLabel("Session link").isVisible(),
+    "Admin has no share link on the Reveal",
+    (await admin.getByLabel("Session link").count()) === 0,
   );
   check(
     "Participant has no share link on the Reveal",
