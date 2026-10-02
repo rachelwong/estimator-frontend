@@ -1,9 +1,10 @@
+import menu from "@/assets/sprites/menu.svg";
 import { FeedbackButton } from "@/components/FeedbackButton";
+import { Sprite } from "@/components/Sprite";
 import { WelcomeSection } from "@/constants";
 import { useEscapeKey } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useId, useState } from "react";
-import { MenuIcon } from "./MenuIcon";
 import { MobileMenu } from "./MobileMenu";
 import { StartSessionButton } from "./StartSessionButton";
 
@@ -55,7 +56,7 @@ export function WelcomeNavigation() {
         )}
         onClick={() => setMenuOpen(!isMenuOpen)}
       >
-        {!isMenuOpen && <MenuIcon />}
+        {!isMenuOpen && <Sprite source={menu} className="w-[18px]" />}
         {isMenuOpen ? "Close" : "Menu"}
       </button>
 
