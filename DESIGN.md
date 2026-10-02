@@ -287,8 +287,8 @@ No grid preview.
 
 Window "join · <session>", chip "Participant". Only: "Join session" heading,
 one input labelled "Your name" (placeholder "e.g. Rachel"), Join session button, and
-a `crowd-0` note: "Your Selection stays private until the Admin ends the
-session and the Reveal shows everyone's Square."
+a `crowd-0` note: "Your estimate stays private until the Admin ends the session and the Reveal shows
+everyone’s estimates."
 
 ### Active (`/:id/start`)
 

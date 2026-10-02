@@ -33,7 +33,6 @@ export function ActiveSessionView({
   onEndSession,
 }: ActiveSessionViewProps) {
   const [hovered, setHovered] = useState<HoveredSquare | null>(null);
-  const hasSelection = state.selection !== null;
 
   return (
     <PageLayout
@@ -58,10 +57,10 @@ export function ActiveSessionView({
         >
           <div className="flex flex-col gap-1.5">
             <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
-              {hasSelection ? "Hand’s down" : "Make your Estimate"}
+              Make your Estimate
             </h1>
             <p className="font-body text-[15px] leading-[1.45] text-text-muted tablet:text-[16px]">
-              Time runs across, Resources go up. Your Estimate stays private
+              Time runs across, Resources go up. Your estimate stays private
               until the Reveal.
             </p>
           </div>
