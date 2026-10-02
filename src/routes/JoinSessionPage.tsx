@@ -79,8 +79,8 @@ export function JoinSessionPage() {
           <div className="flex items-start gap-3 border-2 border-ink bg-crowd-0 px-4 py-3.5">
             <Sprite source={cardBack} className="sprite-sticker h-[29px] w-6 shrink-0" />
             <p className="text-[14px] leading-normal">
-              Your Selection stays private until the Admin ends the session and the Reveal shows
-              everyone’s Square.
+              Your estimate stays private until the Admin ends the session and
+              the Reveal shows everyone’s estimates.
             </p>
           </div>
         </Window>
