@@ -1,6 +1,7 @@
+import code from "@/assets/sprites/code.svg";
+import { Sprite } from "@/components/Sprite";
 import { Button } from "@/components/ui/button";
 import { REPOSITORY_URL, WelcomeSection } from "@/constants";
-import { CodeIcon } from "./CodeIcon";
 import { MakerNote } from "./MakerNote";
 import { WelcomeSectionHeading } from "./WelcomeSectionHeading";
 
@@ -24,7 +25,7 @@ export function WhyIMadeThisSection() {
           className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
         >
           <a href={REPOSITORY_URL.FRONTEND} target="_blank">
-            <CodeIcon />
+            <Sprite source={code} className="w-[18px]" />
             Frontend on GitHub
           </a>
         </Button>
@@ -34,7 +35,7 @@ export function WhyIMadeThisSection() {
           className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px]"
         >
           <a href={REPOSITORY_URL.BACKEND} target="_blank">
-            <CodeIcon />
+            <Sprite source={code} className="w-[18px]" />
             Backend on GitHub
           </a>
         </Button>
