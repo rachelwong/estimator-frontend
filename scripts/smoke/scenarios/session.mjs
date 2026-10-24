@@ -12,10 +12,13 @@ import {
   cells,
   chosen,
   clickCell,
+  createSessionByApi,
   createSocketPool,
+  descriptionBlock,
   hoverCell,
   landsOn,
   openSquarePopover,
+  opensSafelyInNewTab,
   pageHeadings,
   revealed,
   sameSquares,
@@ -24,6 +27,10 @@ import {
   squareClasses,
   waitForChosen,
 } from "../lib.mjs";
+
+const DESCRIPTION = "PROJ-12 https://example.com/ticket/12";
+const TICKET_URL = "https://example.com/ticket/12";
+const INJECTION = "<b>x</b> javascript:alert(1)";
 
 export async function session({ browser, reporter }) {
   const { check, openPage } = reporter;
@@ -34,7 +41,8 @@ export async function session({ browser, reporter }) {
   });
   const admin = await openPage(adminContext);
   await admin.goto(`${APP}/new`);
-  await admin.getByLabel("Your name").fill("Ada");
+  await admin.getByLabel("Name").fill("Ada");
+  await admin.getByLabel("Ticket or task").fill(DESCRIPTION);
   await admin.getByRole("slider").focus();
   await admin.keyboard.press("End");
   await admin.getByRole("button", { name: "Create session" }).click();
@@ -125,6 +133,10 @@ export async function session({ browser, reporter }) {
     (await fay.getByLabel("Session link").count()) === 0,
   );
   check("Participant sees nobody else", (await chosen(fay)).length === 0);
+  check(
+    "Participant sees the description on Active",
+    (await descriptionBlock(fay).innerText()) === DESCRIPTION,
+  );
   await selectSquare(fay, 4, 1);
 
   // Four names on one Square: three shown, then "+1 more". Zed never picks.
@@ -168,9 +180,7 @@ export async function session({ browser, reporter }) {
   );
   check(
     "Chip row label sits under it",
-    await fay
-      .getByRole("heading", { name: "your estimates", level: 2 })
-      .isVisible(),
+    await fay.getByRole("heading", { name: "your team", level: 2 }).isVisible(),
   );
   check(
     "Live Participant sees own name in Reveal",
@@ -216,6 +226,35 @@ export async function session({ browser, reporter }) {
     "Participant has no share link on the Reveal",
     (await fay.getByLabel("Session link").count()) === 0,
   );
+  for (const [label, page] of [
+    ["Admin", admin],
+    ["Participant", fay],
+  ]) {
+    check(
+      `${label} sees the description on the Reveal`,
+      (await descriptionBlock(page).innerText()) === DESCRIPTION,
+    );
+    check(
+      `${label}'s Reveal link opens in a new tab`,
+      await opensSafelyInNewTab(page, TICKET_URL),
+    );
+  }
+
+  // Answered locally, so the click proves a tab opens without leaving the box.
+  await fay
+    .context()
+    .route(`${TICKET_URL}`, (route) => route.fulfill({ body: "ticket" }));
+  const [ticketTab] = await Promise.all([
+    fay.context().waitForEvent("page"),
+    descriptionBlock(fay).getByRole("link").click(),
+  ]);
+  await ticketTab.waitForLoadState();
+  check(
+    "Clicking the Reveal link opens the ticket",
+    ticketTab.url() === TICKET_URL,
+    ticketTab.url(),
+  );
+  await ticketTab.close();
 
   await fay.reload();
   await fay.getByRole("heading", { name: "The Reveal" }).waitFor();
@@ -262,12 +301,12 @@ export async function session({ browser, reporter }) {
     socketTraffic.join(", "),
   );
   check(
-    "Window reads revealed",
-    await fresh.getByText("revealed", { exact: true }).isVisible(),
+    "Window reads the reveal",
+    await fresh.getByText("the reveal", { exact: true }).isVisible(),
   );
   check(
-    "Notice says Estimating is closed",
-    await fresh.getByText("Estimating is closed").isVisible(),
+    "Notice says Estimating is done!",
+    await fresh.getByText("Estimating is done!").isVisible(),
   );
   check(
     "A fresh visitor has no role chip",
@@ -457,7 +496,21 @@ export async function session({ browser, reporter }) {
   check("Start a new session goes to /new", true);
   check(
     "Create form starts empty",
-    (await fresh.getByLabel("Your name").inputValue()) === "",
+    (await fresh.getByLabel("Name").inputValue()) === "",
+  );
+
+  // --- Injection: the description is text, never markup ----------------------
+  const injected = await createSessionByApi("numerical", 4, INJECTION);
+  const victim = await openPage(await browser.newContext());
+  await victim.goto(`${APP}/${injected.sessionId}/join`);
+  await descriptionBlock(victim).waitFor();
+  check(
+    "Markup shows as literal text",
+    (await descriptionBlock(victim).innerText()) === INJECTION,
+  );
+  check(
+    "No <a> or <b> element is made",
+    (await descriptionBlock(victim).locator("a, b").count()) === 0,
   );
 }
 

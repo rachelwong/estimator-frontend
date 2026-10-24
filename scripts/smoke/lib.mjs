@@ -58,14 +58,34 @@ export function createReporter() {
 
 // --- Backend, bypassing the UI ------------------------------------------------
 
-export async function createSessionByApi(pointSystemType = 'numerical', sliderMax = 4) {
+// Left out of the body when `description` is undefined, like a form without one.
+export async function createSessionByApi(pointSystemType = 'numerical', sliderMax = 4, description) {
   const response = await fetch(`${API}/sessions`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ adminName: 'Ada', pointSystemType, sliderMax }),
+    body: JSON.stringify({ adminName: 'Ada', pointSystemType, sliderMax, description }),
   })
 
   return response.json()
+}
+
+// --- The Session description ---------------------------------------------------
+
+export function descriptionBlock(page) {
+  return page.locator('main [data-description]')
+}
+
+// True when the block's one link points at `href` and opens safely in a new tab.
+export async function opensSafelyInNewTab(page, href) {
+  const links = descriptionBlock(page).getByRole('link')
+  if ((await links.count()) !== 1) {
+    return false
+  }
+
+  const [actualHref, target, rel] = await Promise.all(
+    ['href', 'target', 'rel'].map((name) => links.first().getAttribute(name)),
+  )
+  return actualHref === href && target === '_blank' && rel === 'noopener noreferrer'
 }
 
 // Raw sockets for crowd Participants and a headless Admin. close() drops all.

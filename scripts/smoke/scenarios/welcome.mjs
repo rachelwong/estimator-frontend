@@ -1,6 +1,12 @@
 // The Welcome page — fold-and-flip.md Stage 9. No backend involved: the demos
 // run on a sample Session the page carries itself.
-import { APP, landsOn, pageHeadings } from "../lib.mjs";
+import {
+  APP,
+  descriptionBlock,
+  landsOn,
+  opensSafelyInNewTab,
+  pageHeadings,
+} from "../lib.mjs";
 
 const DEMO_CROWD = ["Mia", "Jim-1", "Noor"];
 const SIZES = { desktop: 1440, tablet: 834, mobile: 390 };
@@ -48,7 +54,16 @@ export async function welcome({ browser, reporter }) {
   );
   check(
     "Demo is the real Reveal window",
-    await desktop.getByText("Estimating is closed").isVisible(),
+    await desktop.getByText("Estimating is done!").isVisible(),
+  );
+  check(
+    "Demo Reveal shows the demo description",
+    (await descriptionBlock(desktop).innerText()) ===
+      `Add a demo description to this feature here  ${FRONTEND_REPO}`,
+  );
+  check(
+    "Demo description links to the repo in a new tab",
+    await opensSafelyInNewTab(desktop, FRONTEND_REPO),
   );
 
   // The hero demo is the first grid on the page.

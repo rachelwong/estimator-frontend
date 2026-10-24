@@ -7,8 +7,10 @@ import {
   clickCell,
   createSessionByApi,
   createSocketPool,
+  descriptionBlock,
   joinInBrowser,
   landsOn,
+  opensSafelyInNewTab,
   openSquarePopover,
   sameSquares,
   selectSquare,
@@ -21,6 +23,15 @@ export async function join({ browser, reporter }) {
   const { check, openPage } = reporter
   const { sessionId, adminToken } = await createSessionByApi()
 
+  // --- The description, before anyone gives a name ---------------------------
+  const described = await createSessionByApi('numerical', 4, 'PROJ-12 https://example.com/ticket/12')
+  const reader = await openPage(await browser.newContext())
+  await reader.goto(`${APP}/${described.sessionId}/join`)
+  await descriptionBlock(reader).waitFor()
+  check('Join shows the description',
+    (await descriptionBlock(reader).innerText()) === 'PROJ-12 https://example.com/ticket/12')
+  check('Join link opens in a new tab', await opensSafelyInNewTab(reader, 'https://example.com/ticket/12'))
+
   // --- A bad name never reaches the wire --------------------------------------
   const page = await openPage(await browser.newContext())
   const socketTraffic = []
@@ -28,6 +39,8 @@ export async function join({ browser, reporter }) {
 
   await page.goto(`${APP}/${sessionId}/join`)
   const name = page.locator('input[name="name"]')
+  await name.waitFor()
+  check('No description block without one', (await descriptionBlock(page).count()) === 0)
   await name.fill('Jim@Bob')
   await name.blur()
   check('Symbol in name shows rule', await page.getByText(NAME_RULE).isVisible())
