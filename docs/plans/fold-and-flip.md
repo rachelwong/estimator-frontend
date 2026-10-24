@@ -561,7 +561,7 @@ Where this stage went past or against the letter above:
 | The hero line stays an `h2`                                                                                                                                                          | As in Stages 5 and 8, the `h1` pass waits for Stage 10                                                                                                                                              |
 
 The Reveal notice's headline wording is whatever the real Reveal uses, so the
-hero shows it too (it now reads "Estimating is closed").
+hero shows it too (it now reads "Estimating is done!").
 
 ### Stage 10 — Copy, smoke tests, and a full pass
 

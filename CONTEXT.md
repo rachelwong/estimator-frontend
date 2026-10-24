@@ -48,7 +48,7 @@ _Avoid_: Cell, box, tile, point
 The one Square a Participant is currently holding, or none. Picking a different
 Square moves it. Picking the same Square again clears it. Two names for the same
 thing: **Estimate is the display term** — what the UI says to a Participant
-("Make your Estimate", "your estimates", "Estimating is closed") — and Selection
+("Make your Estimate", "your team", "Estimating is done!") — and Selection
 is the structural one, used in code, in the data model, and in copy about the
 mechanics of holding and clearing a Square ("clear your selection").
 _Avoid_: choice, guess, answer, vote

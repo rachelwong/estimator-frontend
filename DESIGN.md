@@ -272,7 +272,7 @@ Tapping the backdrop closes it.
 Window "new-session", chip "Admin".
 
 - "New session" + one line explaining the Admin role.
-- Your name (input).
+- Name (input).
 - Point system: two-up segmented buttons, Numerical / Fibonacci; the active one
   fills `accent` with a 4px shadow.
 - Highest axis value: value in Bungee `accent` beside the label; pixel slider
@@ -286,7 +286,7 @@ No grid preview.
 ### Join (`/:id/join`)
 
 Window "join · <session>", chip "Participant". Only: "Join session" heading,
-one input labelled "Your name" (placeholder "e.g. Rachel"), Join session button, and
+one input labelled "Name" (placeholder "e.g. Rachel"), Join session button, and
 a `crowd-0` note: "Your estimate stays private until the Admin ends the session and the Reveal shows
 everyone’s estimates."
 
@@ -303,7 +303,7 @@ everyone’s estimates."
 ### Reveal (`/:id/ended`)
 
 - Admin header offers "Start a new session".
-- Window title "<session> · revealed".
+- Window title "the reveal".
 - Dark notice (ink, 4px accent shadow, cream spade): **Selections are closed** —
   "The Admin ended this session, so every Selection is locked in. Pick a Square
   to see who landed there."
@@ -546,7 +546,7 @@ That is the only one.
 
 | Question                        | Answer                                                                                                                                   |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Session name                    | Dropped from window titles — they read `live`, `revealed`, `join`, `new-session`. The backend has no name field and gains none           |
+| Session name                    | Dropped from window titles — they read `live`, `the reveal`, `join`, `new-session`. The backend has no name field and gains none           |
 | Large Numerical grids on mobile | Minimum Square size plus horizontal scroll. No per-device cap, so the grid never depends on the device                                   |
 | Duplicate names                 | Already handled — `estimator-backend/src/sessionStore.ts:35` does `Jim-1`, `Jim-2`                                                       |
 | Breakpoint ranges               | `≤767` mobile · `768–1199` tablet · `≥1200` desktop                                                                                      |
