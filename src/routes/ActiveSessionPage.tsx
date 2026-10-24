@@ -1,15 +1,18 @@
-import { Navigate, useParams } from 'react-router'
+import { Navigate, useLoaderData, useParams } from 'react-router'
 import { ActiveSessionView } from '@/components/ActiveSessionView'
 import { ConnectionLost } from '@/components/ConnectionLost'
 import { LoadingWindow } from '@/components/LoadingWindow'
 import { SessionConnectionStatus } from '@/constants'
 import { useSessionConnection } from '@/hooks'
+import type { GetSessionResponse } from '@/types'
 
 // Redirects here are part of what this page renders for a status, not a side
 // effect — hence <Navigate> rather than navigate() in an effect.
 // Default export so router.tsx can lazy() it directly.
 export default function ActiveSessionPage() {
   const sessionId = useParams().sessionId!
+  // startLoader's REST read. The socket never carries the description.
+  const { description } = useLoaderData() as GetSessionResponse
   const { state, isAdmin, select, dismissError, endSession } = useSessionConnection(sessionId)
 
   const isLost =
@@ -38,6 +41,7 @@ export default function ActiveSessionPage() {
     <ActiveSessionView
       sessionId={sessionId}
       state={state}
+      description={description}
       onSelect={({ time, resource }) => select(time, resource)}
       onDismissError={dismissError}
       // The server's ack, not the token, decides who sees the controls.

@@ -2,6 +2,7 @@ import { RevealWindow } from "@/components/RevealWindow";
 import { Button } from "@/components/ui/button";
 import {
   WELCOME_DEMO_AXIS_VALUES,
+  WELCOME_DEMO_DESCRIPTION,
   WELCOME_DEMO_PINNED,
   WELCOME_DEMO_REVEAL,
   WelcomeSection,
@@ -63,6 +64,7 @@ export function HeroSection() {
           axisValues={WELCOME_DEMO_AXIS_VALUES}
           reveal={WELCOME_DEMO_REVEAL}
           selection={null}
+          description={WELCOME_DEMO_DESCRIPTION}
           initialPinned={WELCOME_DEMO_PINNED}
           holdsWaveUntilInView
         />

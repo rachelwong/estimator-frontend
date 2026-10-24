@@ -33,20 +33,24 @@ export interface CreateSessionRequest {
   adminName: string
   pointSystemType: PointSystemType
   sliderMax: number
+  description?: string
 }
 
+// `description` is null when the admin gave none.
 export interface CreateSessionResponse {
   sessionId: string
   adminToken: string
   adminParticipantId: string
   adminName: string
   pointSystem: PointSystem
+  description: string | null
 }
 
 // `reveal` is present only once the session has ended.
 export interface GetSessionResponse {
   sessionId: string
   pointSystem: PointSystem
+  description: string | null
   ended: boolean
   reveal?: RevealPayload
 }

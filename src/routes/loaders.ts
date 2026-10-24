@@ -18,6 +18,7 @@ import type {
   ActionErrorData,
   EndedLoaderData,
   GetSessionResponse,
+  JoinLoaderData,
   PointSystemType,
   RevealViewer,
 } from '@/types'
@@ -71,7 +72,7 @@ export async function joinLoader({ params }: LoaderFunctionArgs) {
     return redirect(`/${sessionId}/start`)
   }
 
-  return null
+  return { description: session.description } satisfies JoinLoaderData
 }
 
 export async function startLoader({ params }: LoaderFunctionArgs) {
@@ -154,6 +155,8 @@ export async function createSessionAction({ request }: ActionFunctionArgs) {
     adminName: String(formData.get('adminName') ?? ''),
     pointSystemType: String(formData.get('pointSystemType') ?? '') as PointSystemType,
     sliderMax: Number(formData.get('sliderMax') ?? 0),
+    // Sent as typed: the server trims it, and stores a blank one as null.
+    description: String(formData.get('description') ?? ''),
   }
 
   try {

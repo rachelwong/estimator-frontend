@@ -47,6 +47,7 @@ export const ErrorCode = {
   UNKNOWN_SESSION: "UNKNOWN_SESSION",
   INVALID_ADMIN_TOKEN: "INVALID_ADMIN_TOKEN",
   INVALID_SELECTION: "INVALID_SELECTION",
+  INVALID_DESCRIPTION: "INVALID_DESCRIPTION",
   SESSION_ENDED: "SESSION_ENDED",
   INVALID_REQUEST: "INVALID_REQUEST",
   INTERNAL_ERROR: "INTERNAL_ERROR",
@@ -533,6 +534,10 @@ export const WELCOME_DEMO_REVEAL: RevealPayload = {
 
 // The hero's Reveal opens on the crowded Square, its popover already pinned.
 export const WELCOME_DEMO_PINNED: Selection = { time: 5, resource: 3 };
+
+// The sample Session's ticket, so the demo Reveal reads like a real one.
+export const WELCOME_DEMO_DESCRIPTION =
+  "Add a demo description to this feature here  https://github.com/rachelwong/estimator-frontend";
 
 // What the crowd in the closing band says when someone hovers one of them — the
 // easter egg. A random line each time, never the same one twice running. Keep

@@ -25,6 +25,7 @@ export default function EndedPage() {
           axisValues={session.pointSystem.axisValues}
           reveal={session.reveal}
           selection={viewer.selection}
+          description={session.description}
           chip={revealChip(viewer)}
           isScreenHeading
         >

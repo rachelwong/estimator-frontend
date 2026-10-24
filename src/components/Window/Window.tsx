@@ -6,7 +6,7 @@ import type { WindowVariant } from '@/types'
 import { WindowChrome } from './WindowChrome'
 
 interface WindowProps {
-  /** Silkscreen, lower case, one or two words: `live`, `revealed`, `new-session`. */
+  /** Silkscreen, lower case, one or two words: `live`, `the reveal`, `new-session`. */
   title: string
   /** Which screen this is framing — it settles the width and the body padding. */
   variant: WindowVariant

@@ -6,25 +6,53 @@
 // The rule itself is PARTICIPANT_NAME_PATTERN in lib/patterns.ts. The server
 // trims and collapses the same way before it validates, so stray whitespace is
 // never what fails.
-import { PARTICIPANT_NAME_PATTERN, REPEATED_SPACES_PATTERN } from '@/lib/patterns'
+import {
+  PARTICIPANT_NAME_PATTERN,
+  REPEATED_SPACES_PATTERN,
+  WHITESPACE_RUN_PATTERN,
+} from "@/lib/patterns";
 
-const MAX_NAME_LENGTH = 20
+const MAX_NAME_LENGTH = 20;
 
-const NAME_RULE = 'Use 1-20 letters, numbers or spaces, with no symbols.'
+export const MAX_DESCRIPTION_LENGTH = 300;
+
+const NAME_RULE = "Use 1-20 letters, numbers or spaces, with no symbols.";
+
+const DESCRIPTION_RULE = `Keep description to ${MAX_DESCRIPTION_LENGTH} characters or fewer.`;
 
 // Trim the ends, collapse runs of spaces. What the name is judged on, and what
 // the server stores.
 export function normalizeName(name: string): string {
-  return name.trim().replace(REPEATED_SPACES_PATTERN, ' ')
+  return name.trim().replace(REPEATED_SPACES_PATTERN, " ");
 }
 
 // Returns the message to show, or null when the name is fine.
 export function nameError(name: string): string | null {
-  const normalized = normalizeName(name)
+  const normalized = normalizeName(name);
 
-  if (normalized.length <= MAX_NAME_LENGTH && PARTICIPANT_NAME_PATTERN.test(normalized)) {
-    return null
+  if (
+    normalized.length <= MAX_NAME_LENGTH &&
+    PARTICIPANT_NAME_PATTERN.test(normalized)
+  ) {
+    return null;
   }
 
-  return NAME_RULE
+  return NAME_RULE;
+}
+
+// Trim the ends, collapse every whitespace run to one space. What the
+// description is counted on, and what the server stores.
+export function normalizeDescription(description: string): string {
+  return description.trim().replace(WHITESPACE_RUN_PATTERN, " ");
+}
+
+// Returns the message to show, or null when the description is fine. Blank is
+// fine: the description is optional. The server's INVALID_DESCRIPTION stays
+// the backstop.
+export function descriptionError(description: string): string | null {
+  if (normalizeDescription(description).length <= MAX_DESCRIPTION_LENGTH) {
+    return null;
+  }
+
+  return DESCRIPTION_RULE;
 }

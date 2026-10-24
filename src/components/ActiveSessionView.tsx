@@ -2,6 +2,7 @@ import { AdminControls } from "@/components/AdminControls";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { EstimationGrid } from "@/components/EstimationGrid";
 import { PageLayout } from "@/components/PageLayout";
+import { SessionDescription } from "@/components/SessionDescription";
 import { ShareLink } from "@/components/ShareLink";
 import { SpriteScatter } from "@/components/SpriteScatter";
 import { Window } from "@/components/Window";
@@ -12,6 +13,7 @@ import { useState } from "react";
 interface ActiveSessionViewProps {
   sessionId: string;
   state: ActiveConnectionState;
+  description: string | null;
   onSelect: (selection: Selection) => void;
   onDismissError: () => void;
   // Present for the Admin only.
@@ -28,6 +30,7 @@ interface ActiveSessionViewProps {
 export function ActiveSessionView({
   sessionId,
   state,
+  description,
   onSelect,
   onDismissError,
   onEndSession,
@@ -59,11 +62,13 @@ export function ActiveSessionView({
             <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
               Make your Estimate
             </h1>
-            <p className="font-body text-[15px] leading-[1.45] text-text-muted tablet:text-[16px]">
+            <p className="font-body text-[14px] leading-[1.45] text-text-muted tablet:text-[14px]">
               Time runs across, Resources go up. Your estimate stays private
               until the Reveal.
             </p>
           </div>
+
+          <SessionDescription description={description} />
 
           {state.error && (
             <ErrorBanner error={state.error} onDismiss={onDismissError} />

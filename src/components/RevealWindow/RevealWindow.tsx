@@ -1,28 +1,31 @@
-import { useState } from 'react'
-import type { ReactNode } from 'react'
-import { EstimationGrid } from '@/components/EstimationGrid'
-import { Window } from '@/components/Window'
-import { GridMode, WindowVariant } from '@/constants'
-import type { HoveredSquare, RevealPayload, Selection } from '@/types'
-import { landedPeople } from '@/utils'
-import { RevealNotice } from './RevealNotice'
-import { WhoLandedWhere } from './WhoLandedWhere'
+import { EstimationGrid } from "@/components/EstimationGrid";
+import { SessionDescription } from "@/components/SessionDescription";
+import { Window } from "@/components/Window";
+import { GridMode, WindowVariant } from "@/constants";
+import type { HoveredSquare, RevealPayload, Selection } from "@/types";
+import { landedPeople } from "@/utils";
+import type { ReactNode } from "react";
+import { useState } from "react";
+import { RevealNotice } from "./RevealNotice";
+import { WhoLandedWhere } from "./WhoLandedWhere";
 
 interface RevealWindowProps {
-  axisValues: number[]
-  reveal?: RevealPayload
+  axisValues: number[];
+  reveal?: RevealPayload;
   /** The Square the viewer held when the Session ended, if this tab knows it. */
-  selection: Selection | null
+  selection: Selection | null;
+  /** The ticket or task the Session estimated, when the admin gave one. */
+  description?: string | null;
   /** The window's status chip: the viewer's role, when there is one. */
-  chip?: string
+  chip?: string;
   /** A Square whose popover is open from the start. */
-  initialPinned?: Selection | null
+  initialPinned?: Selection | null;
   /** Welcome's demo: the wave waits until the grid is wholly on screen. */
-  holdsWaveUntilInView?: boolean
+  holdsWaveUntilInView?: boolean;
   /** True on the Reveal screen, where "The Reveal" is the page's h1. */
-  isScreenHeading?: boolean
+  isScreenHeading?: boolean;
   /** Anything the page adds under the chips, like the mobile "Start a new session". */
-  children?: ReactNode
+  children?: ReactNode;
 }
 
 // The Reveal window (DESIGN.md §7): the dark notice, the revealed grid, and
@@ -36,33 +39,22 @@ export function RevealWindow({
   axisValues,
   reveal,
   selection,
+  description = null,
   chip,
   initialPinned = null,
   holdsWaveUntilInView = false,
   isScreenHeading = false,
   children,
 }: RevealWindowProps) {
-  const [hovered, setHovered] = useState<HoveredSquare | null>(null)
-  const [pinned, setPinned] = useState<Selection | null>(initialPinned)
-  const Heading = isScreenHeading ? 'h1' : 'h2'
-  const subheading = isScreenHeading ? 'h2' : 'h3'
+  const [hovered, setHovered] = useState<HoveredSquare | null>(null);
+  const [pinned, setPinned] = useState<Selection | null>(initialPinned);
+  const subheading = isScreenHeading ? "h2" : "h3";
 
   return (
-    <Window
-      title="revealed"
-      variant={WindowVariant.SESSION}
-      chip={chip}
-    >
+    <Window title="the reveal" variant={WindowVariant.SESSION} chip={chip}>
       <RevealNotice />
 
-      <div className="flex flex-col gap-1.5">
-        <Heading className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
-          The Reveal
-        </Heading>
-        <p className="font-body text-[15px] leading-[1.45] text-text-muted tablet:text-[16px]">
-          Darker Squares are where more people landed.
-        </p>
-      </div>
+      <SessionDescription description={description} />
 
       <EstimationGrid
         axisValues={axisValues}
@@ -88,5 +80,5 @@ export function RevealWindow({
 
       {children}
     </Window>
-  )
+  );
 }
