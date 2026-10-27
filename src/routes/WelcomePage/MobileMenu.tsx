@@ -14,14 +14,18 @@ interface MobileMenuProps {
 
 // The phone's menu (§7 "Mobile menu"): an ink 45% backdrop over the page below
 // the header, and a window titled "menu" dropped in 12px from the edges. Tapping
-// the backdrop, a row, Esc or the Close button shuts it.
+// the backdrop, a row, Esc or the close button shuts it.
 //
 // Fixed, so it stays put over a page that scrolls beneath it, and capped to the
 // screen so a short phone can still reach Start a session. From tablet up the
 // header has room for its links and the whole thing is hidden.
+//
+// The wrapper is `contents` because it renders inside the header's flex row:
+// as a box it would be an empty flex item, and the row's gap after the toggle
+// would push the Close button left of where the Menu button sat.
 export function MobileMenu({ id, onClose }: MobileMenuProps) {
   return (
-    <div className="tablet:hidden">
+    <div className="contents tablet:hidden">
       <div
         aria-hidden="true"
         className="fixed inset-x-0 top-16 bottom-0 bg-ink/45"

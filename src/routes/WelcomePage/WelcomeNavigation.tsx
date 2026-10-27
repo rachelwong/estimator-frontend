@@ -1,3 +1,4 @@
+import close from "@/assets/sprites/close.svg";
 import menu from "@/assets/sprites/menu.svg";
 import { FeedbackButton } from "@/components/FeedbackButton";
 import { Sprite } from "@/components/Sprite";
@@ -10,7 +11,7 @@ import { StartSessionButton } from "./StartSessionButton";
 
 // Welcome's side of the header (§7 item 1). Desktop links to How to use, the
 // repo, Feedback and the Create form; tablet keeps How to use, Feedback and the
-// button; a phone swaps them all for a Menu button that opens the menu window.
+// button; a phone swaps them all for a hamburger button that opens the menu window.
 //
 // The Feedback tile is placed here rather than left to PageLayout because it
 // belongs next to Start a session — and being inside this nav is also what
@@ -43,21 +44,25 @@ export function WelcomeNavigation() {
         <StartSessionButton className="text-[12px]" />
       </nav>
 
-      {/* Open, it turns yellow and drops its shadow, reading "Close". */}
+      {/* Icon only. Open, it turns yellow, drops its shadow and shows a cross. */}
       <button
         type="button"
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         aria-expanded={isMenuOpen}
         aria-controls={menuId}
         className={cn(
-          "inline-flex h-11 cursor-pointer items-center gap-2 border-[3px] border-ink px-3 font-label text-[12px] text-ink outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink tablet:hidden",
+          "inline-flex size-11 cursor-pointer items-center justify-center border-[3px] border-ink outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink tablet:hidden",
           isMenuOpen
             ? "bg-selection"
             : "bg-white shadow-[3px_3px_0_var(--color-ink)]",
         )}
         onClick={() => setMenuOpen(!isMenuOpen)}
       >
-        {!isMenuOpen && <Sprite source={menu} className="w-[18px]" />}
-        {isMenuOpen ? "Close" : "Menu"}
+        {isMenuOpen ? (
+          <Sprite source={close} className="w-[15px]" />
+        ) : (
+          <Sprite source={menu} className="w-[18px]" />
+        )}
       </button>
 
       {isMenuOpen && (
