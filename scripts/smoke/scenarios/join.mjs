@@ -11,7 +11,7 @@ import {
   joinInBrowser,
   landsOn,
   opensSafelyInNewTab,
-  openSquarePopover,
+  hoverSquarePopover,
   sameSquares,
   selectSquare,
   waitForChosen,
@@ -100,7 +100,8 @@ export async function join({ browser, reporter }) {
   await page.getByText('Estimating is done!').waitFor()
   await page.mouse.move(0, 0)
   check('Crowded Square counts the people', ['3\npeople', '×3'].includes(await cellText(page, 1, 1)))
-  const names = (await openSquarePopover(page, 1, 1)).sort()
+  // A live Participant can still vote here, so a click would vote. Names open on hover.
+  const names = (await hoverSquarePopover(page, 1, 1)).sort()
   check('Three "Jim" joins → Jim, Jim-1, Jim-2', names.join() === 'Jim,Jim-1,Jim-2', names.join())
   check('Back created no extra Participant', !(await page.locator('main').innerText()).includes('Jim-3'))
 }

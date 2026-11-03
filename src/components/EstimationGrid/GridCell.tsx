@@ -1,5 +1,5 @@
 import type { FocusEventHandler, KeyboardEventHandler, PointerEventHandler } from 'react'
-import { SQUARE_HIGHLIGHT_CLASS, SQUARE_LABEL_SIZE_CLASS } from '@/constants'
+import { CHANGE_FLASH_MS, SQUARE_HIGHLIGHT_CLASS, SQUARE_LABEL_SIZE_CLASS } from '@/constants'
 import { cn } from '@/lib/utils'
 import type {
   SquareHighlight as SquareHighlightValue,
@@ -22,6 +22,9 @@ interface GridCellProps {
   revealDelay?: number
   // Reveal only: the wave is waiting to start, so the Square holds blank.
   isWavePaused?: boolean
+  // Reveal only: someone just moved here, so it wears the rainbow ring (§8).
+  // A new id restarts the ring.
+  flashId?: number
   // Off on a revealed Square nobody landed on: hovering it does nothing.
   hasPointerCursor: boolean
   // Roving: 0 on the one Square Tab lands on, −1 on the rest.
@@ -51,6 +54,7 @@ export function GridCell({
   expanded,
   revealDelay,
   isWavePaused = false,
+  flashId,
   hasPointerCursor,
   tabIndex,
   onClick,
@@ -84,6 +88,15 @@ export function GridCell({
       onBlur={onBlur}
       onKeyDown={onKeyDown}
     >
+      {flashId !== undefined && (
+        <span
+          key={flashId}
+          aria-hidden
+          className="change-flash"
+          style={{ animationDuration: `${CHANGE_FLASH_MS}ms` }}
+        />
+      )}
+
       {label.split('\n').map((line) => (
         <span key={line} className="max-w-full truncate">
           {line}

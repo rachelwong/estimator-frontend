@@ -16,9 +16,12 @@ export const PointSystemType = {
   FIBONACCI: "fibonacci",
 } as const;
 
+// REVEAL_VOTING is the Reveal for someone who can still change their estimate:
+// a click votes, and names open on hover instead (§6).
 export const GridMode = {
   INTERACTIVE: "interactive",
   READONLY: "readonly",
+  REVEAL_VOTING: "revealVoting",
 } as const;
 
 export const SessionConnectionStatus = {
@@ -259,6 +262,10 @@ export const YOUR_SQUARE_CLASS =
 // the one before it on the diagonal — (time index + resources index) × step.
 // About 1.5s end to end on a 7×7.
 export const REVEAL_WAVE_STEP_MS = 70;
+
+// How long a changed Square's rainbow ring shows on the Reveal (§8), with or
+// without reduced motion.
+export const CHANGE_FLASH_MS = 1400;
 
 // How much of an element counts as wholly on screen. Short of 1 because a
 // box sitting on a sub-pixel edge can report 0.998 and never reach it.

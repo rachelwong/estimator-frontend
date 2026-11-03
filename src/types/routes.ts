@@ -25,10 +25,13 @@ export interface RevealViewer {
 }
 
 // What EndedPage reads from its live connection. `reveal` is null until the
-// socket sends one, and REST's stands in.
+// socket sends one, and REST's stands in. `name` is the viewer's own, null for
+// a watcher; `canVote` needs both a name and a live socket.
 export interface EndedView {
   reveal: RevealPayload | null
   selection: Selection | null
+  name: string | null
+  canVote: boolean
   error: SessionError | null
   isLive: boolean
 }

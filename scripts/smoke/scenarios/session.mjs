@@ -183,11 +183,12 @@ export async function session({ browser, reporter }) {
   );
 
   // "Your Square": the tab that watched the Session end still knows its
-  // Selection. The Admin cleared theirs, so has none to mark.
+  // Selection. The Admin cleared theirs, so has none to mark. Fay can still
+  // vote here, so the label says so.
   check(
     "Your Square is marked for Fay",
     (await squareAriaLabel(fay, 4, 1)) ===
-      "Time 4, resources 1, Fay, your Selection",
+      "Time 4, resources 1, Fay, your Selection, click to vote",
   );
   check(
     "Your Square wears the ring",

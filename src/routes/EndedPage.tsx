@@ -5,13 +5,14 @@ import { PageLayout } from '@/components/PageLayout'
 import { RevealWindow } from '@/components/RevealWindow'
 import { SpriteScatter } from '@/components/SpriteScatter'
 import { StartSessionLink } from '@/components/StartSessionLink'
-import { useSessionConnection } from '@/hooks'
+import { useChangeFlash, useSessionConnection } from '@/hooks'
 import type { EndedLoaderData } from '@/types'
 import { endedView, revealChip } from '@/utils'
 
 // The Reveal screen (DESIGN.md §7). endedLoader's REST read draws it first;
 // the live connection endedLoader opened takes over once it sends a Reveal of
-// its own, since votes keep changing after the end.
+// its own, since votes keep changing after the end. Whoever can still vote
+// does it on the grid, and every change flashes on everyone else's screen.
 //
 // "Start a new session" sits in the header from tablet up and full width at
 // the bottom on mobile, as End does on Active. Everyone gets it — the artboard
@@ -20,8 +21,10 @@ import { endedView, revealChip } from '@/utils'
 export default function EndedPage() {
   const sessionId = useParams().sessionId!
   const { session, viewer } = useLoaderData() as EndedLoaderData
-  const { state, dismissError } = useSessionConnection(sessionId)
+  const { state, select, dismissError } = useSessionConnection(sessionId)
   const live = endedView(state)
+  const reveal = live.reveal ?? session.reveal
+  const flashes = useChangeFlash(reveal, live.name)
 
   return (
     <PageLayout actions={<StartSessionLink className="hidden text-[12px] tablet:inline-flex" />}>
@@ -30,8 +33,10 @@ export default function EndedPage() {
 
         <RevealWindow
           axisValues={session.pointSystem.axisValues}
-          reveal={live.reveal ?? session.reveal}
+          reveal={reveal}
           selection={live.selection}
+          onSelect={live.canVote ? ({ time, resource }) => select(time, resource) : undefined}
+          flashes={flashes}
           description={session.description}
           chip={revealChip(viewer)}
           isScreenHeading

@@ -22,6 +22,8 @@ export function endedView(state: SessionConnectionState): EndedView {
     return {
       reveal: state.reveal,
       selection: state.selection,
+      name: state.name,
+      canVote: state.isLive && state.name !== null,
       error: state.error,
       isLive: state.isLive,
     }
@@ -31,5 +33,12 @@ export function endedView(state: SessionConnectionState): EndedView {
     state.status === SessionConnectionStatus.CONNECTING ||
     state.status === SessionConnectionStatus.ACTIVE
 
-  return { reveal: null, selection: null, error: null, isLive: isOpening }
+  return {
+    reveal: null,
+    selection: null,
+    name: null,
+    canVote: false,
+    error: null,
+    isLive: isOpening,
+  }
 }

@@ -12,8 +12,12 @@ import { WhoLandedWhere } from "./WhoLandedWhere";
 interface RevealWindowProps {
   axisValues: number[];
   reveal?: RevealPayload;
-  /** The Square the viewer held when the Session ended, if this tab knows it. */
+  /** The Square the viewer holds, if this tab knows it. */
   selection: Selection | null;
+  /** For a viewer who can still vote: a click on the grid votes (§6). */
+  onSelect?: (selection: Selection) => void;
+  /** Squares someone just moved to, as squareKey → flash id (§7). */
+  flashes?: ReadonlyMap<string, number>;
   /** The ticket or task the Session estimated, when the admin gave one. */
   description?: string | null;
   /** The window's status chip: the viewer's role, when there is one. */
@@ -39,6 +43,8 @@ export function RevealWindow({
   axisValues,
   reveal,
   selection,
+  onSelect,
+  flashes,
   description = null,
   chip,
   initialPinned = null,
@@ -58,9 +64,11 @@ export function RevealWindow({
 
       <EstimationGrid
         axisValues={axisValues}
-        mode={GridMode.READONLY}
+        mode={onSelect ? GridMode.REVEAL_VOTING : GridMode.READONLY}
         selection={selection}
         reveal={reveal}
+        onSelect={onSelect}
+        flashes={flashes}
         hovered={hovered}
         onHoveredChange={setHovered}
         pinned={pinned}

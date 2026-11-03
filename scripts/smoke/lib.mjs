@@ -195,6 +195,21 @@ export async function openSquarePopover(page, time, resource) {
   return names
 }
 
+// The same for someone who can vote on the Reveal: a click there votes, so
+// names open on hover. Moving away closes them.
+export async function hoverSquarePopover(page, time, resource) {
+  const popover = page.getByRole('dialog')
+
+  await hoverCell(page, time, resource)
+  await popover.waitFor()
+  const names = await popover.locator('li').allInnerTexts()
+
+  await page.mouse.move(0, 0)
+  await popover.waitFor({ state: 'detached' })
+
+  return names
+}
+
 export function sameSquares(actual, expected) {
   const key = (squares) => squares.map((s) => s.join(':')).sort().join()
   return key(actual) === key(expected)

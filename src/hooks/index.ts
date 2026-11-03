@@ -1,4 +1,5 @@
 export * from './useBreakpoint'
+export * from './useChangeFlash'
 export * from './useCrowdChatter'
 export * from './useDelayedVisibility'
 export * from './useEscapeKey'

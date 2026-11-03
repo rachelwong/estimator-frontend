@@ -31,15 +31,15 @@ import type {
 } from '@/types'
 
 // Interactive: `selection` yellow for your own Selection, crowd-1 across its
-// Area. Readonly: the crowd ramp by headcount, no Areas, and a ring on the
-// Square you held when it ended.
+// Area. Revealed: the crowd ramp by headcount, no Areas, and a ring on the
+// Square you hold.
 export function squareFillClass(
   mode: GridModeValue,
   square: Selection,
   selection: Selection | null,
   names: string[],
 ): string {
-  if (mode === GridMode.READONLY) {
+  if (mode !== GridMode.INTERACTIVE) {
     const crowd = CROWD_CLASS[Math.min(names.length, CROWD_CLASS.length - 1)]
     return selection && isSameSquare(square, selection) ? `${crowd} ${YOUR_SQUARE_CLASS}` : crowd
   }
@@ -101,7 +101,7 @@ export function squareLabel(
 }
 
 // "Time 5, resources 3", then who is there in the Reveal, then whether it is
-// your Selection — the one you hold, or in the Reveal the one you held.
+// your Selection, then on a Reveal you can vote on, that a click votes.
 export function squareAriaLabel(
   mode: GridModeValue,
   square: Selection,
@@ -109,10 +109,11 @@ export function squareAriaLabel(
   names: string[],
 ): string {
   const position = `Time ${square.time}, resources ${square.resource}`
-  const who = mode === GridMode.READONLY ? `, ${names.length > 0 ? names.join(', ') : 'nobody'}` : ''
+  const who = mode !== GridMode.INTERACTIVE ? `, ${names.length > 0 ? names.join(', ') : 'nobody'}` : ''
   const yours = selection && isSameSquare(square, selection) ? ', your Selection' : ''
+  const vote = mode === GridMode.REVEAL_VOTING ? ', click to vote' : ''
 
-  return `${position}${who}${yours}`
+  return `${position}${who}${yours}${vote}`
 }
 
 // When a revealed Square starts arriving (§8): one step per diagonal from the
@@ -130,7 +131,8 @@ export function landedPeople(reveal?: RevealPayload): LandedPerson[] {
 }
 
 // Running: "Time 5 · Resources 3". Revealed: "T5 · R3 · Mia", or a count and a
-// pointer to the popover once there's a crowd.
+// pointer to the popover once there's a crowd. Where a click votes, the
+// popover opens on hover, so the pointer says so.
 export function tooltipText(mode: GridModeValue, square: Selection, names: string[]): string {
   if (mode === GridMode.INTERACTIVE) {
     return popoverTitle(square)
@@ -146,7 +148,8 @@ export function tooltipText(mode: GridModeValue, square: Selection, names: strin
     return `${position} · ${truncate(names[0], TOOLTIP_NAME_MAX_CHARS)}`
   }
 
-  return `${position} · ${names.length} people · click for names`
+  const gesture = mode === GridMode.REVEAL_VOTING ? 'hover' : 'click'
+  return `${position} · ${names.length} people · ${gesture} for names`
 }
 
 export function popoverTitle(square: Selection): string {
@@ -229,6 +232,27 @@ export function groupNames(reveal?: RevealPayload): Map<string, string[]> {
   })
 
   return new Map(entries ?? [])
+}
+
+// The Squares someone just moved to, for the change flash (§7): each one that
+// gained a name it didn't have. The viewer's own move doesn't count, so a
+// Square whose only new name is theirs stays still. A clear gains nothing.
+//
+//   before  2:3 [Ada, Bo]   4:1 [Cy]
+//   after   2:3 [Ada]       4:1 [Cy, Bo]   → ['4:1']  (Bo moved)
+export function changedSquares(
+  previous: RevealPayload,
+  next: RevealPayload,
+  ownName: string | null,
+): string[] {
+  const before = groupNames(previous)
+
+  return next.squares
+    .filter(({ time, resource, names }) => {
+      const had = before.get(squareKey(time, resource)) ?? []
+      return names.some((name) => name !== ownName && !had.includes(name))
+    })
+    .map(({ time, resource }) => squareKey(time, resource))
 }
 
 export function squareKey(time: number, resource: number): string {

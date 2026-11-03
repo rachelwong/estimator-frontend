@@ -177,6 +177,7 @@ axes share the same Axis values (`CONTEXT.md`).
 | Revealed       | Reveal                      | fill from the crowd ramp                                                                 |
 | Your Square    | Reveal                      | 3px `selection` outline inset 7px                                                        |
 | Pinned         | Reveal, popover open        | stays lifted                                                                             |
+| Changed        | Reveal, someone just moved here | rainbow ring, rolls once then fades (§8). Never on your own change          |
 
 Area never shows in the Reveal. Touch gets no hover-dependent affordance.
 
@@ -187,7 +188,15 @@ Area never shows in the Reveal. Touch gets no hover-dependent affordance.
 - Arrow keys move focus (roving `tabIndex`: 0 on the current Square, −1 on the
   rest). Enter/Space selects. Tab leaves the grid in one stop.
 - Every Square has an `aria-label`: "Time 5, resources 3", plus ", your
-  Selection", and in the Reveal the names or ", nobody".
+  Selection", and in the Reveal the names or ", nobody". On a Reveal you can
+  vote on, also ", click to vote".
+- **Voting on the Reveal.** Anyone who joined before the end, and the Admin,
+  can still change their estimate there. A click votes, exactly as on Active:
+  another Square moves it, your own Square clears it. Names move to hover:
+  hovering (or keyboard focus on) a Square with people opens its popover, and
+  leaving closes it. "Your team" chips still pin it. Touch has no hover, so a
+  voter on a phone reads names in the Squares and the chips. Someone who can't
+  vote (a latecomer, or a Participant who reloaded) clicks to pin, as before.
 
 ### Labels in the Reveal
 
@@ -207,10 +216,14 @@ inside the grid width. No arrow.
 - Active: `Time 5 · Resources 3`
 - Reveal: `T5 · R3 · nobody` / `T5 · R3 · Mia` / `T5 · R3 · 4 people · click for names`
   ("tap" on touch). Names in the tooltip cut at 14 characters.
+- Reveal you can vote on: only `T5 · R3 · nobody`. A Square with people opens
+  its popover on hover instead, so the two never overlap. Never "click for
+  names": any prompt says "hover".
 
 ### Popover (click, Reveal)
 
-Opens on any Square with at least one person.
+Opens on any Square with at least one person. On a Reveal you can vote on, it
+opens on hover or focus instead of click (§6 Interaction).
 
 - Ink box, `4px 4px 0 accent`, 210px wide (190 mobile), above the Square,
   clamped inside the grid.
@@ -336,6 +349,21 @@ the Admin ends the session and the Reveal shows everyone’s estimates."
 - The Session description, if any.
 - The grid, then "your team". No legend.
 - No visible heading and no h1: the window title and notice carry the screen.
+- **Live.** Estimates keep changing after the end, and every open Reveal shows
+  each change without a reload. Who can vote: §6 Interaction.
+- **Change flash.** The Square someone just moved to gets a rainbow ring (§8).
+  - A move flashes the Square joined, not the one left. A vote from Abstained
+    flashes the Square joined. A clear flashes nothing.
+  - Not on the voter's own screen, in any of their tabs. A latecomer has no
+    name, so sees every change.
+  - Grid Squares only. Chips don't flash. Nothing flashes on load or reload.
+  - A Square that changes again mid-flash starts over.
+  - Sits with "Your Square" and the hover lift without hiding them: the ring
+    is 3px inside the ink border, "Your Square" is 7px in.
+- **Live updates stopped.** If the connection drops, the last Reveal stays. A
+  white 3px-bordered note pinned bottom right (full width along the bottom on
+  mobile): "Live updates have stopped. Reload to see the latest estimates."
+  with Try again.
 
 ### Share session link (Active, Admin only)
 
@@ -463,6 +491,21 @@ Option C, "Pixel progress bar" (canvas: Spec · Loader options).
   styles. The animation declaration stays identical afterwards, so hover and
   popover re-renders don't replay it. The whole wave takes about 1.5s on a 7×7
   grid.
+
+- **Change flash** (Reveal): a 3px ring just inside the Square's border, a
+  conic gradient of `danger`, `selection`, chrome green, `accent` and back to
+  `danger`. It rolls one full turn, holds, then fades over its last 20%: 1.4s
+  in all. The reveal wave never replays on a change.
+
+  ```css
+  @keyframes ffChangeFlash {
+    0% { --flash-angle: 0deg; opacity: 1; }
+    80% { opacity: 1; }
+    100% { --flash-angle: 360deg; opacity: 0; }
+  }
+  ```
+
+  With reduced motion the same ring shows still, for the same 1.4s, then goes.
 
 - Square hover lift: `transform` and `box-shadow` 90ms; fills 120ms.
 - `prefers-reduced-motion: reduce` switches off all animation and transitions;
