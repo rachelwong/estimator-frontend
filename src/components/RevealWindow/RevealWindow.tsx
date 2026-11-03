@@ -22,7 +22,7 @@ interface RevealWindowProps {
   initialPinned?: Selection | null;
   /** Welcome's demo: the wave waits until the grid is wholly on screen. */
   holdsWaveUntilInView?: boolean;
-  /** True on the Reveal screen, where "The Reveal" is the page's h1. */
+  /** True on the Reveal screen, which has no h1, so its headings start at h2. */
   isScreenHeading?: boolean;
   /** Anything the page adds under the chips, like the mobile "Start a new session". */
   children?: ReactNode;

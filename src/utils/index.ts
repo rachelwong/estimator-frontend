@@ -1,3 +1,4 @@
+export * from './analytics'
 export * from './dither'
 export * from './grid'
 export * from './logoValues'

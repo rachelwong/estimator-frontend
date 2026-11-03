@@ -537,7 +537,7 @@ export const WELCOME_DEMO_PINNED: Selection = { time: 5, resource: 3 };
 
 // The sample Session's ticket, so the demo Reveal reads like a real one.
 export const WELCOME_DEMO_DESCRIPTION =
-  "Add a demo description to this feature here  https://github.com/rachelwong/estimator-frontend";
+  "Add a demo description to this feature here https://github.com/rachelwong/estimator-frontend";
 
 // What the crowd in the closing band says when someone hovers one of them — the
 // easter egg. A random line each time, never the same one twice running. Keep
