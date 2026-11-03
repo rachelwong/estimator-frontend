@@ -179,6 +179,19 @@ export async function squareAriaLabel(page, time, resource) {
   return (await cell(page, time, resource)).getAttribute('aria-label')
 }
 
+// Whether a Square wears the Reveal's change flash (the rainbow ring) right
+// now, and how many Squares on the page do.
+export async function isFlashing(page, time, resource) {
+  const square = await cell(page, time, resource)
+  const flashes = await square.locator('.change-flash').count()
+
+  return flashes > 0
+}
+
+export function flashCount(page) {
+  return page.locator('main [data-square] .change-flash').count()
+}
+
 // Opens a revealed Square's popover and returns the names listed in it.
 // Clicking again closes it, so each call opens, reads and closes.
 export async function openSquarePopover(page, time, resource) {

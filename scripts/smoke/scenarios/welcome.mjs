@@ -48,7 +48,14 @@ export async function welcome({ browser, reporter }) {
   );
   check(
     "Demo is the real Reveal window",
-    await desktop.getByText("Estimating is done!").isVisible(),
+    await desktop.getByText("All estimates are now revealed!").isVisible(),
+  );
+  // The demo can't vote, so its notice says hover, not click.
+  check(
+    "Demo notice uses its own hover wording",
+    await desktop
+      .getByText("Hover over the grid to see how everyone estimated.")
+      .isVisible(),
   );
   // innerText collapses the constant's double space to one.
   check(

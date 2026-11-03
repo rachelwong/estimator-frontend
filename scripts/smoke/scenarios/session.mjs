@@ -172,7 +172,7 @@ export async function session({ browser, reporter }) {
     "No error banner after ending",
     (await admin.getByRole("alert").count()) === 0,
   );
-  await fay.getByText("Estimating is done!").waitFor();
+  await fay.getByText("All estimates are now revealed!").waitFor();
   check(
     "Chip row label is an h2",
     await fay.getByRole("heading", { name: "your team", level: 2 }).isVisible(),
@@ -188,7 +188,7 @@ export async function session({ browser, reporter }) {
   check(
     "Your Square is marked for Fay",
     (await squareAriaLabel(fay, 4, 1)) ===
-      "Time 4, resources 1, Fay, your Selection, click to vote",
+      "Time 4, resources 1, Fay, your Selection, click to change your Estimate",
   );
   check(
     "Your Square wears the ring",
@@ -253,7 +253,7 @@ export async function session({ browser, reporter }) {
   await ticketTab.close();
 
   await fay.reload();
-  await fay.getByText("Estimating is done!").waitFor();
+  await fay.getByText("All estimates are now revealed!").waitFor();
   check(
     "A refresh forgets Your Square",
     (await fay
@@ -288,7 +288,7 @@ export async function session({ browser, reporter }) {
 
   await fresh.goto(`${APP}/${sessionId}`);
   await fresh.waitForURL(/\/ended$/);
-  await fresh.getByText("Estimating is done!").waitFor();
+  await fresh.getByText("All estimates are now revealed!").waitFor();
   await fresh.waitForTimeout(500);
 
   check(
@@ -311,8 +311,8 @@ export async function session({ browser, reporter }) {
     await fresh.getByText("the reveal", { exact: true }).isVisible(),
   );
   check(
-    "Notice says Estimating is done!",
-    await fresh.getByText("Estimating is done!").isVisible(),
+    "Notice says All estimates are now revealed!",
+    await fresh.getByText("All estimates are now revealed!").isVisible(),
   );
   check(
     "A fresh visitor has no role chip",

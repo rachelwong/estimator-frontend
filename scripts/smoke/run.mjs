@@ -7,13 +7,14 @@
 // Needs both dev servers up: backend on :3001, frontend on :5173.
 import { chromium } from 'playwright'
 import { API, APP, createReporter } from './lib.mjs'
+import { afterReveal } from './scenarios/afterReveal.mjs'
 import { create } from './scenarios/create.mjs'
 import { join } from './scenarios/join.mjs'
 import { routing } from './scenarios/routing.mjs'
 import { session } from './scenarios/session.mjs'
 import { welcome } from './scenarios/welcome.mjs'
 
-const SCENARIOS = { welcome, create, routing, join, session }
+const SCENARIOS = { welcome, create, routing, join, session, afterReveal }
 
 const requested = process.argv.slice(2)
 const unknown = requested.filter((name) => !(name in SCENARIOS))

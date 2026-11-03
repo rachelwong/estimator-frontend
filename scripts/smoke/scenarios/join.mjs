@@ -97,7 +97,7 @@ export async function join({ browser, reporter }) {
   check('Participant moves to /ended', await landsOn(page, /\/ended$/))
   sockets.close()
 
-  await page.getByText('Estimating is done!').waitFor()
+  await page.getByText('All estimates are now revealed!').waitFor()
   await page.mouse.move(0, 0)
   check('Crowded Square counts the people', ['3\npeople', '×3'].includes(await cellText(page, 1, 1)))
   // A live Participant can still vote here, so a click would vote. Names open on hover.
