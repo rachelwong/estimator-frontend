@@ -35,7 +35,7 @@ export function HouseRulesSection() {
         <HouseRule
           sprite={ruleChange}
           title="Change your mind"
-          description="When the session is active, you can change your Estimate on the Grid. Click on the same one to clear your selection."
+          description="Admin and users can change their estimates any time. Once a session has been revealed though, no latecomers can join the session to add their estimates"
         />
         <HouseRule
           sprite={ruleAxes}

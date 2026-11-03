@@ -329,6 +329,13 @@ export const WINDOW_VARIANT_CLASS = {
 // sent back to /join — and an Admin reconnects as the Admin, Selection intact.
 // The screen also stands in for a backend that can't be reached at all, which
 // on a free host is usually one still waking up.
+// The Reveal notice's body (§7). Everyone on the Reveal, latecomers too, reads
+// LIVE. Welcome's demo can't vote, so it gets its own line.
+export const REVEAL_NOTICE_BODY = {
+  LIVE: "Explore the grid to see how everyone estimated, click anywhere on the grid to change your estimate again. Latecomers to this session can see the estimates but they can't add their vote.",
+  DEMO: "Hover over the grid to see how everyone estimated.",
+} as const;
+
 export const ERROR_SCREEN_COPY = {
   NOT_FOUND: {
     label: "Sorry, please try again",

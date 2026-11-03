@@ -111,7 +111,7 @@ export function squareAriaLabel(
   const position = `Time ${square.time}, resources ${square.resource}`
   const who = mode !== GridMode.INTERACTIVE ? `, ${names.length > 0 ? names.join(', ') : 'nobody'}` : ''
   const yours = selection && isSameSquare(square, selection) ? ', your Selection' : ''
-  const vote = mode === GridMode.REVEAL_VOTING ? ', click to vote' : ''
+  const vote = mode === GridMode.REVEAL_VOTING ? ', click to change your Estimate' : ''
 
   return `${position}${who}${yours}${vote}`
 }
@@ -131,7 +131,8 @@ export function landedPeople(reveal?: RevealPayload): LandedPerson[] {
 }
 
 // Running: "Time 5 · Resources 3". Revealed: "T5 · R3 · Mia", or a count and a
-// pointer to the popover once there's a crowd. Where a click votes, the
+// pointer to the popover once there's a crowd. An empty revealed Square gets
+// no tooltip, so has no text here. Where a click votes, the
 // popover opens on hover, so the pointer says so.
 export function tooltipText(mode: GridModeValue, square: Selection, names: string[]): string {
   if (mode === GridMode.INTERACTIVE) {
@@ -139,10 +140,6 @@ export function tooltipText(mode: GridModeValue, square: Selection, names: strin
   }
 
   const position = `T${square.time} · R${square.resource}`
-
-  if (names.length === 0) {
-    return `${position} · nobody`
-  }
 
   if (names.length < CROWDED_SQUARE_MINIMUM) {
     return `${position} · ${truncate(names[0], TOOLTIP_NAME_MAX_CHARS)}`

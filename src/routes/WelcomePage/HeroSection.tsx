@@ -1,6 +1,7 @@
 import { RevealWindow } from "@/components/RevealWindow";
 import { Button } from "@/components/ui/button";
 import {
+  REVEAL_NOTICE_BODY,
   WELCOME_DEMO_AXIS_VALUES,
   WELCOME_DEMO_DESCRIPTION,
   WELCOME_DEMO_PINNED,
@@ -66,6 +67,7 @@ export function HeroSection() {
           selection={null}
           description={WELCOME_DEMO_DESCRIPTION}
           initialPinned={WELCOME_DEMO_PINNED}
+          noticeBody={REVEAL_NOTICE_BODY.DEMO}
           holdsWaveUntilInView
         />
       </div>

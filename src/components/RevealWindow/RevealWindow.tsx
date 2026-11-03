@@ -1,7 +1,7 @@
 import { EstimationGrid } from "@/components/EstimationGrid";
 import { SessionDescription } from "@/components/SessionDescription";
 import { Window } from "@/components/Window";
-import { GridMode, WindowVariant } from "@/constants";
+import { GridMode, REVEAL_NOTICE_BODY, WindowVariant } from "@/constants";
 import type { HoveredSquare, RevealPayload, Selection } from "@/types";
 import { landedPeople } from "@/utils";
 import type { ReactNode } from "react";
@@ -24,6 +24,8 @@ interface RevealWindowProps {
   chip?: string;
   /** A Square whose popover is open from the start. */
   initialPinned?: Selection | null;
+  /** The dark notice's body. Welcome's demo can't vote, so it says so. */
+  noticeBody?: string;
   /** Welcome's demo: the wave waits until the grid is wholly on screen. */
   holdsWaveUntilInView?: boolean;
   /** True on the Reveal screen, which has no h1, so its headings start at h2. */
@@ -48,6 +50,7 @@ export function RevealWindow({
   description = null,
   chip,
   initialPinned = null,
+  noticeBody = REVEAL_NOTICE_BODY.LIVE,
   holdsWaveUntilInView = false,
   isScreenHeading = false,
   children,
@@ -58,7 +61,7 @@ export function RevealWindow({
 
   return (
     <Window title="the reveal" variant={WindowVariant.SESSION} chip={chip}>
-      <RevealNotice />
+      <RevealNotice body={noticeBody} />
 
       <SessionDescription description={description} />
 

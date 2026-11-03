@@ -85,9 +85,9 @@ export function HowToUseSection() {
           sprite={avatar}
           tintClass="bg-crowd-0"
         >
-          The hard part. Talk through the highest and lowest estimates. Ask the
-          hard questions to flag uncertainties, dependencies earlier. <br />
-          <strong>And start another session for the next task.</strong>
+          Talk through everyone's estimates, ask hard questions to flag
+          uncertainties and dependencies. The best thing is the team can change
+          their estimates!
         </HowToUseCard>
       </ol>
     </section>

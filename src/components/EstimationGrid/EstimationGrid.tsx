@@ -122,7 +122,13 @@ export function EstimationGrid({
   const popoverSquare = isHoveringNames ? hoveredSquare : shownPinned
   const isHoveringPopover =
     hoveredSquare !== null && popoverSquare !== null && isSameSquare(popoverSquare, hoveredSquare)
-  const tooltipSquare = isHoveringPopover ? null : hoveredSquare
+  // Revealed, an empty Square has nothing to say: no tooltip, whether reached
+  // by mouse or keyboard. Voting, a Square with people has its popover
+  // instead, so no tooltip shows at all.
+  const isHoveringEmpty =
+    !isInteractive && hoveredSquare !== null && namesAt(hoveredSquare).length === 0
+  const hasNoTooltip = isHoveringPopover || isHoveringEmpty || isVoting
+  const tooltipSquare = hasNoTooltip ? null : hoveredSquare
 
   const template = `repeat(${axisValues.length}, ${size}px)`
 
