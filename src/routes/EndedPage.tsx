@@ -38,11 +38,11 @@ export default function EndedPage() {
         >
           {live.error && <ErrorBanner error={live.error} onDismiss={dismissError} />}
 
-          {!live.isLive && <LiveUpdatesStopped />}
-
           <StartSessionLink className="h-[52px] w-full text-[14px] tablet:hidden" />
         </RevealWindow>
       </div>
+
+      {!live.isLive && <LiveUpdatesStopped />}
     </PageLayout>
   )
 }
