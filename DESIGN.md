@@ -189,7 +189,7 @@ Area never shows in the Reveal. Touch gets no hover-dependent affordance.
   rest). Enter/Space selects. Tab leaves the grid in one stop.
 - Every Square has an `aria-label`: "Time 5, resources 3", plus ", your
   Selection", and in the Reveal the names or ", nobody". On a Reveal you can
-  vote on, also ", click to vote".
+  vote on, also ", click to change your Estimate".
 - **Voting on the Reveal.** Anyone who joined before the end, and the Admin,
   can still change their estimate there. A click votes, exactly as on Active:
   another Square moves it, your own Square clears it. Names move to hover:
@@ -214,11 +214,12 @@ Ink box, cream Silkscreen 11px, 8×11px padding, 12px above the Square, clamped
 inside the grid width. No arrow.
 
 - Active: `Time 5 · Resources 3`
-- Reveal: `T5 · R3 · nobody` / `T5 · R3 · Mia` / `T5 · R3 · 4 people · click for names`
-  ("tap" on touch). Names in the tooltip cut at 14 characters.
-- Reveal you can vote on: only `T5 · R3 · nobody`. A Square with people opens
-  its popover on hover instead, so the two never overlap. Never "click for
-  names": any prompt says "hover".
+- Reveal: `T5 · R3 · Mia` / `T5 · R3 · 4 people · click for names` ("tap" on
+  touch). Names in the tooltip cut at 14 characters. An empty Square gets no
+  tooltip, by mouse or keyboard.
+- Reveal you can vote on: no tooltip at all. A Square with people opens its
+  popover on hover instead, so the two never overlap. Never "click for names":
+  any prompt says "hover".
 
 ### Popover (click, Reveal)
 
@@ -343,9 +344,12 @@ the Admin ends the session and the Reveal shows everyone’s estimates."
 - Header offers "Start a new session" to everyone (tablet up; full width at the
   bottom of the window on mobile). No share bar.
 - Window title "the reveal".
-- Dark notice (ink, 4px accent shadow, cream spade): **Estimating is done!** —
-  "Select a square on the grid to see each estimate. The darker the square, the
-  more people have voted the same."
+- Dark notice (ink, 4px accent shadow, cream spade): **All estimates are now
+  revealed!** — "Explore the grid to see how everyone estimated, click anywhere
+  on the grid to change your estimate again. Latecomers to this session can see
+  the estimates but they can't add their vote." One wording for everyone,
+  latecomers included. Welcome's demo can't vote, so its notice reads "Hover
+  over the grid to see how everyone estimated."
 - The Session description, if any.
 - The grid, then "your team". No legend.
 - No visible heading and no h1: the window title and notice carry the screen.

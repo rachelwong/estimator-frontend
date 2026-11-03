@@ -48,7 +48,7 @@ _Avoid_: Cell, box, tile, point
 The one Square a Participant is currently holding, or none. Picking a different
 Square moves it. Picking the same Square again clears it. Two names for the same
 thing: **Estimate is the display term** — what the UI says to a Participant
-("Make your Estimate", "your team", "Estimating is done!") — and Selection
+("Make your Estimate", "your team", "All estimates are now revealed!") — and Selection
 is the structural one, used in code, in the data model, and in copy about the
 mechanics of holding and clearing a Square ("clear your selection").
 _Avoid_: choice, guess, answer, vote
@@ -63,7 +63,9 @@ _Avoid_: Region, range, footprint
 
 **Reveal**:
 What everyone sees once the Session ends — every Square with the names of the
-Participants who chose it, plus the Abstained list.
+Participants who chose it, plus the Abstained list. It stays live: the Admin,
+and any Participant whose tab saw the end, can still change their Estimate
+there, and every open Reveal shows it. Nobody new can join.
 _Avoid_: Results, summary, outcome, tally
 
 **Abstained**:

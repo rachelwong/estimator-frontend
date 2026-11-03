@@ -273,6 +273,10 @@ URLs, not credentials. Nothing secret can ever go in a `VITE_*` variable.
 
 - **Any backend deploy wipes every Session.** State is in memory only. Push
   backend changes when nobody is mid-Session.
+- **Sessions expire by themselves too.** A Session's link stops working 1 hour
+  after the reveal (or after the last Estimate change on the Reveal, if later),
+  or 1.5 hours after an open Session was last opened, joined or voted in. It
+  then reads as "not found". Mirrors the backend's `DEPLOYMENT.md`.
 - **Slow loads or dropped Sessions?** Check the cron job's history first. A
   paused or failing job means Render is sleeping again.
 - **Rollback.** Vercel: Deployments → earlier build → Promote to Production.
