@@ -19,7 +19,6 @@ import {
   landsOn,
   openSquarePopover,
   opensSafelyInNewTab,
-  pageHeadings,
   revealed,
   sameSquares,
   selectSquare,
@@ -173,13 +172,9 @@ export async function session({ browser, reporter }) {
     "No error banner after ending",
     (await admin.getByRole("alert").count()) === 0,
   );
-  await fay.getByRole("heading", { name: "The Reveal" }).waitFor();
+  await fay.getByText("Estimating is done!").waitFor();
   check(
-    "The Reveal is the one h1",
-    (await pageHeadings(fay)).join() === "The Reveal",
-  );
-  check(
-    "Chip row label sits under it",
+    "Chip row label is an h2",
     await fay.getByRole("heading", { name: "your team", level: 2 }).isVisible(),
   );
   check(
@@ -257,7 +252,7 @@ export async function session({ browser, reporter }) {
   await ticketTab.close();
 
   await fay.reload();
-  await fay.getByRole("heading", { name: "The Reveal" }).waitFor();
+  await fay.getByText("Estimating is done!").waitFor();
   check(
     "A refresh forgets Your Square",
     (await fay
@@ -284,7 +279,7 @@ export async function session({ browser, reporter }) {
 
   await fresh.goto(`${APP}/${sessionId}`);
   await fresh.waitForURL(/\/ended$/);
-  await fresh.getByRole("heading", { name: "The Reveal" }).waitFor();
+  await fresh.getByText("Estimating is done!").waitFor();
   await fresh.waitForTimeout(500);
 
   check(

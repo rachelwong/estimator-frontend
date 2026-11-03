@@ -97,7 +97,7 @@ export async function join({ browser, reporter }) {
   check('Participant moves to /ended', await landsOn(page, /\/ended$/))
   sockets.close()
 
-  await page.getByRole('heading', { name: 'The Reveal' }).waitFor()
+  await page.getByText('Estimating is done!').waitFor()
   await page.mouse.move(0, 0)
   check('Crowded Square counts the people', ['3\npeople', '×3'].includes(await cellText(page, 1, 1)))
   const names = (await openSquarePopover(page, 1, 1)).sort()

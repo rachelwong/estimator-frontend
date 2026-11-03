@@ -33,12 +33,6 @@ export async function welcome({ browser, reporter }) {
     welcomeHeadings.length === 1 && /ship together/.test(welcomeHeadings[0]),
     welcomeHeadings.join(" | "),
   );
-  check(
-    "Demo Reveal heading sits under it",
-    await desktop
-      .getByRole("heading", { name: "The Reveal", level: 2 })
-      .isVisible(),
-  );
 
   // The hero's Reveal is pinned on its crowded Square, but holds its wave, and
   // the popover with it, until the whole grid is on screen.
@@ -56,10 +50,11 @@ export async function welcome({ browser, reporter }) {
     "Demo is the real Reveal window",
     await desktop.getByText("Estimating is done!").isVisible(),
   );
+  // innerText collapses the constant's double space to one.
   check(
     "Demo Reveal shows the demo description",
     (await descriptionBlock(desktop).innerText()) ===
-      `Add a demo description to this feature here  ${FRONTEND_REPO}`,
+      `Add a demo description to this feature here ${FRONTEND_REPO}`,
   );
   check(
     "Demo description links to the repo in a new tab",
