@@ -47,7 +47,7 @@ All corners are square. Text on every fill below meets WCAG AA for its size.
 | `white`        | `#FFFFFF` | Windows, cards, inputs, secondary buttons                                          |
 | `text-muted`   | `#3E3852` | Body copy on cream/white                                                           |
 | `text-subtle`  | `#5B5570` | Secondary labels, Abstained chip border                                            |
-| `accent`       | `#6A4FF0` | Window title bars, "Nobody peeks.", active axis label, CTA band (white text on it) |
+| `accent`       | `#6A4FF0` | Window title bars, "ship together", active axis label, CTA band (white text on it) |
 | `page-top`     | `#DCD3FB` | Top of the Welcome page, share bar                                                 |
 | `selection`    | `#FFC53D` | The Participant's own Selection, primary buttons (ink text)                        |
 | `danger`       | `#FF5A5F` | End session & reveal (ink text)                                                    |
@@ -93,7 +93,7 @@ All three are free on Google Fonts.
 | Section heading (h2)            | 44      | 36     | 27     |
 | Card / sub heading (h3)         | 20      | 19     | 17     |
 | CTA band heading                | 41      | 31     | 23     |
-| Screen heading (Active, Reveal) | 27      | 27     | 20     |
+| Screen heading (Active)         | 27      | 27     | 20     |
 | Screen heading (Create)         | 28      | 28     | 20     |
 | Screen heading (Join)           | 30      | 30     | 22     |
 | Wordmark in header              | 16–19   | 16–19  | 12–13  |
@@ -220,12 +220,21 @@ Opens on any Square with at least one person.
   "+ N more".
 - No close button. Click the same Square again, or press Esc, to close.
 
-### "Who landed where" (Reveal)
+### "Your team" chips (Reveal)
 
-Under a 2px dashed ink rule, Silkscreen label "who landed where", then wrapping
-chips: Figtree 14/700, 36px tall, names only (no Time/Resources values).
-Hovering a chip previews its Square; clicking pins its popover. Abstained
-Participants follow with a dashed chip and "Abstained" in `abstained` red.
+Under a 2px dashed ink rule, Silkscreen label "your team" (an h2 on the Reveal
+screen, h3 in the Welcome demo), then wrapping chips: Figtree 14/700, 36px
+tall, names only (no Time/Resources values). Hovering a chip previews its
+Square; clicking pins its popover. Abstained Participants follow with a dashed
+chip and "Abstained" in `abstained` red.
+
+### Session description (Join, Active, Reveal)
+
+The ticket or task the Admin typed on Create, shown under the screen heading
+(under the dark notice on the Reveal). Figtree 15/500 (16 from tablet), `ink`,
+centred. Any URL in it becomes a bold `accent` underlined link that opens in a
+new tab. Rendered as text, never HTML. Nothing at all when the Admin left it
+blank.
 
 ---
 
@@ -233,46 +242,60 @@ Participants follow with a dashed chip and "Abstained" in `abstained` red.
 
 ### Welcome (`/welcome`)
 
-1. Header — logo, "How to use", GitHub,
-   "Start a session" (mobile: logo + Menu button).
-2. Hero on `page-top` — Silkscreen badge "Planning poker, without the poker
-   face", Bungee hero "Everyone plays a hand. / Nobody peeks." (second line in
-   `accent`), paragraph, Start a session + How to use.
-3. Hero demo — the real Reveal window (notice, heading, grid with a lifted
-   Square and open popover, "who landed where" chips), 780px max.
+1. Header — logo, "How to use", GitHub (desktop only, jumps to Why I made
+   this), the Feedback tile, "Start a session". Mobile: logo + an icon-only
+   menu button.
+2. Hero on `page-top` — Silkscreen badge "Planning poker for agile product
+   teams", Bungee hero "Teams who / estimate together / ship together" (last
+   line in `accent`), paragraph, Start a session + How to use.
+3. Hero demo — the real Reveal window (notice, a sample description, grid with
+   a lifted Square and open popover, "your team" chips), 780px max.
 4. Pixel-dither glow — `page-top` breaks into 2px pixels (Bayer 4×4 ordered
    dither) that glow down into cream: 160px deep at the centre, shallower
    towards the sides along a half-ellipse 120% of the page wide, just before
    How to use.
-5. How to use — four cards LV.1–LV.4: Start a session / Pull up a chair /
-   Hands down / The Reveal. 4 → 2 → 1 columns.
-6. Why I made this — a zine spread. Heading on a 3px ink rule with the
-   Silkscreen caption "notes from the maker" opposite. Three placeholder notes
-   (the problem / the idea / the build), each a Silkscreen label on a 3px
-   `accent` rule over a paragraph, split by 2px ink rules: 3 columns on desktop;
-   problem and idea side by side with the build across the bottom on tablet;
-   stacked on mobile. Below, a white "read the source" bar (Card border and
-   shadow) with the sign-off and "Frontend on GitHub" (yellow) + "Backend on
-   GitHub" (white): one row on desktop; buttons side by side under the text on
-   tablet; stacked on mobile.
-7. House rules — six feature cards. 3 → 2 → 1 columns.
-8. CTA band in `accent` — "Round up the team." + Start a session, with pixel
-   characters.
+5. How to use — an intro paragraph, then four cards LV.1–LV.4: Start a
+   session / Cards down / The Flip / Talk it through. 4 → 2 → 1 columns.
+6. Why I made this — centred heading, then "Frontend on GitHub" (yellow) +
+   "Backend on GitHub" (white) buttons: one row on desktop, side by side on
+   tablet, stacked on mobile. Below, three notes (the experience / the idea /
+   the build), each a Silkscreen label over a paragraph, split by 2px ink
+   rules: 3 columns on desktop; the first two side by side with the build
+   across the bottom on tablet; stacked on mobile.
+7. House rules — six feature cards: Live, but private / No sign-up / Unique
+   link / Change your mind / Two axes, one grid / Nothing is kept.
+   3 → 2 → 1 columns.
+8. CTA band in `accent` — "Flip the points / Align the team" + Start a
+   session, with pixel characters.
 9. Footer.
 
-**Mobile menu:** the Menu button (3-bar icon) becomes a yellow "Close" button.
-An ink 45% backdrop covers the page below the header; a window titled "menu"
-drops in 12px from the edges with 60px rows (sprite + label + →) separated by
-2px dashed ink: How to use · Why I made this ·
-Frontend on GitHub · Backend on GitHub, then a full-width Start a session.
-Tapping the backdrop closes it.
+**Mobile menu:** the 44px icon-only menu button (3-bar icon) turns yellow,
+drops its shadow and shows a pixel cross while open; its accessible name is
+"Open menu" / "Close menu". An ink 45% backdrop covers the page below the
+header; a window titled "menu" drops in 12px from the edges with 60px rows
+(sprite + label + →) separated by 2px dashed ink: How to use · Why I made this
+· GitHub ("Frontend & backend repositories") · Feedback (new tab), then a
+full-width Start a session. Tapping the backdrop or a row, or pressing Esc,
+closes it.
+
+### Header (every screen but Welcome)
+
+Logo on the left; on the right the Feedback tile, then the screen's own
+actions. The Feedback tile is a 44px white tile with the pixel bug that opens
+LinkedIn in a new tab; on hover or focus the bug bursts into confetti and a
+Silkscreen "Feedback" label appears beneath.
 
 ### Create (`/new`)
 
 Window "new-session", chip "Admin".
 
-- "New session" + one line explaining the Admin role.
-- Name (input).
+- "New session" + one line explaining the Admin role (14px).
+- Name (input, placeholder "e.g. Rachel").
+- Ticket or task description (input, optional, placeholder "Optional, e.g.
+  PROJ-12 https://…"). A Silkscreen 12px `text-subtle` counter sits opposite
+  the label, `n/300`, counted after trimming and collapsing whitespace. Past 300
+  it shows "Keep description to 300 characters or fewer." and Create session
+  waits.
 - Point system: two-up segmented buttons, Numerical / Fibonacci; the active one
   fills `accent` with a 4px shadow.
 - Highest axis value: value in Bungee `accent` beside the label; pixel slider
@@ -285,32 +308,36 @@ No grid preview.
 
 ### Join (`/:id/join`)
 
-Window "join · <session>", chip "Participant". Only: "Join session" heading,
-one input labelled "Name" (placeholder "e.g. Rachel"), Join session button, and
-a `crowd-0` note: "Your estimate stays private until the Admin ends the session and the Reveal shows
-everyone’s estimates."
+Window "join", chip "Participant". Only: "Join session" heading, the Session
+description (if any), one input labelled "Name" (placeholder "e.g. Rachel"),
+Join session button, and a `crowd-0` note: "Your estimate stays private until
+the Admin ends the session and the Reveal shows everyone’s estimates."
 
 ### Active (`/:id/start`)
 
-- Header: logo · Share control (per option below) · End session & reveal
-  (Admin, `danger`). On mobile the End button moves to full width under the grid.
-- Window title "<session> · live", chip "Admin" / "Participant".
-- Heading "Make your Estimate" → "Hand's down." once there's a Selection, with a
-  one-line hint.
+- Header: logo · Feedback · End session & reveal (Admin, `danger`). On mobile
+  the End button moves to full width under the grid.
+- Share bar under the header, Admin only (option below).
+- Window title "live", chip "Admin" / "Participant".
+- Heading "Make your Estimate", with a 14px hint: "Time runs across, Resources
+  go up. Your estimate stays private until the Reveal."
+- The Session description, if any.
 - The grid.
 - No Participant count, no footer hint line.
 
 ### Reveal (`/:id/ended`)
 
-- Admin header offers "Start a new session".
+- Header offers "Start a new session" to everyone (tablet up; full width at the
+  bottom of the window on mobile). No share bar.
 - Window title "the reveal".
-- Dark notice (ink, 4px accent shadow, cream spade): **Selections are closed** —
-  "The Admin ended this session, so every Selection is locked in. Pick a Square
-  to see who landed there."
-- Heading "The Reveal", hint "Darker Squares are where more people landed."
-- The grid, then "who landed where". No legend.
+- Dark notice (ink, 4px accent shadow, cream spade): **Estimating is done!** —
+  "Select a square on the grid to see each estimate. The darker the square, the
+  more people have voted the same."
+- The Session description, if any.
+- The grid, then "your team". No legend.
+- No visible heading and no h1: the window title and notice carry the screen.
 
-### Share session link (Active and Reveal)
+### Share session link (Active, Admin only)
 
 Three designed options; **bar** is the default.
 
@@ -328,7 +355,7 @@ Copy feedback: the button fills `copied` and reads "Copied!" for 1.6s.
 Option C, "Broken grid" (canvas: Error · C). One layout for all three errors;
 only the copy changes.
 
-- Header: logo only.
+- Header: logo and the Feedback tile.
 - A window (900 / 740 / 366 wide) titled with the error in Silkscreen
   ("session not found", "connection lost", "something went wrong"), chip
   "error".
@@ -475,15 +502,11 @@ Option C, "Pixel progress bar" (canvas: Spec · Loader options).
 - Never: vote/voting, player, dealer, host, results, tally, cell, choice.
   Crowds are "3 people", not "3 estimates".
 - Time and Resources are labels, not units — no hours or days anywhere.
-- Poker is metaphor for headlines only ("Everyone plays a hand", "Hands
-  down"); functional labels use the CONTEXT terms.
+- Poker is metaphor for headlines only ("Cards down", "The Flip", "Flip the
+  points"); functional labels use the CONTEXT terms.
 
-### Placeholders still to fill
-
-- All Welcome copy is provisional until you supply it (only
-  `docs/features/intro-page.md` is sanctioned text today).
-- "Why I made this" — three paragraphs and a sign-off, marked as placeholders.
-- Repo links — `github.com/[you]/estimator-frontend` and `…/estimator-backend`.
+Welcome copy, the "Why I made this" notes and both repo links are written and
+live in the code; none is a placeholder any more.
 
 ---
 
@@ -536,11 +559,7 @@ The build sequence is [`docs/plans/fold-and-flip.md`](docs/plans/fold-and-flip.m
 
 ### Still open
 
-- **Copy.** Welcome copy is placeholder until supplied (only
-  `docs/features/intro-page.md` is sanctioned). "Why I made this" text and the
-  GitHub handle for both repo links are still needed.
-
-That is the only one.
+Nothing. The copy that was open here is now written (§10).
 
 ### Settled
 
