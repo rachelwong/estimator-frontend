@@ -165,10 +165,14 @@ stateDiagram-v2
     active --> active: selection-acknowledged / error / dismiss
     active --> ended: session-ended
     active --> disconnected: disconnect
+    ended --> ended: admin-acknowledged / selection-changed / reveal-updated / error / dismiss / disconnect (not live)
 ```
 
-`active`, `rejected`, `disconnected` and `ended` are terminal apart from
-`active`'s self-transitions. A fresh connection is the only way out.
+`rejected` and `disconnected` are terminal. `ended` stays live: votes after
+the end keep the Reveal changing (see the backend's
+`docs/features/change-estimate-after-reveal.md`). A disconnect there only marks
+it not live, and the last Reveal stays on screen. A fresh connection is the
+only way out of a terminal state, or of a dropped `ended`.
 
 ```ts
 // src/constants.ts
@@ -510,7 +514,8 @@ interpreted on the way in.
 | `joined` | `IDENTITY_ACKED` (`isAdmin: false`) |
 | `admin-acknowledged` | `IDENTITY_ACKED` (`isAdmin: true`) |
 | `selection-acknowledged` | `SELECTION_ACKED` |
-| `session-ended` | `SESSION_ENDED` — payload dropped, `/ended` refetches over REST |
+| `session-ended` | `SESSION_ENDED` — carries the Reveal |
+| `reveal-updated` | `REVEAL_UPDATED` — a vote after the end |
 | `error` | `ERROR_RECEIVED` |
 | `disconnect` | `DISCONNECTED` |
 | `connect_error` | `DISCONNECTED` |

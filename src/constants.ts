@@ -37,6 +37,7 @@ export const SessionAction = {
   ERROR_DISMISSED: "errorDismissed",
   DISCONNECTED: "disconnected",
   SESSION_ENDED: "sessionEnded",
+  REVEAL_UPDATED: "revealUpdated",
 } as const;
 
 // Mirrors estimator-backend/src/errors.ts. Keys are ALL_CAPS here, which is a
@@ -65,6 +66,7 @@ export const WebSocketEvent = {
   ADMIN_ACKNOWLEDGED: "admin-acknowledged",
   SELECTION_CHANGED: "selection-changed",
   SESSION_ENDED: "session-ended",
+  REVEAL_UPDATED: "reveal-updated",
   ERROR: "error",
 } as const;
 

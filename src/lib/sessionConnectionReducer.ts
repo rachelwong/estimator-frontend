@@ -1,16 +1,18 @@
 // The live connection state machine. Pure: no React, no router, no socket.
 //
-//   CONNECTING ──identity ack──► ACTIVE ──session-ended──► ENDED
-//       │  └─session-info (ended)──────────────────────────► ENDED
-//       ├──error──► REJECTED
+//   CONNECTING ──identity ack──► ACTIVE ──session-ended──► ENDED ◄─┐ votes, acks,
+//       │  └─session-info (ended)──────────────────────────► ENDED ─┘ reveal-updated,
+//       ├──error──► REJECTED                                         errors, disconnect
 //       └──disconnect──► DISCONNECTED ◄──disconnect── ACTIVE
 //
-// REJECTED, DISCONNECTED and ENDED are terminal. Only a fresh connection
-// leaves them.
+// REJECTED and DISCONNECTED are terminal. ENDED stays: votes after the end
+// keep the Reveal changing. A disconnect there only marks it not live.
+// Only a fresh connection leaves a terminal state.
 import { SessionAction, SessionConnectionStatus } from '@/constants'
 import type {
   ActiveConnectionState,
   ConnectingConnectionState,
+  EndedConnectionState,
   SessionConnectionAction,
   SessionConnectionState,
 } from '@/types'
@@ -32,9 +34,12 @@ export function sessionConnectionReducer(
     return nextStateWhileActive(state, action)
   }
 
+  if (state.status === SessionConnectionStatus.ENDED) {
+    return nextStateWhileEnded(state, action)
+  }
+
   // Terminal. Ignoring DISCONNECTED here keeps REJECTED's message after
-  // UNKNOWN_SESSION closes the socket, and keeps ENDED after the store closes
-  // its own socket.
+  // UNKNOWN_SESSION closes the socket.
   return state
 }
 
@@ -47,7 +52,14 @@ function nextStateWhileConnecting(
     // (decision #22b).
     case SessionAction.SESSION_INFO_RECEIVED: {
       if (action.ended) {
-        return { status: SessionConnectionStatus.ENDED, selection: null }
+        return {
+          status: SessionConnectionStatus.ENDED,
+          selection: null,
+          reveal: null,
+          name: null,
+          isLive: true,
+          error: null,
+        }
       }
 
       return { ...state, pointSystem: action.pointSystem }
@@ -66,6 +78,7 @@ function nextStateWhileConnecting(
         selection: action.selection,
         error: null,
         isAdmin: action.isAdmin,
+        name: action.name,
       }
     }
 
@@ -103,13 +116,64 @@ function nextStateWhileActive(
       return { ...state, error: null }
     }
 
-    // The Selection rides along so the Reveal can mark it.
+    // The Selection and name ride along: the Reveal marks the one, and the
+    // other lets this tab keep voting.
     case SessionAction.SESSION_ENDED: {
-      return { status: SessionConnectionStatus.ENDED, selection: state.selection }
+      return {
+        status: SessionConnectionStatus.ENDED,
+        selection: state.selection,
+        reveal: action.reveal,
+        name: state.name,
+        isLive: true,
+        error: null,
+      }
     }
 
     case SessionAction.DISCONNECTED: {
       return { status: SessionConnectionStatus.DISCONNECTED }
+    }
+
+    default: {
+      return state
+    }
+  }
+}
+
+// On the Reveal: votes after the end, the Reveal they change, and the Admin
+// identifying on a tab opened after the end.
+function nextStateWhileEnded(
+  state: EndedConnectionState,
+  action: SessionConnectionAction,
+): SessionConnectionState {
+  switch (action.type) {
+    case SessionAction.IDENTITY_ACKED: {
+      return { ...state, selection: action.selection, name: action.name }
+    }
+
+    case SessionAction.SELECTION_ACKED: {
+      return { ...state, selection: action.selection, error: null }
+    }
+
+    case SessionAction.REVEAL_UPDATED: {
+      return { ...state, reveal: action.reveal }
+    }
+
+    case SessionAction.ERROR_RECEIVED: {
+      return { ...state, error: action.error }
+    }
+
+    case SessionAction.ERROR_DISMISSED: {
+      return { ...state, error: null }
+    }
+
+    // Stays on ENDED with the last Reveal. Same reference when already down,
+    // so the store's own disconnect after this doesn't notify twice.
+    case SessionAction.DISCONNECTED: {
+      if (!state.isLive) {
+        return state
+      }
+
+      return { ...state, isLive: false }
     }
 
     default: {

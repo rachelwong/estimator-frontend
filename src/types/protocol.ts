@@ -87,5 +87,7 @@ export interface ServerToClientEvents {
   // Sent to every tab of the one participant. null means cleared.
   [WebSocketEvent.SELECTION_CHANGED]: (payload: Selection | null) => void
   [WebSocketEvent.SESSION_ENDED]: (payload: RevealPayload) => void
+  // The new Reveal after a vote on an ended Session, sent to the whole Session.
+  [WebSocketEvent.REVEAL_UPDATED]: (payload: RevealPayload) => void
   [WebSocketEvent.ERROR]: (payload: { error?: ErrorCode; message: string }) => void
 }

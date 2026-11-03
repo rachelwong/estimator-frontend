@@ -265,17 +265,25 @@ export async function session({ browser, reporter }) {
   // --- A brand-new visitor to the ended Session ------------------------------
   const fresh = await openPage(await browser.newContext());
   const socketTraffic = [];
+  // Everything the page sends the backend: polling bodies, then frames once
+  // the socket upgrades.
+  const sentToSocket = [];
   // Backend only — Vite's HMR socket on :5173 is dev noise. Matching on the
   // host covers ws:// locally and wss:// in production.
-  fresh.on(
-    "websocket",
-    (ws) => ws.url().includes(SOCKET_HOST) && socketTraffic.push(ws.url()),
-  );
-  fresh.on(
-    "request",
-    (request) =>
-      request.url().includes("/socket.io") && socketTraffic.push(request.url()),
-  );
+  fresh.on("websocket", (ws) => {
+    if (!ws.url().includes(SOCKET_HOST)) {
+      return;
+    }
+    socketTraffic.push(ws.url());
+    ws.on("framesent", ({ payload }) => sentToSocket.push(String(payload)));
+  });
+  fresh.on("request", (request) => {
+    if (!request.url().includes("/socket.io")) {
+      return;
+    }
+    socketTraffic.push(request.url());
+    sentToSocket.push(request.postData() ?? "");
+  });
 
   await fresh.goto(`${APP}/${sessionId}`);
   await fresh.waitForURL(/\/ended$/);
@@ -290,10 +298,12 @@ export async function session({ browser, reporter }) {
     "No name prompt",
     (await fresh.locator('input[name="name"]').count()) === 0,
   );
+  // A watcher listens for live changes, but never joins or claims the Admin.
+  check("Socket opened for live updates", socketTraffic.length > 0);
   check(
-    "No socket opened",
-    socketTraffic.length === 0,
-    socketTraffic.join(", "),
+    "Watcher never identifies",
+    !sentToSocket.some((sent) => /"(join|admin-auth)"/.test(sent)),
+    sentToSocket.join(", "),
   );
   check(
     "Window reads the reveal",

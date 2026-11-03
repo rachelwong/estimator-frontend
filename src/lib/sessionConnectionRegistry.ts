@@ -23,7 +23,7 @@ import { createSocket } from './socket'
 const registry = new Map<string, SessionConnectionStore>()
 
 // Called once per entry — startLoader for an Admin, joinAction for a
-// Participant — never on render.
+// Participant, endedLoader for the Reveal — never on render.
 export function getOrCreateSessionConnection(
   sessionId: string,
   identity: SessionIdentity,
@@ -90,11 +90,25 @@ function createSessionConnectionStore(
     state = next
     listeners.forEach((listener) => listener())
 
-    // The server does not close the socket after session-ended, and a later
-    // server restart would otherwise drag a tab on ENDED back to /join. The
-    // local disconnect this fires is absorbed by the reducer's terminal guard.
+    // The socket is no use once the state is dead. The local disconnect this
+    // fires is absorbed by the reducer.
     if (isTerminal(state)) {
       socket.disconnect()
+    }
+  }
+
+  // Sent once session-info says whether the Session has ended.
+  // - Admin: always. They can still vote on the Reveal.
+  // - Participant: only while open. Joining an ended one earns SESSION_ENDED.
+  // - Watcher: never.
+  function identify(): void {
+    if ('adminToken' in identity) {
+      socket.emit(WebSocketEvent.ADMIN_AUTHENTICATE, identity.adminToken)
+      return
+    }
+
+    if ('name' in identity && state.status === SessionConnectionStatus.CONNECTING) {
+      socket.emit(WebSocketEvent.JOIN, identity.name)
     }
   }
 
@@ -108,33 +122,27 @@ function createSessionConnectionStore(
 
   socket.on(WebSocketEvent.SESSION_INFO, ({ pointSystem, ended }) => {
     dispatch({ type: SessionAction.SESSION_INFO_RECEIVED, pointSystem, ended })
-
-    // Identify only once the Session is known to be open. An ended Session
-    // has already moved to ENDED, and joining it would only earn an error.
-    if (state.status === SessionConnectionStatus.CONNECTING) {
-      if ('adminToken' in identity) {
-        socket.emit(WebSocketEvent.ADMIN_AUTHENTICATE, identity.adminToken)
-      } else {
-        socket.emit(WebSocketEvent.JOIN, identity.name)
-      }
-    }
+    identify()
   })
 
-  socket.on(WebSocketEvent.JOINED, () => {
-    dispatch({ type: SessionAction.IDENTITY_ACKED, isAdmin: false, selection: null })
+  socket.on(WebSocketEvent.JOINED, ({ name }) => {
+    dispatch({ type: SessionAction.IDENTITY_ACKED, isAdmin: false, selection: null, name })
   })
 
-  socket.on(WebSocketEvent.ADMIN_ACKNOWLEDGED, ({ selection }) => {
-    dispatch({ type: SessionAction.IDENTITY_ACKED, isAdmin: true, selection })
+  socket.on(WebSocketEvent.ADMIN_ACKNOWLEDGED, ({ name, selection }) => {
+    dispatch({ type: SessionAction.IDENTITY_ACKED, isAdmin: true, selection, name })
   })
 
   socket.on(WebSocketEvent.SELECTION_CHANGED, (selection) => {
     dispatch({ type: SessionAction.SELECTION_ACKED, selection })
   })
 
-  // The Reveal payload is dropped — /ended refetches it over REST.
-  socket.on(WebSocketEvent.SESSION_ENDED, () => {
-    dispatch({ type: SessionAction.SESSION_ENDED })
+  socket.on(WebSocketEvent.SESSION_ENDED, (reveal) => {
+    dispatch({ type: SessionAction.SESSION_ENDED, reveal })
+  })
+
+  socket.on(WebSocketEvent.REVEAL_UPDATED, (reveal) => {
+    dispatch({ type: SessionAction.REVEAL_UPDATED, reveal })
   })
 
   socket.on(WebSocketEvent.ERROR, ({ error, message }) => {
@@ -191,8 +199,13 @@ function createSessionConnectionStore(
   }
 }
 
-// REJECTED, DISCONNECTED and ENDED. Only a fresh connection leaves them.
+// No socket left: REJECTED, DISCONNECTED, or an ENDED one that dropped. Only a
+// fresh connection leaves them.
 function isTerminal(state: SessionConnectionState): boolean {
+  if (state.status === SessionConnectionStatus.ENDED) {
+    return !state.isLive
+  }
+
   return (
     state.status !== SessionConnectionStatus.CONNECTING &&
     state.status !== SessionConnectionStatus.ACTIVE

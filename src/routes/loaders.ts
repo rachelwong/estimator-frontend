@@ -21,6 +21,7 @@ import type {
   JoinLoaderData,
   PointSystemType,
   RevealViewer,
+  SessionIdentity,
 } from '@/types'
 
 const NOT_FOUND_PATH = '/not-found'
@@ -107,19 +108,36 @@ export async function endedLoader({ params }: LoaderFunctionArgs) {
     return redirect(openSessionPath(sessionId))
   }
 
+  connectToReveal(sessionId)
+
   return { session, viewer: revealViewer(sessionId) } satisfies EndedLoaderData
 }
 
-// Read, never opened: a connection here is the one that just watched the
-// Session end, and it is already closed.
+// The Reveal holds a socket, so votes after the end show up live.
+// - A live connection is reused: a Participant's from /start can still vote.
+// - A dead one, or none, is replaced: the Admin's token gets voting back; anyone
+//   else only watches. Try again lands here too.
+function connectToReveal(sessionId: string): void {
+  if (hasLiveSessionConnection(sessionId)) {
+    return
+  }
+
+  removeSessionConnection(sessionId)
+
+  const adminToken = getAdminToken(sessionId)
+  const identity: SessionIdentity = adminToken === null ? { watchOnly: true } : { adminToken }
+  getOrCreateSessionConnection(sessionId, identity)
+}
+
+// Who is looking, for the role chip. A name means this connection identified:
+// it watched the end, or it is the Admin's and already acknowledged.
 function revealViewer(sessionId: string): RevealViewer {
   const state = peekSessionConnection(sessionId)?.getSnapshot()
-  const hasEnded = state?.status === SessionConnectionStatus.ENDED
+  const hasJoined = state?.status === SessionConnectionStatus.ENDED && state.name !== null
 
   return {
     isAdmin: getAdminToken(sessionId) !== null,
-    hasJoined: hasEnded,
-    selection: hasEnded ? state.selection : null,
+    hasJoined,
   }
 }
 
