@@ -192,6 +192,14 @@ export function flashCount(page) {
   return page.locator('main [data-square] .change-flash').count()
 }
 
+// Whether a person's chip in "your team" wears the change flash right now.
+export async function isChipFlashing(page, name) {
+  const chip = page.locator('main button[aria-expanded]:not([data-square])', { hasText: name })
+  const flashes = await chip.locator('.change-flash').count()
+
+  return flashes > 0
+}
+
 // Opens a revealed Square's popover and returns the names listed in it.
 // Clicking again closes it, so each call opens, reads and closes.
 export async function openSquarePopover(page, time, resource) {

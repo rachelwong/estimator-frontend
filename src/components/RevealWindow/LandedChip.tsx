@@ -1,3 +1,4 @@
+import { ChangeFlash } from '@/components/ChangeFlash'
 import { Chip } from '@/components/Chip'
 import { ChipSize, FOCUS_VISIBLE_SELECTOR, HoverSource, MOUSE_POINTER_TYPE } from '@/constants'
 import type { HoverSource as HoverSourceValue } from '@/types'
@@ -6,6 +7,8 @@ interface LandedChipProps {
   name: string
   // Whether this person's Square has its popover open.
   expanded: boolean
+  // Set while this person's change flashes (§8). A new id restarts it.
+  flashId?: number
   onPreview: (source: HoverSourceValue) => void
   onPreviewEnd: (source: HoverSourceValue) => void
   onClick: () => void
@@ -14,8 +17,9 @@ interface LandedChipProps {
 // One name in "who landed where" (§6), standing in for its Square: hovering
 // previews it, clicking pins its popover. The same rules as a Square's own
 // hover — the mouse, or keyboard focus, never a tap. Either one tints the chip
-// `crowd-0`.
-export function LandedChip({ name, expanded, onPreview, onPreviewEnd, onClick }: LandedChipProps) {
+// `crowd-0`. When they move on the Reveal, its border flashes like their new
+// Square's.
+export function LandedChip({ name, expanded, flashId, onPreview, onPreviewEnd, onClick }: LandedChipProps) {
   return (
     <button
       type="button"
@@ -29,8 +33,9 @@ export function LandedChip({ name, expanded, onPreview, onPreviewEnd, onClick }:
     >
       <Chip
         size={ChipSize.NAME}
-        className="transition-colors duration-[120ms] group-hover:bg-crowd-0 group-focus-visible:bg-crowd-0"
+        className="relative transition-colors duration-[120ms] group-hover:bg-crowd-0 group-focus-visible:bg-crowd-0"
       >
+        <ChangeFlash flashId={flashId} />
         <span className="max-w-[120px] truncate">{name}</span>
       </Chip>
     </button>

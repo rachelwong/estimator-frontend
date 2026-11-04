@@ -11,6 +11,7 @@ import {
   createSocketPool,
   flashCount,
   hoverCell,
+  isChipFlashing,
   isFlashing,
   joinInBrowser,
   landsOn,
@@ -83,9 +84,13 @@ export async function afterReveal({ browser, reporter }) {
   check('New Square flashes for the fresh visitor', await isFlashing(fresh, 3, 1))
   check('Old Square does not flash', !(await isFlashing(admin, 1, 1)) && !(await isFlashing(fresh, 1, 1)))
   check("No flash on Fay's own tab", (await flashCount(fay)) === 0)
+  check("Fay's chip flashes for Ada", await isChipFlashing(admin, 'Fay'))
+  check("Ada's chip does not", !(await isChipFlashing(admin, 'Ada')))
+  check("Fay's chip does not flash on her own tab", !(await isChipFlashing(fay, 'Fay')))
 
   await settle(admin, FLASH_GONE_MS)
   check('The flash stops, leaving nothing marked', (await totalFlashes(admin, fresh)) === 0)
+  check("Fay's chip stops too", !(await isChipFlashing(admin, 'Fay')))
 
   // --- Ada moves: Fay and the fresh visitor see the flash, Ada doesn't --------
   await clickCell(admin, 0, 0)

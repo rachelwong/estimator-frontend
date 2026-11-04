@@ -177,7 +177,7 @@ axes share the same Axis values (`CONTEXT.md`).
 | Revealed       | Reveal                      | fill from the crowd ramp                                                                 |
 | Your Square    | Reveal                      | 3px `selection` outline inset 7px                                                        |
 | Pinned         | Reveal, popover open        | stays lifted                                                                             |
-| Changed        | Reveal, someone just moved here | rainbow ring, rolls once then fades (§8). Never on your own change          |
+| Changed        | Reveal, someone just moved here | border turns rainbow, rolls once then fades back to ink (§8). Never on your own change |
 
 Area never shows in the Reveal. Touch gets no hover-dependent affordance.
 
@@ -240,7 +240,8 @@ Under a 2px dashed ink rule, Silkscreen label "your team" (an h2 on the Reveal
 screen, h3 in the Welcome demo), then wrapping chips: Figtree 14/700, 36px
 tall, names only (no Time/Resources values). Hovering a chip previews its
 Square; clicking pins its popover. Abstained Participants follow with a dashed
-chip and "Abstained" in `abstained` red.
+chip and "Abstained" in `abstained` red. When someone moves, their chip's
+border flashes with their new Square's (§8).
 
 ### Session description (Join, Active, Reveal)
 
@@ -355,15 +356,17 @@ the Admin ends the session and the Reveal shows everyone’s estimates."
 - No visible heading and no h1: the window title and notice carry the screen.
 - **Live.** Estimates keep changing after the end, and every open Reveal shows
   each change without a reload. Who can vote: §6 Interaction.
-- **Change flash.** The Square someone just moved to gets a rainbow ring (§8).
+- **Change flash.** The Square someone just moved to, and their chip, get a
+  rainbow border (§8).
   - A move flashes the Square joined, not the one left. A vote from Abstained
     flashes the Square joined. A clear flashes nothing.
   - Not on the voter's own screen, in any of their tabs. A latecomer has no
     name, so sees every change.
-  - Grid Squares only. Chips don't flash. Nothing flashes on load or reload.
-  - A Square that changes again mid-flash starts over.
-  - Sits with "Your Square" and the hover lift without hiding them: the ring
-    is 3px inside the ink border, "Your Square" is 7px in.
+  - The Square and the mover's chip flash together. Nothing flashes on load or
+    reload.
+  - A Square or chip that changes again mid-flash starts over.
+  - Sits with "Your Square" and the hover lift without hiding them: the
+    rainbow takes over the 2px ink border, "Your Square" is 7px in.
 - **Live updates stopped.** If the connection drops, the last Reveal stays. A
   white 3px-bordered note pinned bottom right (full width along the bottom on
   mobile): "Live updates have stopped. Reload to see the latest estimates."
@@ -496,10 +499,11 @@ Option C, "Pixel progress bar" (canvas: Spec · Loader options).
   popover re-renders don't replay it. The whole wave takes about 1.5s on a 7×7
   grid.
 
-- **Change flash** (Reveal): a 3px ring just inside the Square's border, a
-  conic gradient of `danger`, `selection`, chrome green, `accent` and back to
-  `danger`. It rolls one full turn, holds, then fades over its last 20%: 1.4s
-  in all. The reveal wave never replays on a change.
+- **Change flash** (Reveal): the Square's 2px ink border, and the mover's
+  chip's, turn to a conic gradient of `danger`, `selection`, chrome green,
+  `accent` and back to `danger`. It rolls one full turn, holds, then fades
+  back to ink over its last 20%: 1.4s in all. No second border: the rainbow
+  lies over the ink one. The reveal wave never replays on a change.
 
   ```css
   @keyframes ffChangeFlash {
@@ -509,7 +513,7 @@ Option C, "Pixel progress bar" (canvas: Spec · Loader options).
   }
   ```
 
-  With reduced motion the same ring shows still, for the same 1.4s, then goes.
+  With reduced motion the same rainbow shows still, for the same 1.4s, then goes.
 
 - Square hover lift: `transform` and `box-shadow` 90ms; fills 120ms.
 - `prefers-reduced-motion: reduce` switches off all animation and transitions;

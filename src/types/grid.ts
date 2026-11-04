@@ -14,3 +14,10 @@ export interface LandedPerson {
   name: string
   square: Selection
 }
+
+// What wears the Reveal's change flash right now, each mapped to a flash id: the
+// Squares by squareKey, and the people who moved by name.
+export interface ChangeFlashes {
+  squares: ReadonlyMap<string, number>
+  names: ReadonlyMap<string, number>
+}

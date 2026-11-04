@@ -1,5 +1,6 @@
 import type { FocusEventHandler, KeyboardEventHandler, PointerEventHandler } from 'react'
-import { CHANGE_FLASH_MS, SQUARE_HIGHLIGHT_CLASS, SQUARE_LABEL_SIZE_CLASS } from '@/constants'
+import { ChangeFlash } from '@/components/ChangeFlash'
+import { SQUARE_HIGHLIGHT_CLASS, SQUARE_LABEL_SIZE_CLASS } from '@/constants'
 import { cn } from '@/lib/utils'
 import type {
   SquareHighlight as SquareHighlightValue,
@@ -22,8 +23,8 @@ interface GridCellProps {
   revealDelay?: number
   // Reveal only: the wave is waiting to start, so the Square holds blank.
   isWavePaused?: boolean
-  // Reveal only: someone just moved here, so it wears the rainbow ring (§8).
-  // A new id restarts the ring.
+  // Reveal only: someone just moved here, so its border flashes rainbow (§8).
+  // A new id restarts the flash.
   flashId?: number
   // Off on a revealed Square nobody landed on: hovering it does nothing.
   hasPointerCursor: boolean
@@ -72,7 +73,7 @@ export function GridCell({
       aria-pressed={pressed}
       aria-expanded={expanded}
       className={cn(
-        'relative flex flex-col items-center justify-center overflow-hidden border-2 border-ink p-0.5 text-center font-label leading-tight outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
+        'relative border-2 border-ink p-0.5 text-center font-label leading-tight outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
         hasPointerCursor ? 'cursor-pointer' : 'cursor-default',
         fillClass,
         SQUARE_LABEL_SIZE_CLASS[labelSize],
@@ -88,20 +89,17 @@ export function GridCell({
       onBlur={onBlur}
       onKeyDown={onKeyDown}
     >
-      {flashId !== undefined && (
-        <span
-          key={flashId}
-          aria-hidden
-          className="change-flash"
-          style={{ animationDuration: `${CHANGE_FLASH_MS}ms` }}
-        />
-      )}
+      <ChangeFlash flashId={flashId} />
 
-      {label.split('\n').map((line) => (
-        <span key={line} className="max-w-full truncate">
-          {line}
-        </span>
-      ))}
+      {/* The label clips here rather than on the button, which would cut away
+          the change flash laid over its border. */}
+      <span className="flex size-full flex-col items-center justify-center overflow-hidden">
+        {label.split('\n').map((line) => (
+          <span key={line} className="max-w-full truncate">
+            {line}
+          </span>
+        ))}
+      </span>
     </button>
   )
 }

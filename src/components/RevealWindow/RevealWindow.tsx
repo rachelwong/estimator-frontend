@@ -2,7 +2,7 @@ import { EstimationGrid } from "@/components/EstimationGrid";
 import { SessionDescription } from "@/components/SessionDescription";
 import { Window } from "@/components/Window";
 import { GridMode, REVEAL_NOTICE_BODY, WindowVariant } from "@/constants";
-import type { HoveredSquare, RevealPayload, Selection } from "@/types";
+import type { ChangeFlashes, HoveredSquare, RevealPayload, Selection } from "@/types";
 import { landedPeople } from "@/utils";
 import type { ReactNode } from "react";
 import { useState } from "react";
@@ -16,8 +16,8 @@ interface RevealWindowProps {
   selection: Selection | null;
   /** For a viewer who can still vote: a click on the grid votes (§6). */
   onSelect?: (selection: Selection) => void;
-  /** Squares someone just moved to, as squareKey → flash id (§7). */
-  flashes?: ReadonlyMap<string, number>;
+  /** The Squares people just moved to, and those people's chips (§7). */
+  flashes?: ChangeFlashes;
   /** The ticket or task the Session estimated, when the admin gave one. */
   description?: string | null;
   /** The window's status chip: the viewer's role, when there is one. */
@@ -71,7 +71,7 @@ export function RevealWindow({
         selection={selection}
         reveal={reveal}
         onSelect={onSelect}
-        flashes={flashes}
+        flashes={flashes?.squares}
         hovered={hovered}
         onHoveredChange={setHovered}
         pinned={pinned}
@@ -87,6 +87,7 @@ export function RevealWindow({
         onHoveredChange={setHovered}
         pinned={pinned}
         onPinnedChange={setPinned}
+        flashes={flashes?.names}
       />
 
       {children}

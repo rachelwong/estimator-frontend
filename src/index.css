@@ -150,9 +150,9 @@
   }
 }
 
-/* The change flash (§8): a rainbow ring that rolls one turn round a Square
-   someone just moved to, then fades. The angle is a registered property so
-   the conic gradient can animate. */
+/* The change flash (§8): a rainbow that rolls one turn round the border of a
+   Square someone just moved to, and of their chip, then fades back to ink. The
+   angle is a registered property so the conic gradient can animate. */
 @property --flash-angle {
   syntax: "<angle>";
   inherits: false;
@@ -173,14 +173,16 @@
   }
 }
 
-/* The ring: the gradient fills the box, and the mask cuts out all but its 3px
-   padding. GridCell sets the duration and removes it after. Reduced motion
-   drops the animation outright rather than collapsing it, so the ring shows
-   still for that time instead of finishing faded. */
+/* Laid over the parent's 2px border: pulled out by the border's width, the
+   gradient fills the box, and the mask cuts out all but that 2px of padding.
+   ChangeFlash sets the duration and removes it after, leaving the ink border
+   it faded back to. Reduced motion drops the animation outright rather than
+   collapsing it, so the rainbow shows still for that time instead of finishing
+   faded. */
 @utility change-flash {
   position: absolute;
-  inset: 0;
-  padding: 3px;
+  inset: -2px;
+  padding: 2px;
   pointer-events: none;
   background: conic-gradient(
     from var(--flash-angle),

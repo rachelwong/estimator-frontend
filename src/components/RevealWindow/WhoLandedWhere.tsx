@@ -19,6 +19,8 @@ interface WhoLandedWhereProps {
   onHoveredChange: (hovered: HoveredSquare | null) => void;
   pinned: Selection | null;
   onPinnedChange: (pinned: Selection | null) => void;
+  /** People who just moved, as name → flash id (§7). */
+  flashes?: ReadonlyMap<string, number>;
 }
 
 // Everyone in the Reveal as a row of chips (§6): names only, since the grid
@@ -33,6 +35,7 @@ export function WhoLandedWhere({
   onHoveredChange,
   pinned,
   onPinnedChange,
+  flashes,
 }: WhoLandedWhereProps) {
   // Ends only the preview this chip started: a Square the mouse has since
   // moved onto keeps its own.
@@ -54,6 +57,7 @@ export function WhoLandedWhere({
             <LandedChip
               name={name}
               expanded={Boolean(pinned && isSameSquare(pinned, square))}
+              flashId={flashes?.get(name)}
               onPreview={(source) => onHoveredChange({ square, source })}
               onPreviewEnd={endPreview}
               onClick={() => onPinnedChange(nextPinned(pinned, square, [name]))}

@@ -231,25 +231,23 @@ export function groupNames(reveal?: RevealPayload): Map<string, string[]> {
   return new Map(entries ?? [])
 }
 
-// The Squares someone just moved to, for the change flash (§7): each one that
-// gained a name it didn't have. The viewer's own move doesn't count, so a
-// Square whose only new name is theirs stays still. A clear gains nothing.
+// Who just moved, and where to, for the change flash (§7): each name a Square
+// gained that it didn't have. The viewer's own move doesn't count. A clear
+// gains nothing.
 //
 //   before  2:3 [Ada, Bo]   4:1 [Cy]
-//   after   2:3 [Ada]       4:1 [Cy, Bo]   → ['4:1']  (Bo moved)
-export function changedSquares(
+//   after   2:3 [Ada]       4:1 [Cy, Bo]   → [Bo at 4:1]
+export function movedPeople(
   previous: RevealPayload,
   next: RevealPayload,
   ownName: string | null,
-): string[] {
+): LandedPerson[] {
   const before = groupNames(previous)
 
-  return next.squares
-    .filter(({ time, resource, names }) => {
-      const had = before.get(squareKey(time, resource)) ?? []
-      return names.some((name) => name !== ownName && !had.includes(name))
-    })
-    .map(({ time, resource }) => squareKey(time, resource))
+  return landedPeople(next).filter(({ name, square }) => {
+    const had = before.get(squareKey(square.time, square.resource)) ?? []
+    return name !== ownName && !had.includes(name)
+  })
 }
 
 export function squareKey(time: number, resource: number): string {
