@@ -37,24 +37,29 @@ next to its label.
 
 Same rule on both sides of the wire, and it stays hand-mirrored:
 
-- Normalize first — `name.trim().replace(/ +/g, ' ')`. A stray double space
-  collapses rather than erroring.
-- Then `/^[A-Za-z0-9]+( [A-Za-z0-9]+)*$/`, with the normalized name capped at
-  20 characters.
+- Trim the ends only — `name.trim()`. Case and interior spacing are kept
+  exactly as typed.
+- Then `/^[A-Za-z0-9]+( +[A-Za-z0-9]+)*$/`, with the trimmed name capped at
+  20 characters. Interior spaces count towards the 20.
 - Message: _Use 1-20 letters, numbers or spaces, with no symbols._
 
-| Input         | Result                                           |
-| ------------- | ------------------------------------------------ |
-| `Jim Bob`     | Accepted, stored as `Jim Bob`                    |
-| `jim  bob`    | Accepted, collapsed and capitalized to `Jim Bob` |
-| `  Jim  `     | Accepted, stored as `Jim`                        |
-| `Jim@Bob`     | Rejected, `INVALID_NAME`                         |
-| 21 characters | Rejected, `INVALID_NAME`                         |
+| Input         | Result                             |
+| ------------- | ---------------------------------- |
+| `Jim Bob`     | Accepted, stored as `Jim Bob`      |
+| `jONath an`   | Accepted, stored as `jONath an`    |
+| `jim  bob`    | Accepted, stored as `jim  bob`     |
+| `  Jim  `     | Accepted, stored as `Jim`          |
+| `Jim@Bob`     | Rejected, `INVALID_NAME`           |
+| 21 characters | Rejected, `INVALID_NAME`           |
 
-The backend's `formatName` now capitalizes **per word**, not per name — before
-this round it lowercased everything after the first character, which would have
-stored `Jim Bob` as `Jim bob`. Uniqueness is unchanged: `isNameTaken` compares
-whole lowercased names, so a second `Jim Bob` still becomes `Jim Bob-1`.
+A browser shows a run of spaces as one, so `jim  bob` looks like `jim bob` on
+screen. The stored name still has both spaces.
+
+Uniqueness ignores case and spacing. The backend's `isNameTaken` compares names
+lowercased with runs of spaces collapsed, so:
+
+- a second `Jim Bob` becomes `Jim Bob-1`
+- `jim  bob` after `Jim Bob` becomes `jim  bob-1`
 
 ## 3 — A colour per person on the Reveal
 
@@ -122,7 +127,7 @@ never be assembled at runtime.
 | File                                   | Change                                                                                                                               |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `src/lib/patterns.ts`                  | New. Every production regex in one place, mirroring the backend's `utils/patterns.ts`                                                |
-| `src/lib/validation.ts`                | `normalizeName`, the new message, `isPointSystemType`                                                                                |
+| `src/lib/validation.ts`                | `nameError` trims the name, the new message, `isPointSystemType`                                                                     |
 | `src/routes/CreateSessionPage.tsx`     | `canSubmit` from the three conditions                                                                                                |
 | `src/constants.ts`                     | `CellState.REVEALED`, `CROWDED_SQUARE_CLASS`, `CROWDED_SQUARE_BORDER_CLASS`, `PARTICIPANT_COLOUR_CLASS`. `MAX_VISIBLE_NAMES` is gone |
 | `src/index.css`                        | The `rainbow-border` utility, its `@property` angle and keyframes                                                                    |
@@ -145,7 +150,7 @@ as short as "Bob".
 - [x] `Start Session` is disabled with no name, with a bad name, and while the max is 0.
 - [x] It enables with a valid name and a max above 0, and re-disables when switching point system resets the max.
 - [x] `Jim Bob` is accepted on `/new` and on `/join`; `Jim@Bob` shows the rule and opens no socket.
-- [x] `jim  bob` is stored and displayed as `Jim Bob`.
+- [x] `jONath an` is stored and displayed as `jONath an`, case kept as typed.
 - [x] On `/ended`, a Square one person picked is filled with their colour and carries their name.
 - [x] A crowded Square is grey, deeper the more estimates, inside a rolling rainbow border, and reads `N estimates`.
 - [x] Clicking a crowded Square opens every name as a badge in its owner's colour; clicking again, clicking away, or Escape closes it.

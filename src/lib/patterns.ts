@@ -2,12 +2,9 @@
 // reviewed and reused in one place instead of being buried at their call sites.
 // Mirrors estimator-backend/src/utils/patterns.ts.
 
-// 1-20 letters, digits and single interior spaces — "Jim Bob" is a name,
-// "Jim@Bob" is not. The length is checked separately, in lib/validation.ts.
-export const PARTICIPANT_NAME_PATTERN = /^[A-Za-z0-9]+( [A-Za-z0-9]+)*$/
-
-// Runs of two or more spaces, collapsed to one when a name is normalized.
-export const REPEATED_SPACES_PATTERN = / +/g
+// 1-20 letters, digits and interior spaces — "Jim Bob" and "Jim  Bob" are
+// names, "Jim@Bob" is not. The length is checked separately, in lib/validation.ts.
+export const PARTICIPANT_NAME_PATTERN = /^[A-Za-z0-9]+( +[A-Za-z0-9]+)*$/
 
 // Any run of whitespace — spaces, tabs, line breaks — collapsed to one space
 // when a description is normalized, so it is always a single line.

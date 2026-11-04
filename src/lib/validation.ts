@@ -4,13 +4,9 @@
 // the wire. The server's own INVALID_NAME stays the backstop, not the usual path.
 //
 // The rule itself is PARTICIPANT_NAME_PATTERN in lib/patterns.ts. The server
-// trims and collapses the same way before it validates, so stray whitespace is
-// never what fails.
-import {
-  PARTICIPANT_NAME_PATTERN,
-  REPEATED_SPACES_PATTERN,
-  WHITESPACE_RUN_PATTERN,
-} from "@/lib/patterns";
+// trims the ends the same way before it validates, so stray whitespace at the
+// ends is never what fails. Case and interior spacing are kept as typed.
+import { PARTICIPANT_NAME_PATTERN, WHITESPACE_RUN_PATTERN } from "@/lib/patterns";
 
 const MAX_NAME_LENGTH = 20;
 
@@ -20,19 +16,14 @@ const NAME_RULE = "Use 1-20 letters, numbers or spaces, with no symbols.";
 
 const DESCRIPTION_RULE = `Keep description to ${MAX_DESCRIPTION_LENGTH} characters or fewer.`;
 
-// Trim the ends, collapse runs of spaces. What the name is judged on, and what
-// the server stores.
-export function normalizeName(name: string): string {
-  return name.trim().replace(REPEATED_SPACES_PATTERN, " ");
-}
-
-// Returns the message to show, or null when the name is fine.
+// Returns the message to show, or null when the name is fine. Judged with the
+// ends trimmed, as the server stores it.
 export function nameError(name: string): string | null {
-  const normalized = normalizeName(name);
+  const trimmed = name.trim();
 
   if (
-    normalized.length <= MAX_NAME_LENGTH &&
-    PARTICIPANT_NAME_PATTERN.test(normalized)
+    trimmed.length <= MAX_NAME_LENGTH &&
+    PARTICIPANT_NAME_PATTERN.test(trimmed)
   ) {
     return null;
   }
