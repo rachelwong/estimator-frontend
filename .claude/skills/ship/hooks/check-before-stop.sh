@@ -1,9 +1,11 @@
 #!/bin/bash
 # Stop hook for /ship. Exit 2 blocks Claude from finishing and sends stderr back to it.
-# Checks every estimator repo with uncommitted code changes, not just the one the session started in.
+# Checks every estimator checkout with uncommitted code changes, not just the one the session started in:
+# the backend, the frontend (release/design) and the frontend master worktree.
 # Same file in estimator-backend and estimator-frontend. Keep both copies in sync.
 
 MAX_BLOCKS=3
+CHECKOUTS=(estimator-backend estimator-frontend estimator-frontend-master)
 
 input=$(cat)
 session_id=$(jq -r '.session_id' <<<"$input")
@@ -17,23 +19,41 @@ if ((blocks >= MAX_BLOCKS)); then
   exit 0
 fi
 
-# Prints the shell checks for a repo.
-checks_for() {
-  case "$1" in
-    estimator-backend) echo "npm run typecheck && npm run lint && npm test" ;;
-    estimator-frontend) echo "npx tsc -b && npm run lint" ;;
+# Runs the checks for a checkout. Remaining args are changed files to format-check (backend only).
+run_checks() {
+  local checkout=$1
+  shift
+  case "$checkout" in
+    estimator-backend)
+      npm run typecheck && npm run lint && npm test || return 1
+      (($# == 0)) || npx prettier --check -- "$@"
+      ;;
+    # cnTables.ts is generated and gitignored, so build it first, as `npm run build` does.
+    estimator-frontend*)
+      npx cn build --content 'src/**/*.{ts,tsx}' --out src/lib/cnTables.ts --quiet && npx tsc -b && npm run lint
+      ;;
   esac
+}
+
+# Blocks once per session with a reminder.
+remind_once() {
+  [[ -f "$state_dir/$1" ]] && return
+  touch "$state_dir/$1"
+  echo "$2" >&2
+  exit 2
 }
 
 failures=""
 code_changed=false
-code_repos=0
 docs_changed=false
 plan_changed=false
+plans=()
+code_in=" "
 
-for repo in estimator-backend estimator-frontend; do
-  dir="$projects_dir/$repo"
-  [[ -d "$dir/.git" ]] || continue
+for checkout in "${CHECKOUTS[@]}"; do
+  dir="$projects_dir/$checkout"
+  [[ -e "$dir/.git" ]] || continue
+  [[ -f "$dir/estimator-plan.md" ]] && plans+=("$dir/estimator-plan.md")
 
   changed=$(git -C "$dir" status --porcelain --untracked-files=all | cut -c4-)
   grep -q '\.md$' <<<"$changed" && docs_changed=true
@@ -42,18 +62,18 @@ for repo in estimator-backend estimator-frontend; do
   code=$(grep -E '^(src|tests|scripts)/.*\.(ts|tsx|mjs|js)$' <<<"$changed")
   [[ -n "$code" ]] || continue
   code_changed=true
-  code_repos=$((code_repos + 1))
+  code_in+="$checkout "
 
   # Whole-repo format:check fails on old files, so only check the changed ones.
-  existing=$(cd "$dir" && for f in $code; do [[ -f "$f" ]] && echo "$f"; done)
-  format=""
-  if [[ "$repo" == estimator-backend && -n "$existing" ]]; then
-    format=" && npx prettier --check $(tr '\n' ' ' <<<"$existing")"
-  fi
+  # Kept as an array so file names are never parsed as shell.
+  files=()
+  while IFS= read -r f; do
+    [[ -f "$dir/$f" ]] && files+=("$f")
+  done <<<"$code"
 
-  output=$(cd "$dir" && eval "$(checks_for "$repo")$format" 2>&1)
+  output=$(cd "$dir" && run_checks "$checkout" ${files[@]+"${files[@]}"} 2>&1)
   if (($? != 0)); then
-    failures+="--- $repo failed ---"$'\n'"$(tail -40 <<<"$output")"$'\n'
+    failures+="--- $checkout failed ---"$'\n'"$(tail -40 <<<"$output")"$'\n'
   fi
 done
 
@@ -64,27 +84,34 @@ if [[ -n "$failures" ]]; then
   exit 2
 fi
 
-# estimator-plan.md is the shared source of truth. Once either copy changes, both must match.
-backend_plan="$projects_dir/estimator-backend/estimator-plan.md"
-frontend_plan="$projects_dir/estimator-frontend/estimator-plan.md"
-if $plan_changed && ! cmp -s "$backend_plan" "$frontend_plan"; then
-  echo $((blocks + 1)) >"$state_dir/blocks"
-  echo "estimator-plan.md differs between estimator-backend and estimator-frontend. Make both copies identical." >&2
-  exit 2
+# estimator-plan.md is the shared source of truth. Once any copy changes, all must match.
+if $plan_changed; then
+  for plan in "${plans[@]:1}"; do
+    if ! cmp -s "${plans[0]}" "$plan"; then
+      echo $((blocks + 1)) >"$state_dir/blocks"
+      echo "estimator-plan.md differs between ${plans[0]} and $plan. Make every copy identical." >&2
+      exit 2
+    fi
+  done
 fi
 
-# A change in both repos is cross-stack behaviour, so the plan needs updating. Remind once.
-if ((code_repos == 2)) && ! $plan_changed && [[ ! -f "$state_dir/plan-reminded" ]]; then
-  touch "$state_dir/plan-reminded"
-  echo "Code changed in both repos but estimator-plan.md didn't. Update it in both repos, or say why it doesn't apply." >&2
-  exit 2
+# Reminders are judgement calls, so each blocks once and Claude can say why it doesn't apply.
+# Prints the checkout name if it has code changes.
+code_in() { [[ "$code_in" == *" $1 "* ]] && echo "$1"; }
+backend=$(code_in estimator-backend)
+design=$(code_in estimator-frontend)
+master=$(code_in estimator-frontend-master)
+
+if [[ -n "$design" && -z "$master" ]] || [[ -z "$design" && -n "$master" ]]; then
+  remind_once branch-reminded "Only one frontend branch changed. Make the same functional change on the other (release/design and master), or say why it doesn't apply."
 fi
 
-# Remind about docs once per session. A hook can't judge if the docs are right, only if they were touched.
-if $code_changed && ! $docs_changed && [[ ! -f "$state_dir/docs-reminded" ]]; then
-  touch "$state_dir/docs-reminded"
-  echo "Code changed but no docs did. Update the docs in place (step 5 of /ship), or say why none apply." >&2
-  exit 2
+if [[ -n "$backend" && -n "$design$master" ]] && ! $plan_changed; then
+  remind_once plan-reminded "Code changed in both backend and frontend but estimator-plan.md didn't. Update every copy, or say why it doesn't apply."
+fi
+
+if $code_changed && ! $docs_changed; then
+  remind_once docs-reminded "Code changed but no docs did. Update the docs in place (step 5 of /ship), or say why none apply."
 fi
 
 exit 0
