@@ -26,8 +26,10 @@ interface ActiveSessionViewProps {
 // the share bar, the End button and the chip.
 //
 // End sits in the header from tablet up and moves to full width under the grid
-// on mobile. Both are rendered and CSS shows one, so the confirm dialog belongs
-// to whichever the viewport draws.
+// on mobile. Work's desktop moves it once more, into the floating admin bar
+// ShareLink becomes there, and leaves room under the window for that bar. All
+// are rendered and CSS shows one, so the confirm dialog belongs to whichever
+// the viewport draws.
 export function ActiveSessionView({
   sessionId,
   state,
@@ -45,14 +47,14 @@ export function ActiveSessionView({
         onEndSession && (
           <AdminControls
             onEndSession={onEndSession}
-            className="hidden text-[12px] tablet:inline-flex"
+            className="hidden text-[12px] tablet:inline-flex work:h-9 work:px-4 work:text-[14px] work:desktop:hidden"
           />
         )
       }
     >
-      {onEndSession && <ShareLink sessionId={sessionId} />}
+      {onEndSession && <ShareLink sessionId={sessionId} onEndSession={onEndSession} />}
 
-      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
+      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10 work:pt-4 work:pb-10 work:tablet:pt-8 work:tablet:pb-14 work:desktop:pt-10 work:desktop:pb-32">
         <SpriteScatter />
 
         <Window
@@ -60,11 +62,11 @@ export function ActiveSessionView({
           variant={WindowVariant.SESSION}
           chip={state.isAdmin ? content.role.admin : content.role.participant}
         >
-          <div className="flex flex-col gap-1.5">
-            <h1 className="font-display text-[20px] leading-[1.05] text-foreground tablet:text-[27px]">
+          <div className="flex flex-col gap-1.5 work:gap-2 work:pr-20">
+            <h1 className="font-display text-[20px] leading-[1.05] text-foreground tablet:text-[27px] work:text-[24px] work:leading-[1.2] work:font-medium work:tracking-[-0.01em] work:tablet:text-[28px]">
               {content.active.heading}
             </h1>
-            <p className="font-body text-[14px] leading-[1.45] text-muted-foreground tablet:text-[14px]">
+            <p className="font-body text-[14px] leading-[1.45] text-muted-foreground tablet:text-[14px] work:leading-[22px] work:tablet:text-[15px] work:tablet:leading-6">
               {content.active.intro}
             </p>
           </div>
@@ -87,7 +89,7 @@ export function ActiveSessionView({
           {onEndSession && (
             <AdminControls
               onEndSession={onEndSession}
-              className="h-[52px] w-full text-[14px] tablet:hidden"
+              className="h-[52px] w-full text-[14px] tablet:hidden work:h-12 work:text-[15px]"
             />
           )}
         </Window>

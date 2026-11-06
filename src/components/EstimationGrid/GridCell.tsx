@@ -38,7 +38,8 @@ interface GridCellProps {
 }
 
 // One Square. Every decision about it is made by EstimationGrid; this only
-// draws it. `data-square` is how the grid finds it again to move focus and to
+// draws it. Work (G6) shares its rules with its neighbours: a 1px right and
+// bottom edge each, in a grid with no gap. `data-square` is how the grid finds it again to move focus and to
 // anchor the tooltip and popover.
 //
 // Each line of the label is cut to the Square's width with an ellipsis, so a
@@ -73,7 +74,7 @@ export function GridCell({
       aria-pressed={pressed}
       aria-expanded={expanded}
       className={cn(
-        'relative border-2 border-border-subtle p-0.5 text-center font-label leading-tight outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
+        'relative border-2 border-border-subtle p-0.5 text-center font-label leading-tight outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms] work:border-0 work:border-r work:border-b work:font-medium',
         hasPointerCursor ? 'cursor-pointer' : 'cursor-default',
         fillClass,
         SQUARE_LABEL_SIZE_CLASS[labelSize],

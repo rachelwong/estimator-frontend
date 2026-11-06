@@ -24,11 +24,11 @@ export function PointSystemPicker({ value, onChange }: PointSystemPickerProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      <span id={labelId} className="text-[15px] font-extrabold">
+      <span id={labelId} className="text-[15px] font-extrabold work:text-[14px] work:leading-5 work:font-medium">
         {content.create.pointSystemLabel}
       </span>
 
-      <div role="group" aria-labelledby={labelId} className="grid grid-cols-2 gap-3.5">
+      <div role="group" aria-labelledby={labelId} className="grid grid-cols-2 gap-3.5 work:gap-2">
         {Object.values(PointSystemType).map((type) => (
           <button
             key={type}
@@ -36,8 +36,10 @@ export function PointSystemPicker({ value, onChange }: PointSystemPickerProps) {
             aria-pressed={type === value}
             onClick={() => onChange(type)}
             className={cn(
-              'h-13 cursor-pointer border-[3px] border-border transition-[filter] hover:brightness-95 font-body text-[16px] font-extrabold outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring',
-              type === value ? 'bg-option-selected text-option-selected-foreground shadow-control' : 'bg-input text-foreground',
+              'h-13 cursor-pointer rounded-control border-[3px] border-border transition-[filter,background-color] hover:brightness-95 font-body text-[16px] font-extrabold outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring work:h-12 work:border work:text-[15px] work:font-medium work:hover:brightness-100 work:focus-visible:outline-2 work:focus-visible:outline-offset-2',
+              type === value
+                ? 'bg-option-selected text-option-selected-foreground border-option-selected-border shadow-control'
+                : 'bg-input text-foreground work:hover:bg-row-hover',
             )}
           >
             {content.create.pointSystemName[type]}

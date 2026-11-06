@@ -6,7 +6,6 @@ import {
   GridMode,
   HoverSource,
   MOUSE_POINTER_TYPE,
-  SQUARE_GAP_PX,
 } from '@/constants'
 import { useBreakpoint, useContent, useEscapeKey, useFullyInView } from '@/hooks'
 import type { GridMode as GridModeValue, HoveredSquare, RevealPayload, Selection } from '@/types'
@@ -223,20 +222,27 @@ export function EstimationGrid({
   return (
     // min-w-0: as a grid or flex item it would otherwise refuse to shrink below
     // its Squares, and push the page sideways instead of scrolling itself.
-    <div className="relative flex min-w-0 flex-col gap-2">
-      <span className="font-label text-[11px] tablet:hidden">{content.axisResources}</span>
+    <div className="relative flex min-w-0 flex-col gap-2 work:max-w-full work:self-center work:pt-6 work:pb-2">
+      {/* Work labels both axes in words at every width (NL-Active-*), so the
+          phone's label above the grid stays, and the vertical one goes. */}
+      <span className="font-label text-[11px] text-axis-label tablet:hidden work:text-[13px] work:font-medium work:tablet:block">
+        {content.axisResources}
+      </span>
 
       <div className="flex justify-center gap-2">
-        <div className="hidden w-[18px] shrink-0 items-center tablet:flex">
+        <div className="hidden w-[18px] shrink-0 items-center text-axis-label tablet:flex work:tablet:hidden">
           <span className="rotate-180 font-label text-[11px] [writing-mode:vertical-rl]">
             {content.axisResources}
           </span>
         </div>
 
-        {/* pt-1 matches the scroller's padding, so each value sits on its row. */}
+        {/* pt-1 matches the scroller's padding, so each value sits on its row.
+            Work has no padding there, only the frame's 1px edge, and sets the
+            values on a raised strip (NL-Active-*). The Square gap is a class
+            rather than a style so Work can close it (G6, gapless). */}
         <div
-          className="grid w-[22px] shrink-0 justify-items-end pt-1"
-          style={{ gridTemplateRows: template, gap: SQUARE_GAP_PX }}
+          className="grid w-[22px] shrink-0 justify-items-end gap-1 self-start pt-1 work:w-6 work:justify-items-center work:gap-0 work:rounded-strip work:bg-raised work:pt-px work:tablet:w-8"
+          style={{ gridTemplateRows: template }}
         >
           {rows.map((resource) => (
             <AxisValue
@@ -252,60 +258,66 @@ export function EstimationGrid({
               keeps a lifted Square's offset and shadow inside the clip. */}
           <div
             ref={scrollerRef}
-            className="overflow-x-auto p-1"
+            className="overflow-x-auto p-1 work:p-0"
             onScroll={hovered || pinned ? rerender : undefined}
           >
-            {/* Cleared on leaving the whole grid, not each Square, so the
-                preview doesn't flicker across the gutters. */}
-            <div
-              className="grid"
-              style={{ gridTemplateColumns: template, gap: SQUARE_GAP_PX }}
-              onAnimationEnd={isWaveLanded ? undefined : handleWaveEnd}
-              onPointerLeave={() => {
-                if (hovered?.source === HoverSource.POINTER) {
-                  onHoveredChange(null)
-                }
-              }}
-            >
-              {rows.map((resource) => (
-                <Fragment key={resource}>
-                  {cols.map((time) => {
-                    const square = { time, resource }
-                    const names = namesAt(square)
-                    const isPinned = Boolean(shownPinned && isSameSquare(shownPinned, square))
+            {/* Work frames the Squares in one 1px edge with 6px corners. Each
+                Square draws its own right and bottom rule; the grid runs 1px
+                past the frame on those sides so the outermost rules are clipped
+                and only the frame's edge shows. Play leaves it a bare box. */}
+            <div className="w-fit work:overflow-hidden work:rounded-control work:border work:border-border">
+              {/* Cleared on leaving the whole grid, not each Square, so the
+                  preview doesn't flicker across the gutters. */}
+              <div
+                className="grid gap-1 work:-mr-px work:-mb-px work:gap-0"
+                style={{ gridTemplateColumns: template }}
+                onAnimationEnd={isWaveLanded ? undefined : handleWaveEnd}
+                onPointerLeave={() => {
+                  if (hovered?.source === HoverSource.POINTER) {
+                    onHoveredChange(null)
+                  }
+                }}
+              >
+                {rows.map((resource) => (
+                  <Fragment key={resource}>
+                    {cols.map((time) => {
+                      const square = { time, resource }
+                      const names = namesAt(square)
+                      const isPinned = Boolean(shownPinned && isSameSquare(shownPinned, square))
 
-                    return (
-                      <GridCell
-                        key={time}
-                        squareKey={squareKey(time, resource)}
-                        size={size}
-                        label={squareLabel(mode, square, selection, names, faceSize, content)}
-                        labelSize={faceSize}
-                        fillClass={squareFillClass(mode, square, selection, names)}
-                        highlight={squareHighlight(mode, square, hovered, shownPinned)}
-                        ariaLabel={squareAriaLabel(mode, square, selection, names, content)}
-                        pressed={votes ? Boolean(selection && isSameSquare(selection, square)) : undefined}
-                        expanded={isReadonly && names.length > 0 ? isPinned : undefined}
-                        revealDelay={isInteractive ? undefined : revealDelay(axisValues, square)}
-                        isWavePaused={!isWaveStarted}
-                        flashId={flashes?.get(squareKey(time, resource))}
-                        hasPointerCursor={votes || names.length > 0}
-                        tabIndex={isSameSquare(tabStop, square) ? 0 : -1}
-                        onClick={() => handleClick(square)}
-                        onPointerEnter={(event) => handlePointerEnter(event, square)}
-                        onFocus={(event) => handleFocus(event, square)}
-                        onBlur={handleBlur}
-                        onKeyDown={(event) => handleArrowKey(event, square)}
-                      />
-                    )
-                  })}
-                </Fragment>
-              ))}
+                      return (
+                        <GridCell
+                          key={time}
+                          squareKey={squareKey(time, resource)}
+                          size={size}
+                          label={squareLabel(mode, square, selection, names, faceSize, content)}
+                          labelSize={faceSize}
+                          fillClass={squareFillClass(mode, square, selection, names)}
+                          highlight={squareHighlight(mode, square, hovered, shownPinned)}
+                          ariaLabel={squareAriaLabel(mode, square, selection, names, content)}
+                          pressed={votes ? Boolean(selection && isSameSquare(selection, square)) : undefined}
+                          expanded={isReadonly && names.length > 0 ? isPinned : undefined}
+                          revealDelay={isInteractive ? undefined : revealDelay(axisValues, square)}
+                          isWavePaused={!isWaveStarted}
+                          flashId={flashes?.get(squareKey(time, resource))}
+                          hasPointerCursor={votes || names.length > 0}
+                          tabIndex={isSameSquare(tabStop, square) ? 0 : -1}
+                          onClick={() => handleClick(square)}
+                          onPointerEnter={(event) => handlePointerEnter(event, square)}
+                          onFocus={(event) => handleFocus(event, square)}
+                          onBlur={handleBlur}
+                          onKeyDown={(event) => handleArrowKey(event, square)}
+                        />
+                      )
+                    })}
+                  </Fragment>
+                ))}
+              </div>
             </div>
 
             <div
-              className="mt-1.5 grid justify-items-center"
-              style={{ gridTemplateColumns: template, gap: SQUARE_GAP_PX }}
+              className="mt-1.5 grid justify-items-center gap-1 work:mt-1 work:h-7 work:w-fit work:gap-0 work:rounded-strip work:bg-raised work:pl-px"
+              style={{ gridTemplateColumns: template }}
             >
               {cols.map((time) => (
                 <AxisValue key={time} value={time} emphasis={axisEmphasis(time, hovered?.square.time)} />
@@ -313,7 +325,9 @@ export function EstimationGrid({
             </div>
           </div>
 
-          <span className="self-end font-label text-[11px]">{content.axisTime}</span>
+          <span className="self-end font-label text-[11px] text-axis-label work:text-[13px] work:font-medium">
+            {content.axisTime}
+          </span>
         </div>
       </div>
 

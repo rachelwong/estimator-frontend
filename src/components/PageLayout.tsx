@@ -41,6 +41,9 @@ interface PageLayoutProps {
 //
 // The theme switch leads the right-hand group on every screen and at every
 // width — on a phone it sits beside the menu button, never inside the menu.
+//
+// Work's header (NL-* boards) is one 56px bar at every width with a 1px rule,
+// 16px in from the edge on a phone and 32px from tablet up.
 export function PageLayout({ actions, children, footer, hasOwnFeedbackButton, onLogoLinkClick }: PageLayoutProps) {
   const content = useContent()
 
@@ -49,12 +52,12 @@ export function PageLayout({ actions, children, footer, hasOwnFeedbackButton, on
       {/* The Feedback tile throws confetti well past its own 44px, and it sits
           at the right edge on a phone — so the bar clips sideways and stays
           open downwards, where the confetti and the tile's label belong. */}
-      <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-4 overflow-x-clip border-b-[3px] border-header-border bg-header px-5 tablet:h-[72px] tablet:px-10 desktop:h-[84px] desktop:px-20">
+      <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-4 overflow-x-clip border-b-[3px] border-header-border bg-header px-5 tablet:h-[72px] tablet:px-10 desktop:h-[84px] desktop:px-20 work:h-14 work:border-b work:px-4 work:tablet:h-14 work:tablet:px-8 work:desktop:h-14 work:desktop:px-8">
         <Link to={RoutePath.WELCOME} aria-label={content.brand.homeLinkLabel} onClick={onLogoLinkClick}>
           <LogoLockup />
         </Link>
 
-        <div className="flex items-center gap-3.5">
+        <div className="flex items-center gap-3.5 work:gap-3 work:tablet:gap-6">
           <ThemeSwitch />
           {!hasOwnFeedbackButton && <FeedbackButton />}
           {actions}

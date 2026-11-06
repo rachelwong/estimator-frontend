@@ -16,7 +16,7 @@ export function SessionDescription({ description }: SessionDescriptionProps) {
   return (
     <p
       data-description
-      className="font-body text-center font-medium text-[15px] leading-[1.45] break-words text-foreground tablet:text-[16px]"
+      className="font-body text-center font-medium text-[15px] leading-[1.45] break-words text-foreground tablet:text-[16px] work:rounded-panel work:bg-raised work:px-5 work:py-4 work:text-left work:text-[14px] work:leading-[23px] work:tablet:text-[15px]"
     >
       {description.split(URL_PATTERN).map((piece, index) =>
         index % 2 === 1 ? (

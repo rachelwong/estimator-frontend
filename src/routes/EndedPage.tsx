@@ -28,8 +28,8 @@ export default function EndedPage() {
   const content = useContent()
 
   return (
-    <PageLayout actions={<StartSessionLink className="hidden text-[12px] tablet:inline-flex" />}>
-      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
+    <PageLayout actions={<StartSessionLink className="hidden text-[12px] tablet:inline-flex work:h-9 work:px-4 work:text-[14px] work:font-semibold" />}>
+      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10 work:pt-4 work:pb-10 work:tablet:pt-8 work:tablet:pb-14 work:desktop:pt-10 work:desktop:pb-16">
         <SpriteScatter />
 
         <RevealWindow
@@ -44,7 +44,7 @@ export default function EndedPage() {
         >
           {live.error && <ErrorBanner error={live.error} onDismiss={dismissError} />}
 
-          <StartSessionLink className="h-[52px] w-full text-[14px] tablet:hidden" />
+          <StartSessionLink className="h-[52px] w-full text-[14px] tablet:hidden work:h-12 work:text-[15px] work:font-semibold" />
         </RevealWindow>
       </div>
 

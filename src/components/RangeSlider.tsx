@@ -44,15 +44,15 @@ export function RangeSlider({
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-baseline justify-between">
-        <label htmlFor={id} className="text-[15px] font-extrabold">
+        <label htmlFor={id} className="text-[15px] font-extrabold work:text-[14px] work:leading-5 work:font-medium">
           {content.create.sliderLabel}
         </label>
-        <span className="font-display text-[23px] text-primary tabular-nums">
+        <span className="font-display text-[23px] text-primary tabular-nums work:text-[20px] work:leading-none work:font-semibold work:text-foreground">
           {value}
         </span>
       </div>
 
-      <div className="flex h-11 items-center">
+      <div className="flex h-11 items-center work:h-5">
         <input
           id={id}
           type="range"
@@ -71,14 +71,16 @@ export function RangeSlider({
       {/* Inset by half the thumb, which is how far its centre can travel. */}
       <div
         aria-hidden="true"
-        className="relative mx-3.5 h-3.5 font-label text-[11px]"
+        className="relative mx-3.5 h-3.5 font-label text-[11px] work:mx-2.5 work:h-3 work:text-[12px] work:leading-none work:font-medium"
       >
         {sliderTickIndexes(pointSystemType, values.length).map((tick) => (
           <span
             key={tick}
             className={cn(
               "absolute top-0 -translate-x-1/2",
-              tick === index ? "text-range-tick-selected" : "text-foreground",
+              tick === index
+                ? "text-range-tick-selected work:font-semibold"
+                : "text-foreground work:text-subtle-foreground",
             )}
             style={{ left: `${position(tick)}%` }}
           >

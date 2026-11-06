@@ -11,7 +11,7 @@ export function AxisValue({ value, emphasis = AxisValueEmphasis.NONE }: AxisValu
   return (
     <span
       className={cn(
-        'flex items-center font-label text-[11px] tabular-nums',
+        'flex items-center font-label text-[11px] tabular-nums work:font-medium work:tablet:text-[12px]',
         AXIS_VALUE_EMPHASIS_CLASS[emphasis],
       )}
     >

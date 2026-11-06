@@ -21,7 +21,7 @@ export function DitherBand() {
   return (
     <svg
       aria-hidden="true"
-      className="block w-full bg-background"
+      className="block w-full bg-background work:hidden"
       height={DITHER_GLOW_DEPTH_PX}
       shapeRendering="crispEdges"
     >

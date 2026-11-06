@@ -19,11 +19,11 @@ export function LoadingNotice() {
   return (
     <div
       role="status"
-      className="fixed inset-x-0 bottom-6 mx-auto flex w-fit items-center gap-2.5 rounded-panel border-[3px] border-border bg-card px-4 py-2.5 shadow-notice"
+      className="fixed inset-x-0 bottom-6 mx-auto flex w-fit items-center gap-2.5 rounded-panel border-[3px] border-border bg-card px-4 py-2.5 shadow-notice work:border work:bg-raised work:shadow-float"
     >
       <PixelProgressBar size={PixelBarSize.INLINE} />
 
-      <span className="font-label text-[11px] text-foreground">{content.loading.notice}</span>
+      <span className="font-label text-[11px] text-foreground work:text-[14px] work:font-medium">{content.loading.notice}</span>
     </div>
   )
 }

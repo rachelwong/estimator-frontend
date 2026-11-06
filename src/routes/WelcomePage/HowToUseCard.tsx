@@ -33,7 +33,7 @@ export function HowToUseCard({
     <li className="flex">
       <Card
         className={cn(
-          "flex w-full flex-col gap-3.5 transition-[translate,box-shadow] duration-[90ms] hover:translate-x-[6px] hover:translate-y-[6px] hover:shadow-none",
+          "flex w-full flex-col gap-3.5 transition-[translate,box-shadow] duration-[90ms] hover:translate-x-[6px] hover:translate-y-[6px] hover:shadow-none work:gap-3 work:rounded-bar work:p-6 work:hover:translate-0 work:tablet:p-6 work:desktop:p-6",
           tintClass,
         )}
       >
@@ -46,12 +46,12 @@ export function HowToUseCard({
 
         <h3
           className={
-            "font-display text-[17px] leading-[1.1] text-foreground tablet:text-[19px] desktop:text-[20px]"
+            "font-display text-[17px] leading-[1.1] text-foreground tablet:text-[19px] desktop:text-[20px] work:text-[18px] work:leading-[1.33] work:font-medium work:tablet:text-[18px] work:desktop:text-[18px]"
           }
         >
           {title}
         </h3>
-        <p className="text-[16px] leading-[1.55] text-muted-foreground">{parse(description)}</p>
+        <p className="text-[16px] leading-[1.55] text-muted-foreground work:text-[15px] work:leading-6">{parse(description)}</p>
       </Card>
     </li>
   );

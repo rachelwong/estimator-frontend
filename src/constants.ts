@@ -149,7 +149,8 @@ export const CROWD_CLASS = [
 export const AREA_SQUARE_CLASS = "bg-area text-crowd-foreground";
 
 // Your own Selection while the Session runs.
-export const SELECTION_SQUARE_CLASS = "bg-selection text-selection-foreground";
+// Work rings it as well (`shadow-selection`); Play has no ring there.
+export const SELECTION_SQUARE_CLASS = "bg-selection text-selection-foreground shadow-selection";
 
 // The headcount at which a Square stops being one person's and becomes a
 // crowd: its face says a count instead of a name.
@@ -213,7 +214,7 @@ export const SQUARE_HIGHLIGHT_CLASS = {
   [SquareHighlight.NONE]: "z-0",
   [SquareHighlight.AREA_PREVIEW]: "z-0 shadow-area-preview",
   [SquareHighlight.LIFTED]:
-    "z-10 -translate-x-[3px] -translate-y-[3px] shadow-lift",
+    "z-10 -translate-x-[3px] -translate-y-[3px] shadow-lift work:translate-0",
 } as const;
 
 // How a Square came to be hovered. The Area preview follows the mouse only.
@@ -252,8 +253,9 @@ export const POPOVER_BULLET_CLASS = ["bg-selection", "bg-crowd-2"] as const;
 
 // "Your Square" in the Reveal (§6): a 3px `selection` ring inset 7px, drawn
 // over whatever crowd fill the Square has.
+// Work draws a double inset ring instead (`shadow-your-square`, NL-Components).
 export const YOUR_SQUARE_CLASS =
-  "outline-3 outline-solid outline-selection -outline-offset-7";
+  "outline-3 outline-solid outline-selection -outline-offset-7 shadow-your-square work:outline-none";
 
 // The Reveal's diagonal wave (§8): each Square starts this much later than
 // the one before it on the diagonal — (time index + resources index) × step.
@@ -280,7 +282,9 @@ export const WindowVariant = {
 } as const;
 
 // What each screen's Window measures (§5), and the body padding where its
-// artboard differs from the Window default. An empty string takes the default:
+// artboard differs from the Window default. `work:` widths are the NL-* boards'
+// cards; Work's body padding is the Window default except on the error screen,
+// whose row needs its own gaps restated over Work's. An empty string takes the default:
 // loading and the menu sit in an element that already sizes them, and loading's
 // body is the default one.
 export const WINDOW_VARIANT_CLASS = {
@@ -288,14 +292,14 @@ export const WINDOW_VARIANT_CLASS = {
   // tighter than the default on mobile: a Fibonacci 7×7 at 39px needs 335px,
   // and the default padding leaves 328.
   [WindowVariant.SESSION]: {
-    window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[780px]",
+    window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[780px] work:tablet:max-w-[754px] work:desktop:max-w-[880px]",
     body: "gap-3.5 px-3 pt-2.5 pb-3.5 desktop:px-9 desktop:pt-7",
   },
   // Create and Join are narrower than a session's, since they hold a form
   // rather than a grid. Both take the artboards' wider body from tablet up —
   // 32/40/36 around a 24px gap — where the default is tuned tighter.
   [WindowVariant.CREATE]: {
-    window: "w-full max-w-[366px] tablet:max-w-[600px] desktop:max-w-[640px]",
+    window: "w-full max-w-[366px] tablet:max-w-[600px] desktop:max-w-[640px] work:tablet:max-w-[560px] work:desktop:max-w-[560px]",
     body: "tablet:gap-6 tablet:px-10 tablet:pt-8 tablet:pb-9",
   },
   [WindowVariant.JOIN]: {
@@ -305,8 +309,8 @@ export const WINDOW_VARIANT_CLASS = {
   // The widest of the screens (§5, §7): the broken grid sits beside the words
   // from tablet up. On a phone it stacks above them.
   [WindowVariant.ERROR]: {
-    window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[900px]",
-    body: "gap-6 px-[18px] pt-5 pb-5 tablet:flex-row tablet:items-center tablet:gap-10 tablet:px-9 tablet:pt-10 tablet:pb-10 desktop:gap-14 desktop:px-12 desktop:pt-10 desktop:pb-10",
+    window: "w-full max-w-[366px] tablet:max-w-[740px] desktop:max-w-[900px] work:desktop:max-w-[760px]",
+    body: "gap-6 px-[18px] pt-5 pb-5 tablet:flex-row tablet:items-center tablet:gap-10 tablet:px-9 tablet:pt-10 tablet:pb-10 desktop:gap-14 desktop:px-12 desktop:pt-10 desktop:pb-10 work:gap-6 work:p-5 work:tablet:gap-10 work:tablet:p-10 work:desktop:gap-14 work:desktop:p-12",
   },
   [WindowVariant.MENU]: {
     window: "",
@@ -406,7 +410,7 @@ export const CHIP_VARIANT_CLASS = {
 
 export const CHIP_SIZE_CLASS = {
   [ChipSize.LABEL]: "px-[7px] py-0.5 font-label text-[11px]",
-  [ChipSize.NAME]: "h-9 gap-2 px-2.5 font-body text-[14px] font-bold",
+  [ChipSize.NAME]: "h-9 gap-2 px-2.5 font-body text-[14px] font-bold work:h-8 work:px-3 work:font-medium",
 } as const;
 
 // The loader at its two sizes (DESIGN.md §7): 220×18 in eight blocks centred in

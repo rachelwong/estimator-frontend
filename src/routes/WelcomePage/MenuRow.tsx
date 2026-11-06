@@ -20,14 +20,14 @@ export function MenuRow({ href, sprite, label, sublabel, opensInNewTab, onClick 
       <a
         href={href}
         target={opensInNewTab ? '_blank' : undefined}
-        className="flex min-h-[60px] items-center justify-between gap-3 border-b-2 border-dashed border-border-subtle px-1 py-2 text-foreground outline-none focus-visible:outline-[3px] focus-visible:outline-ring"
+        className="flex min-h-[60px] items-center justify-between gap-3 border-b-2 border-dashed border-border-subtle work:border-b work:border-solid px-1 py-2 text-foreground outline-none focus-visible:outline-[3px] focus-visible:outline-ring"
         onClick={onClick}
       >
         <span className="flex items-center gap-3.5">
           <Sprite source={sprite} className="h-auto w-[30px] shrink-0" />
 
           <span className="flex flex-col gap-0.5">
-            <span className="text-[19px] leading-tight font-extrabold">{label}</span>
+            <span className="text-[19px] leading-tight font-extrabold work:text-[17px] work:font-medium">{label}</span>
             {sublabel && <span className="font-label text-[10px] text-subtle-foreground">{sublabel}</span>}
           </span>
         </span>

@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button"
 // Restyled in place to the Fold and Flip window (DESIGN.md §4): square, a 3px
 // ink edge, the 8px window shadow, over the same ink 45% backdrop the mobile
 // menu uses (§7). No fade or zoom — nothing in this design eases in.
+// Work (NL-Components): a 1px edge, 12px corners and a soft drop, with Cancel
+// as a ghost beside the confirm. Cancel is `ghost` in both themes; in Play that
+// variant is the white secondary look it always had.
 // AlertDialogMedia went with the restyle; it had no caller.
 
 function AlertDialog({
@@ -61,7 +64,7 @@ function AlertDialogContent({
         data-slot="alert-dialog-content"
         data-size={size}
         className={cn(
-          "group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-24px)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-card border-[3px] border-border bg-card p-5 text-foreground shadow-dialog outline-none data-[size=default]:max-w-[366px] data-[size=sm]:max-w-xs data-[size=default]:tablet:max-w-[440px] tablet:p-7",
+          "group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-24px)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-card border-[3px] border-border bg-card p-5 text-foreground shadow-dialog outline-none data-[size=default]:max-w-[366px] data-[size=sm]:max-w-xs data-[size=default]:tablet:max-w-[440px] tablet:p-7 work:gap-6 work:border",
           className
         )}
         {...props}
@@ -78,7 +81,7 @@ function AlertDialogHeader({
     <div
       data-slot="alert-dialog-header"
       className={cn(
-        "grid gap-2 text-left",
+        "grid gap-2 text-left work:gap-3",
         className
       )}
       {...props}
@@ -94,7 +97,7 @@ function AlertDialogFooter({
     <div
       data-slot="alert-dialog-footer"
       className={cn(
-        "flex flex-col-reverse gap-3 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 tablet:flex-row tablet:justify-end",
+        "flex flex-col-reverse gap-3 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 tablet:flex-row tablet:justify-end work:gap-2",
         className
       )}
       {...props}
@@ -110,7 +113,7 @@ function AlertDialogTitle({
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
       className={cn(
-        "font-display text-[20px] leading-tight tablet:text-[22px]",
+        "font-display text-[20px] leading-tight tablet:text-[22px] work:font-medium",
         className
       )}
       {...props}
@@ -154,7 +157,7 @@ function AlertDialogAction({
 
 function AlertDialogCancel({
   className,
-  variant = "secondary",
+  variant = "ghost",
   size = "default",
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel> &

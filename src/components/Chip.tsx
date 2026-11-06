@@ -27,7 +27,7 @@ export function Chip({
   return (
     <span
       className={cn(
-        'inline-flex w-fit items-center whitespace-nowrap rounded-control border-2 text-foreground',
+        'inline-flex w-fit items-center whitespace-nowrap rounded-control border-2 text-foreground work:border',
         CHIP_VARIANT_CLASS[variant],
         CHIP_SIZE_CLASS[size],
         className,

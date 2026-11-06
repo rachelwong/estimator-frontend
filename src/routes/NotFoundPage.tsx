@@ -17,7 +17,7 @@ export function NotFoundPage() {
           <Button asChild size="lg">
             <Link to={RoutePath.NEW}>{content.action.startSession}</Link>
           </Button>
-          <Button asChild size="lg" variant="secondary">
+          <Button asChild size="lg" variant="ghost">
             <Link to={RoutePath.WELCOME}>{content.action.backToHome}</Link>
           </Button>
         </>

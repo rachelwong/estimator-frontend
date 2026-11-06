@@ -15,7 +15,7 @@ export function SquareTooltip({ anchorKey, boundsRef, text }: SquareTooltipProps
       anchorKey={anchorKey}
       boundsRef={boundsRef}
       role="tooltip"
-      className="pointer-events-none z-20 rounded-control bg-inverse px-[11px] py-2 font-label text-[11px] whitespace-nowrap text-inverse-foreground"
+      className="pointer-events-none z-20 rounded-control bg-inverse px-[11px] py-2 font-label text-[11px] whitespace-nowrap text-inverse-foreground work:flex work:h-8 work:items-center work:px-3 work:py-0 work:text-[12px] work:font-medium work:tabular-nums work:shadow-float"
     >
       {text}
     </GridFloat>

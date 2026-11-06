@@ -22,7 +22,7 @@ export function ErrorBanner({ error, onDismiss }: ErrorBannerProps) {
   return (
     <div
       role="alert"
-      className="flex items-start gap-3 rounded-panel border-[3px] border-error-border bg-error-surface px-4 py-3 font-body text-[15px] font-bold text-foreground shadow-notice"
+      className="flex items-start gap-3 rounded-panel border-[3px] border-error-border bg-error-surface px-4 py-3 font-body text-[15px] font-bold text-foreground shadow-notice work:border work:py-3 work:pr-3 work:text-[14px] work:leading-[22px] work:font-normal"
     >
       <p className="flex-1">{error.message}</p>
 

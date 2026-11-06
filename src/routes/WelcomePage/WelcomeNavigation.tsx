@@ -27,7 +27,7 @@ export function WelcomeNavigation() {
     <>
       <nav
         aria-label={navigation.mainLabel}
-        className="hidden items-center gap-7 text-[16px] font-bold tablet:flex"
+        className="hidden items-center gap-7 text-[16px] font-bold tablet:flex work:gap-6 work:text-[15px] work:font-medium work:text-nav-foreground work:desktop:gap-7"
       >
         <a
           href={`#${WelcomeSection.HOW_TO_USE}`}
@@ -42,7 +42,7 @@ export function WelcomeNavigation() {
           {navigation.gitHub}
         </a>
         <FeedbackButton />
-        <StartSessionButton className="text-[12px]" />
+        <StartSessionButton className="text-[12px] work:h-9 work:px-4 work:text-[14px] work:font-semibold" />
       </nav>
 
       {/* Icon only. Open, it turns yellow, drops its shadow and shows a cross. */}
@@ -52,7 +52,7 @@ export function WelcomeNavigation() {
         aria-expanded={isMenuOpen}
         aria-controls={menuId}
         className={cn(
-          "inline-flex size-11 cursor-pointer items-center justify-center border-[3px] border-ghost-border outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring tablet:hidden",
+          "inline-flex size-11 cursor-pointer items-center justify-center rounded-control border-[3px] border-ghost-border outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring tablet:hidden work:border work:focus-visible:outline-2 work:focus-visible:outline-offset-2",
           isMenuOpen
             ? "bg-action"
             : "bg-secondary shadow-icon",

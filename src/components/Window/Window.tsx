@@ -27,19 +27,35 @@ interface WindowProps {
 // The design gives each screen its own width and body padding (§5), so the
 // window is told which screen it is framing and reads both off WINDOW_VARIANT_CLASS.
 // No caller passes classes in: none of them varies what it would pass.
+//
+// Work has no window costume (NL-* boards): the frame is a plain card, 1px
+// edge and 12px corners, with no title bar. The title goes with the bar — the
+// h1 inside already names the screen — and the chip turns into a quiet role
+// label in the card's top-right corner, level with the heading.
 export function Window({ title, variant, chip, children }: WindowProps) {
   const variantClass = WINDOW_VARIANT_CLASS[variant]
 
   return (
     <section
-      className={cn('border-[3px] border-border-subtle bg-card shadow-window', variantClass.window)}
+      className={cn(
+        'relative rounded-card border-[3px] border-border-subtle bg-card shadow-window work:border',
+        variantClass.window,
+      )}
     >
-      <div className="flex h-11 items-center justify-between gap-2.5 border-b-[3px] border-border-subtle bg-primary px-3.5 font-label text-[12px] text-primary-foreground">
-        <span className="truncate">{title}</span>
+      {/* In Work the bar dissolves (`contents`): the title and the dots go, and
+          the chip, still one element, moves to the card's corner as plain text. */}
+      <div className="flex h-11 items-center justify-between gap-2.5 border-b-[3px] border-border-subtle bg-primary px-3.5 font-label text-[12px] text-primary-foreground work:contents">
+        <span className="truncate work:hidden">{title}</span>
 
-        <span className="flex shrink-0 items-center gap-2.5">
-          {chip && <Chip>{chip}</Chip>}
-          <WindowChrome />
+        <span className="flex shrink-0 items-center gap-2.5 work:absolute work:top-4 work:right-4 work:tablet:top-8 work:tablet:right-8">
+          {chip && (
+            <Chip className="work:border-0 work:bg-transparent work:p-0 work:font-body work:text-[13px] work:leading-4 work:font-medium work:text-muted-foreground">
+              {chip}
+            </Chip>
+          )}
+          <span className="contents work:hidden">
+            <WindowChrome />
+          </span>
         </span>
       </div>
 
@@ -49,7 +65,7 @@ export function Window({ title, variant, chip, children }: WindowProps) {
           doesn't fit that says so in its WINDOW_VARIANT_CLASS body. */}
       <div
         className={cn(
-          'flex flex-col gap-5 px-4 pt-[18px] pb-5 tablet:gap-[18px] tablet:px-7 tablet:pt-5 tablet:pb-7 desktop:px-10 desktop:pt-8 desktop:pb-9',
+          'flex flex-col gap-5 px-4 pt-[18px] pb-5 tablet:gap-[18px] tablet:px-7 tablet:pt-5 tablet:pb-7 desktop:px-10 desktop:pt-8 desktop:pb-9 work:p-4 work:tablet:gap-6 work:tablet:p-8',
           variantClass.body,
         )}
       >

@@ -20,15 +20,15 @@ export function SquarePopover({ anchorKey, boundsRef, title, names }: SquarePopo
       boundsRef={boundsRef}
       role="dialog"
       ariaLabel={title}
-      className="z-30 flex w-[190px] flex-col gap-2 rounded-panel bg-popover px-3 pt-3 pb-2.5 text-popover-foreground shadow-float tablet:w-[210px]"
+      className="z-30 flex w-[190px] flex-col gap-2 rounded-panel bg-popover px-3 pt-3 pb-2.5 text-popover-foreground shadow-float tablet:w-[210px] work:w-[176px] work:border work:border-border work:px-3.5 work:py-3 work:tablet:w-[176px]"
     >
-      <span className="font-label text-[11px]">{title}</span>
+      <span className="font-label text-[11px] work:text-[12px] work:leading-4 work:text-subtle-foreground">{title}</span>
 
-      <ul className="flex flex-col gap-1">
+      <ul className="flex flex-col gap-1 work:gap-0">
         {names.map((name, index) => (
-          <li key={name} className="flex items-center gap-2 text-[14px] font-semibold">
+          <li key={name} className="flex items-center gap-2 text-[14px] font-semibold work:h-6 work:gap-2.5 work:font-normal">
             <span
-              className={cn('size-2 shrink-0', POPOVER_BULLET_CLASS[index % POPOVER_BULLET_CLASS.length])}
+              className={cn('size-2 shrink-0 work:rounded-[2px]', POPOVER_BULLET_CLASS[index % POPOVER_BULLET_CLASS.length])}
             />
             <span className="max-w-[140px] truncate tablet:max-w-[160px]">{name}</span>
           </li>

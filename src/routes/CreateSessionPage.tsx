@@ -59,22 +59,22 @@ export default function CreateSessionPage() {
 
   return (
     <PageLayout>
-      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
+      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10 work:pt-4 work:tablet:pt-12 work:desktop:pt-16 work:desktop:pb-20">
         <SpriteScatter />
 
         <Window title={content.create.windowTitle} variant={WindowVariant.CREATE} chip={content.role.admin}>
-          <div className="flex flex-col gap-1.5">
-            <h1 className="font-display text-[20px] leading-[1.05] text-foreground tablet:text-[28px]">
+          <div className="flex flex-col gap-1.5 work:gap-2 work:pr-20">
+            <h1 className="font-display text-[20px] leading-[1.05] text-foreground tablet:text-[28px] work:text-[24px] work:leading-[1.2] work:font-medium work:tracking-[-0.01em] work:tablet:text-[28px]">
               {content.create.heading}
             </h1>
-            <p className="text-[14px] leading-[1.45] text-muted-foreground">
+            <p className="text-[14px] leading-[1.45] text-muted-foreground work:leading-[22px] work:tablet:text-[15px] work:tablet:leading-6">
               {content.create.intro}
             </p>
           </div>
 
           <Form method="post" className="flex flex-col gap-5 tablet:gap-6">
             <div className="flex flex-col gap-2">
-              <label htmlFor="adminName" className="text-[15px] font-extrabold">
+              <label htmlFor="adminName" className="text-[15px] font-extrabold work:text-[14px] work:leading-5 work:font-medium">
                 {content.nameField.label}
               </label>
               <Input
@@ -88,7 +88,7 @@ export default function CreateSessionPage() {
                 aria-invalid={touched && !isNameOk}
               />
               {touched && !isNameOk && (
-                <p className="text-[14px] text-error-foreground">{content.validation.nameRule}</p>
+                <p className="text-[14px] text-error-foreground work:text-[13px] work:leading-[18px]">{content.validation.nameRule}</p>
               )}
             </div>
 
@@ -96,13 +96,13 @@ export default function CreateSessionPage() {
               <div className="flex items-baseline justify-between gap-3">
                 <label
                   htmlFor="description"
-                  className="text-[15px] font-extrabold"
+                  className="text-[15px] font-extrabold work:text-[14px] work:leading-5 work:font-medium"
                 >
                   {content.create.descriptionLabel}
                 </label>
                 <span
                   id="description-count"
-                  className="font-label text-[12px] text-subtle-foreground"
+                  className="font-label text-[12px] text-subtle-foreground work:text-[13px] work:leading-4 work:tabular-nums"
                 >
                   {descriptionLength}/{MAX_DESCRIPTION_LENGTH}
                 </span>
@@ -118,7 +118,7 @@ export default function CreateSessionPage() {
                 aria-invalid={!isDescriptionOk}
               />
               {!isDescriptionOk && (
-                <p className="text-[14px] text-error-foreground">
+                <p className="text-[14px] text-error-foreground work:text-[13px] work:leading-[18px]">
                   {content.validation.descriptionRule(MAX_DESCRIPTION_LENGTH)}
                 </p>
               )}
@@ -136,7 +136,7 @@ export default function CreateSessionPage() {
             />
 
             {actionData && (
-              <p className="text-[14px] text-error-foreground">
+              <p className="text-[14px] text-error-foreground work:text-[13px] work:leading-[18px]">
                 {actionErrorMessage(actionData, content.actionFailure)}
               </p>
             )}

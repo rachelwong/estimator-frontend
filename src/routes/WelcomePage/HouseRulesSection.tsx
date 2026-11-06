@@ -15,11 +15,11 @@ export function HouseRulesSection() {
 
   return (
     <section
-      className="flex flex-col gap-6 px-5 pt-20 tablet:gap-9 tablet:px-10 tablet:pt-[110px] desktop:px-20"
+      className="flex flex-col gap-6 px-5 pt-20 tablet:gap-9 tablet:px-10 tablet:pt-[110px] desktop:px-20 work:mx-auto work:w-full work:max-w-[1440px] work:px-5 work:tablet:px-10 work:desktop:px-[120px] work:pt-[72px] work:tablet:gap-8 work:tablet:pt-[88px] work:desktop:pt-28"
     >
       <WelcomeSectionHeading text={rules.heading} />
 
-      <ul className="grid gap-4 tablet:grid-cols-2 tablet:gap-6 desktop:grid-cols-3">
+      <ul className="grid gap-4 tablet:grid-cols-2 tablet:gap-6 desktop:grid-cols-3 work:mb-16 work:tablet:mb-[88px] work:desktop:mb-28">
         <HouseRule sprite={ruleLive} title={rules.livePrivate.title} description={rules.livePrivate.description} />
         <HouseRule sprite={avatarFour} title={rules.noSignUp.title} description={rules.noSignUp.description} />
         <HouseRule sprite={ruleLink} title={rules.uniqueLink.title} description={rules.uniqueLink.description} />

@@ -27,7 +27,7 @@ export function ErrorScreen({ copy, actions, footer }: ErrorScreenProps) {
 
   return (
     <PageLayout footer={footer}>
-      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
+      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10 work:pt-4 work:tablet:pt-16 work:desktop:pt-[120px] work:desktop:pb-[120px]">
         <SpriteScatter />
 
         <Window
@@ -42,15 +42,17 @@ export function ErrorScreen({ copy, actions, footer }: ErrorScreenProps) {
               wears, and need 470 to sit side by side, so the column takes the
               window's remaining 476. On tablet they wrap, as the artboard's do. */}
           <div className="flex min-w-0 flex-1 flex-col gap-3.5 tablet:max-w-[380px] desktop:max-w-none">
-            <span className="font-label text-[12px] text-foreground">{copy.label}</span>
+            <span className="font-label text-[12px] text-foreground work:text-[13px] work:leading-4 work:font-medium work:text-error-foreground">
+              {copy.label}
+            </span>
 
-            <h1 className="font-display text-[26px] leading-[1.05] text-foreground tablet:text-[32px] desktop:text-[36px]">
+            <h1 className="font-display text-[26px] leading-[1.05] text-foreground tablet:text-[32px] desktop:text-[36px] work:leading-[1.2] work:font-medium work:tracking-[-0.01em] work:desktop:text-[32px]">
               {copy.title}
             </h1>
 
-            <p className="text-[16px] leading-[1.55] text-muted-foreground">{copy.body}</p>
+            <p className="text-[16px] leading-[1.55] text-muted-foreground work:text-[15px] work:leading-6">{copy.body}</p>
 
-            <div className="flex flex-col gap-3.5 *:w-full tablet:flex-row tablet:flex-wrap tablet:*:w-auto">
+            <div className="flex flex-col gap-3.5 *:w-full tablet:flex-row tablet:flex-wrap tablet:*:w-auto work:gap-3 work:pt-2">
               {actions}
             </div>
           </div>

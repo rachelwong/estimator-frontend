@@ -3,7 +3,6 @@ import {
   BROKEN_GRID_HEIGHT_PITCHES,
   BROKEN_GRID_STANDING,
   CROWD_CLASS,
-  SQUARE_GAP_PX,
 } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { CSSProperties } from "react";
@@ -14,7 +13,8 @@ import type { CSSProperties } from "react";
 //
 // Squares are 30 / 44 / 50px. Everything is placed in multiples of one pitch —
 // a Square plus the grid's gap — so the breakpoints only change --square, and
-// the gap stays 4px at every size, as it is on the real grid.
+// the gap stays 4px at every size, as it is on the real grid. Work's real grid
+// has no gap (G6), so neither does this one there.
 //
 // Decorative only: nothing here is a real Square, so none of it is announced.
 export function BrokenGrid() {
@@ -23,11 +23,11 @@ export function BrokenGrid() {
   return (
     <div
       aria-hidden="true"
-      className="relative shrink-0 [--square:30px] tablet:[--square:44px] desktop:[--square:50px]"
+      className="relative shrink-0 [--gap:4px] [--square:30px] tablet:[--square:44px] desktop:[--square:50px] work:[--gap:0px]"
       style={
         {
-          "--pitch": `calc(var(--square) + ${SQUARE_GAP_PX}px)`,
-          width: `calc(var(--pitch) * ${columns} - ${SQUARE_GAP_PX}px)`,
+          "--pitch": "calc(var(--square) + var(--gap))",
+          width: `calc(var(--pitch) * ${columns} - var(--gap))`,
           height: `calc(var(--pitch) * ${BROKEN_GRID_HEIGHT_PITCHES})`,
         } as CSSProperties
       }
@@ -37,7 +37,7 @@ export function BrokenGrid() {
           <div
             key={`${row}-${column}`}
             className={cn(
-              "absolute size-(--square) border-2",
+              "absolute size-(--square) border-2 work:border",
               crowdStep === null
                 ? "border-dashed border-absent-border"
                 : cn("border-border-subtle", CROWD_CLASS[crowdStep]),
@@ -54,7 +54,7 @@ export function BrokenGrid() {
         <div
           key={`${column}-${row}`}
           className={cn(
-            "absolute size-(--square) border-2 border-border-subtle",
+            "absolute size-(--square) border-2 border-border-subtle work:rounded-[2px] work:border-0 work:shadow-float",
             fillClass,
           )}
           style={{

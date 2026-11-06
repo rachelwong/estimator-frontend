@@ -32,14 +32,14 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
     <div className="contents tablet:hidden">
       <div
         aria-hidden="true"
-        className="fixed inset-x-0 top-16 bottom-0 bg-scrim"
+        className="fixed inset-x-0 top-16 bottom-0 bg-scrim work:top-14"
         onClick={onClose}
       />
 
       <nav
         id={id}
         aria-label={navigation.menuLabel}
-        className="fixed inset-x-3 top-[76px] max-h-[calc(100dvh-88px)] overflow-y-auto"
+        className="fixed inset-x-3 top-[76px] max-h-[calc(100dvh-88px)] overflow-y-auto work:top-[68px] work:max-h-[calc(100dvh-80px)] work:rounded-card work:shadow-menu"
       >
         <Window title={navigation.menuWindowTitle} variant={WindowVariant.MENU}>
           <ul>
@@ -74,7 +74,7 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
           </ul>
 
           <div className="pt-[18px]">
-            <StartSessionButton className="h-[52px] w-full text-[14px]" />
+            <StartSessionButton className="h-[52px] w-full text-[14px] work:h-12 work:text-[16px] work:font-semibold" />
           </div>
         </Window>
       </nav>

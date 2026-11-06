@@ -16,7 +16,7 @@ export function ConnectionLost() {
       actions={
         <>
           <TryAgainButton />
-          <Button asChild size="lg" variant="secondary">
+          <Button asChild size="lg" variant="ghost">
             <Link to={RoutePath.WELCOME}>{content.action.backToHome}</Link>
           </Button>
         </>

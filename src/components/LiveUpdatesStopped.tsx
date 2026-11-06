@@ -14,7 +14,7 @@ export function LiveUpdatesStopped() {
   return (
     <div
       role="status"
-      className="fixed inset-x-3 bottom-3 z-10 flex flex-col items-start gap-3 rounded-panel border-[3px] border-border bg-card px-4 py-3 font-body text-[15px] text-foreground shadow-notice tablet:inset-x-auto tablet:right-6 tablet:bottom-6 tablet:max-w-sm"
+      className="fixed inset-x-3 bottom-3 z-10 flex flex-col items-start gap-3 rounded-panel border-[3px] border-border bg-card px-4 py-3 font-body text-[15px] text-foreground shadow-notice work:border work:bg-raised work:text-[14px] work:leading-[22px] work:shadow-float tablet:inset-x-auto tablet:right-6 tablet:bottom-6 tablet:max-w-sm"
     >
       <p>{content.reveal.liveUpdatesStopped}</p>
 

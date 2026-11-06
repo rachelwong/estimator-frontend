@@ -14,11 +14,11 @@ interface MakerNoteProps {
 export function MakerNote({ label, text, className }: MakerNoteProps) {
   return (
     <div className={cn("flex flex-col gap-3.5", className)}>
-      <div className="pb-1">
-        <span className="font-label text-[13px]">{label}</span>
+      <div className="pb-1 work:pb-0">
+        <span className="font-label text-[13px] work:font-display work:text-[18px] work:leading-[1.33] work:font-medium">{label}</span>
       </div>
 
-      <div className="text-[18px] leading-[1.6] text-muted-foreground tablet:text-[18px]">
+      <div className="text-[18px] leading-[1.6] text-muted-foreground tablet:text-[18px] work:text-[15px] work:leading-[25px] work:tablet:text-[15px]">
         {parse(text)}
       </div>
     </div>

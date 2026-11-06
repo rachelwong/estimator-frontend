@@ -49,8 +49,8 @@ export function WhoLandedWhere({
   }
 
   return (
-    <section className="flex flex-col gap-2.5 border-t-2 border-dashed border-border-subtle pt-3.5">
-      <Heading className="font-label text-[11px] font-normal">
+    <section className="flex flex-col gap-2.5 border-t-2 border-dashed border-border-subtle pt-3.5 work:gap-3 work:border-t work:border-solid work:pt-6">
+      <Heading className="font-label text-[11px] font-normal work:font-display work:text-[15px] work:leading-[1.4] work:font-medium">
         {content.reveal.teamHeading}
       </Heading>
 
@@ -76,7 +76,7 @@ export function WhoLandedWhere({
               className="transition-colors duration-[120ms] hover:bg-row-hover"
             >
               <span className="max-w-[120px] truncate">{name}</span>
-              <span className="font-label text-[10px] font-normal text-abstained">
+              <span className="font-label text-[10px] font-normal text-abstained work:font-body work:text-[12px]">
                 {content.reveal.abstained}
               </span>
             </Chip>

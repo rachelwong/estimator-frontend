@@ -18,8 +18,8 @@
    Tier 2, roles: one job each. Components only ever use roles (`bg-card`,
    `shadow-control`), and a theme swaps role values, never classes. Two roles
    with the same Play value stay two roles, because Work gives them different
-   ones. Every role starts on its Play value; Work overrides sit under
-   [data-theme='work'] below (the switch and fonts so far, the rest in phase 4). */
+   ones. Every role starts on its Play value; Work overrides every one of them
+   under [data-theme='work'] below. */
 :root {
   /* tier 1: Play primitives */
   --plum-950: #1e1b2e;
@@ -42,10 +42,47 @@
   --brick-700: #b42318;
   --white: #ffffff;
 
-  /* tier 1: Work primitives (the NL-* boards), so far only the switch's */
+  /* tier 1: Work primitives, swept from the NL-* boards and kept as drawn
+     (decision 12; near-duplicates are flagged in the plan, not merged) */
+  --night-950: #0b0f12;
+  --night-900: #11161a;
+  --night-850: #161c21;
+  --night-800: #171d22;
+  --night-700: #1f262c;
+  --night-600: #2a333b;
+  --steel-100: #e8edf1;
+  --steel-200: #c8d3dd;
+  --steel-300: #a9b4be;
+  --steel-400: #8794a0;
+  --sky-200: #7cc4e8;
+  --sky-250: #7cc0e0;
   --sky-400: #5fb2d6;
+  --sky-600: #1f7aad;
+  --sky-650: #297ba4;
+  --sky-700: #186a98;
   --sky-720: #0d7dae;
   --sky-750: #0b6e99;
+  --sky-800: #245f7d;
+  --sky-900: #1d3a4a;
+  --sky-925: #1b2e3a;
+  --sky-975: #0b2230;
+  --amber-400: #f2b134;
+  --amber-500: #e3a21f;
+  --red-300: #ff9592;
+  --red-500: #e5484d;
+  --steel-100-a08: rgb(232 237 241 / 0.08);
+  --steel-100-a16: rgb(232 237 241 / 0.16);
+  --steel-100-a32: rgb(232 237 241 / 0.32);
+  --steel-100-a40: rgb(232 237 241 / 0.4);
+  --white-a06: rgb(255 255 255 / 0.06);
+  --white-a20: rgb(255 255 255 / 0.2);
+  --white-a25: rgb(255 255 255 / 0.25);
+  --sky-400-a22: rgb(95 178 214 / 0.22);
+  --sky-600-a14: rgb(31 122 173 / 0.14);
+  --red-500-a10: rgb(229 72 77 / 0.1);
+  --red-300-a35: rgb(255 149 146 / 0.35);
+  /* The boards' scrim. Not named `scrim`: that's the role's name. */
+  --night-975-a72: rgb(5 8 10 / 0.72);
 
   /* tier 2: colour roles, Play values */
   --background: var(--cream);
@@ -74,8 +111,16 @@
   --border-hover: var(--plum-950);
   --border-selected: var(--plum-950);
   --absent-border: var(--plum-700);
+  --ghost: var(--white);
+  --ghost-foreground: var(--plum-950);
   --ghost-border: var(--plum-950);
   --ghost-hover: var(--white);
+  --copy: var(--sun-400);
+  --copy-hover: var(--sun-400);
+  --copy-foreground: var(--plum-950);
+  --copy-border: var(--plum-950);
+  --copied: var(--mint-100);
+  --copied-border: var(--plum-950);
   --ring: var(--plum-950);
   --ring-halo: transparent;
   --primary: var(--grape-500);
@@ -102,11 +147,13 @@
   --selection-ring: var(--plum-950);
   --option-selected: var(--grape-500);
   --option-selected-foreground: var(--white);
+  --option-selected-border: var(--plum-950);
   --range-track: var(--grape-50);
   --range-fill: var(--grape-500);
   --range-thumb: var(--white);
   --range-tick-selected: var(--grape-500);
   --axis-foreground: var(--plum-950);
+  --axis-label: var(--plum-950);
   --progress: var(--grape-500);
   --progress-track: var(--white);
   --destructive: var(--coral-400);
@@ -151,6 +198,10 @@
   --shadow-menu: 8px 8px 0 var(--plum-950);
   --shadow-dialog: 8px 8px 0 var(--plum-950);
   --shadow-knob: none;
+  /* Rings on your own Square: running, and in the Reveal. Play marks these with
+     fill and outline alone; Work draws them as inset rings. */
+  --shadow-selection: none;
+  --shadow-your-square: none;
   /* The Area preview on the running grid (§6): `primary` at 15% laid over
      whatever fill the Square already has. A shadow rather than a background
      so it composes with the Selection Area's fill underneath. */
@@ -172,18 +223,137 @@
   --font-label: "Silkscreen", monospace;
 }
 
-/* Work's role values (docs/plans/themes.md). Only the switch's roles and the
-   fonts so far; phase 4 adds the rest and color-scheme: dark. The Red Hat
-   faces load on the first switch (utils/loadWorkFonts.ts), and until they land
-   text shows in the fallback face. */
+/* Work's role values (docs/plans/themes.md, Roles tables). Same roles, same
+   order as :root. color-scheme: dark gives native scrollbars, autofill and
+   form controls the dark page (decision 16). The Red Hat faces load on the
+   first switch (utils/loadWorkFonts.ts), and until they land text shows in the
+   fallback face. */
 [data-theme="work"] {
+  color-scheme: dark;
+
+  --background: var(--night-900);
+  --foreground: var(--steel-100);
+  --muted-foreground: var(--steel-300);
+  --subtle-foreground: var(--steel-400);
+  --placeholder: var(--steel-400);
+  --card: var(--night-800);
+  --input: var(--night-900);
+  --raised: var(--night-700);
+  --row-hover: var(--night-700);
+  --header: var(--night-950);
+  --header-border: var(--white-a06);
+  --nav-foreground: var(--steel-200);
+  --nav-hover: var(--white);
+  --inverse: var(--steel-100);
+  --inverse-foreground: var(--night-950);
+  --inverse-muted: var(--steel-300);
+  --popover: var(--night-700);
+  --popover-foreground: var(--steel-100);
+  --page-top: var(--night-900);
+  --share-bar: var(--night-800);
+  --note: transparent;
+  --border: var(--steel-100-a16);
+  --border-subtle: var(--steel-100-a08);
+  --border-hover: var(--steel-100-a32);
+  --border-selected: var(--steel-100-a40);
+  --absent-border: var(--steel-100-a16);
+  --ghost: transparent;
+  --ghost-foreground: var(--white);
+  --ghost-border: var(--white-a20);
+  --ghost-hover: var(--white-a06);
+  --copy: transparent;
+  --copy-hover: var(--white-a06);
+  --copy-foreground: var(--white);
+  --copy-border: var(--white-a20);
+  --copied: transparent;
+  --copied-border: var(--sky-400);
+  --ring: var(--sky-400);
+  --ring-halo: var(--sky-400-a22);
+  --primary: var(--sky-600);
+  --primary-foreground: var(--white);
+  --action: var(--sky-600);
+  --action-hover: var(--sky-700);
+  --action-foreground: var(--white);
+  --action-border: var(--sky-600);
+  --secondary: var(--night-700);
+  --secondary-hover: var(--night-600);
+  --secondary-border: var(--steel-100-a16);
+  --emphasis: var(--amber-400);
+  --emphasis-hover: var(--amber-500);
+  --emphasis-foreground: var(--night-950);
+  --emphasis-border: var(--amber-400);
+  --new-session: var(--amber-400);
+  --new-session-hover: var(--amber-500);
+  --new-session-foreground: var(--night-950);
+  --new-session-border: var(--amber-400);
+  --link: var(--sky-250);
+  --link-hover: var(--steel-100);
+  --selection: var(--sky-600);
+  --selection-foreground: var(--white);
+  --selection-ring: var(--steel-100);
+  --option-selected: var(--sky-600-a14);
+  --option-selected-foreground: var(--steel-100);
+  --option-selected-border: var(--sky-400);
+  --range-track: var(--night-600);
+  --range-fill: var(--sky-600);
+  --range-thumb: var(--steel-100);
+  --range-tick-selected: var(--sky-250);
+  --axis-foreground: var(--steel-400);
+  --axis-label: var(--steel-300);
+  --progress: var(--sky-600);
+  --progress-track: var(--night-700);
+  --destructive: var(--red-500);
+  --error-foreground: var(--red-300);
+  --error-surface: var(--red-500-a10);
+  --error-border: var(--red-300-a35);
+  --abstained: var(--steel-400);
+  --success: var(--night-700);
+  --scrim: var(--night-975-a72);
+  --area: var(--sky-925);
+  --crowd-0: var(--night-850);
+  --crowd-1: var(--sky-900);
+  --crowd-2: var(--sky-800);
+  --crowd-3: var(--sky-650);
+  --crowd-4: var(--sky-200);
+  --crowd-foreground: var(--steel-100);
+  --crowd-3-foreground: var(--white);
+  --crowd-4-foreground: var(--sky-975);
   --switch-track: var(--sky-750);
   --switch-track-hover: var(--sky-720);
   --switch-border: var(--sky-400);
   --switch-foreground: var(--white);
   --switch-knob: var(--white);
+  --chrome-dot: var(--night-700);
+  --tint-plain: var(--night-800);
+  --tint-butter: var(--night-800);
+  --tint-mint: var(--night-800);
+  --tint-lavender: var(--night-800);
 
+  /* No shadow on controls and cards; a soft drop on floating layers only
+     (decision 10). The area preview keeps its Play recipe over Work's primary. */
+  --shadow-control: none;
+  --shadow-icon: none;
+  --shadow-card: none;
+  --shadow-window: none;
+  --shadow-float: 0 16px 40px rgb(0 0 0 / 0.45);
+  --shadow-notice: none;
+  /* Work doesn't lift a Square; hover rings it instead (NL-Components). */
+  --shadow-lift: inset 0 0 0 2px var(--steel-100);
+  --shadow-thumb: none;
+  --shadow-bar: 0 2px 4px rgb(0 0 0 / 0.3), 0 16px 40px rgb(0 0 0 / 0.5);
+  --shadow-menu: 0 24px 48px rgb(0 0 0 / 0.5);
+  --shadow-dialog: 0 24px 64px rgb(0 0 0 / 0.55);
   --shadow-knob: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-selection: inset 0 0 0 2px var(--steel-100);
+  --shadow-your-square:
+    inset 0 0 0 2px var(--steel-100), inset 0 0 0 4px var(--night-900);
+
+  --radius-control: 6px;
+  --radius-panel: 8px;
+  --radius-bar: 10px;
+  --radius-card: 12px;
+  --radius-strip: 4px;
+  --radius-track: 2px;
 
   --font-display: "Red Hat Display Variable", sans-serif;
   --font-body: "Red Hat Text Variable", system-ui, sans-serif;
@@ -229,8 +399,16 @@
   --color-border-hover: var(--border-hover);
   --color-border-selected: var(--border-selected);
   --color-absent-border: var(--absent-border);
+  --color-ghost: var(--ghost);
+  --color-ghost-foreground: var(--ghost-foreground);
   --color-ghost-border: var(--ghost-border);
   --color-ghost-hover: var(--ghost-hover);
+  --color-copy: var(--copy);
+  --color-copy-hover: var(--copy-hover);
+  --color-copy-foreground: var(--copy-foreground);
+  --color-copy-border: var(--copy-border);
+  --color-copied: var(--copied);
+  --color-copied-border: var(--copied-border);
   --color-ring: var(--ring);
   --color-ring-halo: var(--ring-halo);
   --color-primary: var(--primary);
@@ -257,11 +435,13 @@
   --color-selection-ring: var(--selection-ring);
   --color-option-selected: var(--option-selected);
   --color-option-selected-foreground: var(--option-selected-foreground);
+  --color-option-selected-border: var(--option-selected-border);
   --color-range-track: var(--range-track);
   --color-range-fill: var(--range-fill);
   --color-range-thumb: var(--range-thumb);
   --color-range-tick-selected: var(--range-tick-selected);
   --color-axis-foreground: var(--axis-foreground);
+  --color-axis-label: var(--axis-label);
   --color-progress: var(--progress);
   --color-progress-track: var(--progress-track);
   --color-destructive: var(--destructive);
@@ -304,6 +484,8 @@
   --shadow-menu: var(--shadow-menu);
   --shadow-dialog: var(--shadow-dialog);
   --shadow-knob: var(--shadow-knob);
+  --shadow-selection: var(--shadow-selection);
+  --shadow-your-square: var(--shadow-your-square);
   --shadow-area-preview: var(--shadow-area-preview);
 
   --radius-*: initial;
@@ -649,6 +831,32 @@
   &:focus-visible {
     outline: 3px solid var(--ring);
     outline-offset: 8px;
+  }
+
+  /* Work (NL-Components): a 4px track with no edge, and a round 20px thumb
+     ringed 4px in the fill colour. Shape, not colour, so it can't be a token. */
+  &:where([data-theme="work"] *) {
+    height: 4px;
+    border: none;
+
+    &::-webkit-slider-thumb {
+      width: 20px;
+      height: 20px;
+      border: 4px solid var(--range-fill);
+      border-radius: 50%;
+    }
+
+    &::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border: 4px solid var(--range-fill);
+      border-radius: 50%;
+    }
+
+    &:focus-visible {
+      outline-width: 2px;
+      outline-offset: 6px;
+    }
   }
 }
 

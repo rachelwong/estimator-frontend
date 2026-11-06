@@ -20,7 +20,7 @@ export function LoadingWindow() {
   return (
     <PageLayout>
       {isVisible && (
-        <div className="mx-auto w-full max-w-[366px] px-5 py-10 tablet:max-w-[420px]">
+        <div className="mx-auto w-full max-w-[366px] px-5 py-10 tablet:max-w-[420px] work:tablet:max-w-[366px] work:desktop:py-[200px]">
           <Window title={content.loading.windowTitle} variant={WindowVariant.LOADING}>
             <div
               role="status"
@@ -28,7 +28,7 @@ export function LoadingWindow() {
             >
               <PixelProgressBar />
 
-              <span className="font-label text-[12px] text-foreground">{content.loading.windowMessage}</span>
+              <span className="font-label text-[12px] text-foreground work:text-[15px] work:font-medium work:text-muted-foreground">{content.loading.windowMessage}</span>
             </div>
           </Window>
         </div>

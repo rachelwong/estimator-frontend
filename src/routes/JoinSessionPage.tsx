@@ -40,11 +40,11 @@ export function JoinSessionPage() {
 
   return (
     <PageLayout>
-      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
+      <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10 work:pt-4 work:tablet:pt-12 work:desktop:pt-16 work:desktop:pb-20">
         <SpriteScatter />
 
         <Window title={content.join.windowTitle} variant={WindowVariant.JOIN} chip={content.role.participant}>
-          <h1 className="font-display text-[22px] leading-[1.05] text-foreground tablet:text-[30px]">
+          <h1 className="font-display text-[22px] leading-[1.05] text-foreground tablet:text-[30px] work:text-[24px] work:leading-[1.2] work:font-medium work:tracking-[-0.01em] work:tablet:text-[28px]">
             {content.join.heading}
           </h1>
 
@@ -52,7 +52,7 @@ export function JoinSessionPage() {
 
           <Form method="post" className="flex flex-col gap-5 tablet:gap-6">
             <div className="flex flex-col gap-2">
-              <label htmlFor="name" className="text-[15px] font-extrabold">
+              <label htmlFor="name" className="text-[15px] font-extrabold work:text-[14px] work:leading-5 work:font-medium">
                 {content.nameField.label}
               </label>
               <Input
@@ -66,12 +66,12 @@ export function JoinSessionPage() {
                 aria-invalid={touched && !isNameOk}
               />
               {touched && !isNameOk && (
-                <p className="text-[14px] text-error-foreground">{content.validation.nameRule}</p>
+                <p className="text-[14px] text-error-foreground work:text-[13px] work:leading-[18px]">{content.validation.nameRule}</p>
               )}
             </div>
 
             {actionData && (
-              <p className="text-[14px] text-error-foreground">
+              <p className="text-[14px] text-error-foreground work:text-[13px] work:leading-[18px]">
                 {actionErrorMessage(actionData, content.actionFailure)}
               </p>
             )}
@@ -89,12 +89,12 @@ export function JoinSessionPage() {
             </Button>
           </Form>
 
-          <div className="flex items-start gap-3 border-2 border-border-subtle bg-note px-4 py-3.5">
+          <div className="flex items-start gap-3 border-2 border-border-subtle bg-note px-4 py-3.5 work:border-0 work:border-t work:px-0 work:pt-5 work:pb-0">
             <Sprite
               source={cardBack}
               className="sprite-sticker h-[29px] w-6 shrink-0"
             />
-            <p className="text-[14px] leading-normal">{content.join.privacyNote}</p>
+            <p className="text-[14px] leading-normal work:leading-[22px] work:text-muted-foreground">{content.join.privacyNote}</p>
           </div>
         </Window>
       </div>

@@ -27,7 +27,7 @@ export function FeedbackButton() {
         href={REPOSITORY_URL.LINKEDIN}
         target="_blank"
         aria-label={content.feedback.label}
-        className="inline-flex h-11 w-11 items-center justify-center border-[3px] border-ghost-border bg-secondary shadow-icon outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-control border-[3px] border-ghost-border bg-secondary shadow-icon outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring work:border work:bg-ghost work:focus-visible:outline-2 work:focus-visible:outline-offset-2"
       >
         <Sprite
           source={bug}

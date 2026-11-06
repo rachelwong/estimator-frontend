@@ -20,7 +20,7 @@ export function CallToActionBand() {
   return (
     <section
       ref={bandRef}
-      className="relative isolate mx-5 mt-20 h-80 overflow-hidden border-[3px] border-border-subtle bg-primary shadow-window tablet:mx-10 tablet:mt-[110px] tablet:h-[330px] desktop:mx-20"
+      className="relative isolate mx-5 mt-20 h-80 overflow-hidden border-[3px] border-border-subtle bg-primary shadow-window tablet:mx-10 tablet:mt-[110px] tablet:h-[330px] desktop:mx-20 work:hidden"
     >
       <TeamSprites isGathered={isGathered} remark={remark} onCharacterPointerEnter={speak} />
 
