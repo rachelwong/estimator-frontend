@@ -576,6 +576,9 @@ live in the code; none is a placeholder any more.
   (`const CROWD = ['bg-crowd-0', …, 'bg-crowd-4'] as const`).
 - Put tokens, font names and domain numbers (7s logo cycle, 1.6s copied state,
   4px gap, logo values) in `src/constants.ts` per the repo rules.
+- Every word the UI says, aria-labels included, lives in `src/content.ts` with a
+  `play` and a `work` version, read through `useContent()`. The copy quoted in
+  this document is the Play version.
 
 Tokens as CSS custom properties (map into `@theme` on Tailwind v4, or
 `theme.extend` on v3):
