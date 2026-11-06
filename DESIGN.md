@@ -7,6 +7,10 @@ language).
 Source of truth for layouts: the "Round 6 · Fold and Flip" page of the design
 canvas — https://claude.ai/artifact/B8xUuTAY1pmHCQcMD5FKRc
 
+**Two themes.** This document is the **Play** theme, the default. **Work** (Round 14 · Night Ledger) is
+switched on from the header; its spec lives in [`docs/plans/themes.md`](docs/plans/themes.md) until that plan's
+last phase folds it in here. Colours are two-tier tokens (primitives → roles); see the plan's Tokens section.
+
 Direction in one line: a cream-and-lavender pixel office. Chunky ink outlines,
 hard offset shadows, square corners, pixel-art characters, and a purple
 "window" that frames every working surface.
@@ -429,6 +433,9 @@ Option C, "Pixel progress bar" (canvas: Spec · Loader options).
 
 ## 8. Motion
 
+Everything in this section is **Play only**. Work has no motion besides the theme switch itself, and its loader
+is a plain bar.
+
 ```css
 @keyframes ffShake {
   0%,
@@ -620,7 +627,7 @@ Nothing. The copy that was open here is now written (§10).
 | Large Numerical grids on mobile | Minimum Square size plus horizontal scroll. No per-device cap, so the grid never depends on the device                                   |
 | Duplicate names                 | Already handled — `estimator-backend/src/sessionStore.ts:35` does `Jim-1`, `Jim-2`                                                       |
 | Breakpoint ranges               | `≤767` mobile · `768–1199` tablet · `≥1200` desktop                                                                                      |
-| "Two visual modes"              | Dropped                                                                                                                                  |
+| "Two visual modes"              | Reopened as Play / Work themes — see [`docs/plans/themes.md`](docs/plans/themes.md)                                                     |
 | Fonts                           | Self-hosted via Fontsource, matching the existing package pattern                                                                        |
 | Sprites                         | In `src/assets/sprites/` as SVG, imported directly and rendered as `<img>` (Stage 2). Not React components — see the plan's Stage 2 note |
 
