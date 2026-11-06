@@ -3,7 +3,7 @@ import menu from "@/assets/sprites/menu.svg";
 import { FeedbackButton } from "@/components/FeedbackButton";
 import { Sprite } from "@/components/Sprite";
 import { WelcomeSection } from "@/constants";
-import { useEscapeKey } from "@/hooks";
+import { useContent, useEscapeKey } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useId, useState } from "react";
 import { MobileMenu } from "./MobileMenu";
@@ -19,26 +19,27 @@ import { StartSessionButton } from "./StartSessionButton";
 export function WelcomeNavigation() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
+  const navigation = useContent().welcome.navigation;
 
   useEscapeKey(isMenuOpen ? () => setMenuOpen(false) : null);
 
   return (
     <>
       <nav
-        aria-label="Main"
+        aria-label={navigation.mainLabel}
         className="hidden items-center gap-7 text-[16px] font-bold tablet:flex"
       >
         <a
           href={`#${WelcomeSection.HOW_TO_USE}`}
           className="hover:text-text-subtle"
         >
-          How to use
+          {navigation.howToUse}
         </a>
         <a
           href={`#${WelcomeSection.WHY_I_MADE_THIS}`}
           className="hidden hover:text-text-subtle desktop:inline"
         >
-          GitHub
+          {navigation.gitHub}
         </a>
         <FeedbackButton />
         <StartSessionButton className="text-[12px]" />
@@ -47,7 +48,7 @@ export function WelcomeNavigation() {
       {/* Icon only. Open, it turns yellow, drops its shadow and shows a cross. */}
       <button
         type="button"
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        aria-label={isMenuOpen ? navigation.closeMenu : navigation.openMenu}
         aria-expanded={isMenuOpen}
         aria-controls={menuId}
         className={cn(

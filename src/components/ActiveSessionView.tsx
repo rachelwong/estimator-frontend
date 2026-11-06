@@ -7,6 +7,7 @@ import { ShareLink } from "@/components/ShareLink";
 import { SpriteScatter } from "@/components/SpriteScatter";
 import { Window } from "@/components/Window";
 import { GridMode, WindowVariant } from "@/constants";
+import { useContent } from "@/hooks";
 import type { ActiveConnectionState, HoveredSquare, Selection } from "@/types";
 import { useState } from "react";
 
@@ -36,6 +37,7 @@ export function ActiveSessionView({
   onEndSession,
 }: ActiveSessionViewProps) {
   const [hovered, setHovered] = useState<HoveredSquare | null>(null);
+  const content = useContent();
 
   return (
     <PageLayout
@@ -54,17 +56,16 @@ export function ActiveSessionView({
         <SpriteScatter />
 
         <Window
-          title="live"
+          title={content.active.windowTitle}
           variant={WindowVariant.SESSION}
-          chip={state.isAdmin ? "Admin" : "Participant"}
+          chip={state.isAdmin ? content.role.admin : content.role.participant}
         >
           <div className="flex flex-col gap-1.5">
             <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
-              Make your Estimate
+              {content.active.heading}
             </h1>
             <p className="font-body text-[14px] leading-[1.45] text-text-muted tablet:text-[14px]">
-              Time runs across, Resources go up. Your estimate stays private
-              until the Reveal.
+              {content.active.intro}
             </p>
           </div>
 

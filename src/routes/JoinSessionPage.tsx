@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Window } from "@/components/Window";
 import { PixelBarSize, WindowVariant } from "@/constants";
+import { useContent } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { nameError } from "@/lib/validation";
+import { isNameValid } from "@/lib/validation";
 import type { ActionErrorData, JoinLoaderData } from "@/types";
+import { actionErrorMessage } from "@/utils";
 import { useState } from "react";
 import {
   Form,
@@ -29,10 +31,11 @@ export function JoinSessionPage() {
   const { description } = useLoaderData() as JoinLoaderData;
   const navigation = useNavigation();
   const actionData = useActionData() as ActionErrorData | undefined;
+  const content = useContent();
 
   // Checked here so "Jim@Bob" never reaches the wire. The server's
   // INVALID_NAME stays the backstop.
-  const validationError = nameError(name);
+  const isNameOk = isNameValid(name);
   const isSubmitting = navigation.state !== "idle";
 
   return (
@@ -40,9 +43,9 @@ export function JoinSessionPage() {
       <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
         <SpriteScatter />
 
-        <Window title="join" variant={WindowVariant.JOIN} chip="Participant">
+        <Window title={content.join.windowTitle} variant={WindowVariant.JOIN} chip={content.role.participant}>
           <h1 className="font-display text-[22px] leading-[1.05] text-ink tablet:text-[30px]">
-            Join session
+            {content.join.heading}
           </h1>
 
           <SessionDescription description={description} />
@@ -50,25 +53,27 @@ export function JoinSessionPage() {
           <Form method="post" className="flex flex-col gap-5 tablet:gap-6">
             <div className="flex flex-col gap-2">
               <label htmlFor="name" className="text-[15px] font-extrabold">
-                Name
+                {content.nameField.label}
               </label>
               <Input
                 id="name"
                 name="name"
                 value={name}
-                placeholder="e.g. Rachel"
+                placeholder={content.nameField.placeholder}
                 autoComplete="off"
                 onChange={(event) => setName(event.target.value)}
                 onBlur={() => setTouched(true)}
-                aria-invalid={touched && validationError !== null}
+                aria-invalid={touched && !isNameOk}
               />
-              {touched && validationError && (
-                <p className="text-[14px] text-abstained">{validationError}</p>
+              {touched && !isNameOk && (
+                <p className="text-[14px] text-abstained">{content.validation.nameRule}</p>
               )}
             </div>
 
-            {actionData?.error && (
-              <p className="text-[14px] text-abstained">{actionData.error}</p>
+            {actionData && (
+              <p className="text-[14px] text-abstained">
+                {actionErrorMessage(actionData, content.actionFailure)}
+              </p>
             )}
 
             {/* Pressed, it carries the inline loader (§7) — held at full
@@ -77,10 +82,10 @@ export function JoinSessionPage() {
               type="submit"
               size="lg"
               className={cn("w-full", isSubmitting && "disabled:opacity-100")}
-              disabled={isSubmitting || validationError !== null}
+              disabled={isSubmitting || !isNameOk}
             >
               {isSubmitting && <PixelProgressBar size={PixelBarSize.INLINE} />}
-              {isSubmitting ? "Joining session…" : "Join session"}
+              {isSubmitting ? content.join.submitting : content.join.submit}
             </Button>
           </Form>
 
@@ -89,10 +94,7 @@ export function JoinSessionPage() {
               source={cardBack}
               className="sprite-sticker h-[29px] w-6 shrink-0"
             />
-            <p className="text-[14px] leading-normal">
-              Your estimate stays private until the Admin ends the session and
-              the Reveal shows everyone’s estimates.
-            </p>
+            <p className="text-[14px] leading-normal">{content.join.privacyNote}</p>
           </div>
         </Window>
       </div>

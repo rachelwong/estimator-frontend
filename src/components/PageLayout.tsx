@@ -2,7 +2,9 @@ import type { MouseEvent, ReactNode } from 'react'
 import { Link } from 'react-router'
 import { FeedbackButton } from '@/components/FeedbackButton'
 import { LogoLockup } from '@/components/LogoLockup'
+import { ThemeSwitch } from '@/components/ThemeSwitch'
 import { RoutePath } from '@/constants'
+import { useContent } from '@/hooks'
 
 interface PageLayoutProps {
   /** The screen's own controls, on the right of the header. */
@@ -36,18 +38,24 @@ interface PageLayoutProps {
 //
 // z-20 keeps the header above what scrolls under it: the share bar at z-10, and
 // the grid's tooltip and popover, which stay inside their page's stacking context.
+//
+// The theme switch leads the right-hand group on every screen and at every
+// width — on a phone it sits beside the menu button, never inside the menu.
 export function PageLayout({ actions, children, footer, hasOwnFeedbackButton, onLogoLinkClick }: PageLayoutProps) {
+  const content = useContent()
+
   return (
     <div className="flex min-h-dvh flex-col">
       {/* The Feedback tile throws confetti well past its own 44px, and it sits
           at the right edge on a phone — so the bar clips sideways and stays
           open downwards, where the confetti and the tile's label belong. */}
       <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-4 overflow-x-clip border-b-[3px] border-ink bg-white px-5 tablet:h-[72px] tablet:px-10 desktop:h-[84px] desktop:px-20">
-        <Link to={RoutePath.WELCOME} aria-label="Fold and Flip home" onClick={onLogoLinkClick}>
+        <Link to={RoutePath.WELCOME} aria-label={content.brand.homeLinkLabel} onClick={onLogoLinkClick}>
           <LogoLockup />
         </Link>
 
         <div className="flex items-center gap-3.5">
+          <ThemeSwitch />
           {!hasOwnFeedbackButton && <FeedbackButton />}
           {actions}
         </div>

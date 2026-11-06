@@ -1,5 +1,6 @@
 import { useId } from 'react'
-import { POINT_SYSTEM_LABEL, PointSystemType } from '@/constants'
+import { PointSystemType } from '@/constants'
+import { useContent } from '@/hooks'
 import { cn } from '@/lib/utils'
 import type { PointSystemType as PointSystemTypeValue } from '@/types'
 
@@ -19,11 +20,12 @@ interface PointSystemPickerProps {
 // what the form sends.
 export function PointSystemPicker({ value, onChange }: PointSystemPickerProps) {
   const labelId = useId()
+  const content = useContent()
 
   return (
     <div className="flex flex-col gap-2">
       <span id={labelId} className="text-[15px] font-extrabold">
-        Point system
+        {content.create.pointSystemLabel}
       </span>
 
       <div role="group" aria-labelledby={labelId} className="grid grid-cols-2 gap-3.5">
@@ -38,7 +40,7 @@ export function PointSystemPicker({ value, onChange }: PointSystemPickerProps) {
               type === value ? 'bg-accent text-white shadow-px' : 'bg-white text-ink',
             )}
           >
-            {POINT_SYSTEM_LABEL[type]}
+            {content.create.pointSystemName[type]}
           </button>
         ))}
       </div>

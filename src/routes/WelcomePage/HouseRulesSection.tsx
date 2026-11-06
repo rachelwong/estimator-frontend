@@ -4,49 +4,32 @@ import ruleChange from "@/assets/sprites/rule-change.svg";
 import ruleKept from "@/assets/sprites/rule-kept.svg";
 import ruleLink from "@/assets/sprites/rule-link.svg";
 import ruleLive from "@/assets/sprites/rule-live.svg";
+import { useContent } from "@/hooks";
 import { HouseRule } from "./HouseRule";
 import { WelcomeSectionHeading } from "./WelcomeSectionHeading";
 
 // House rules (§7 item 7): six things worth knowing before a first Session.
 // Three across on desktop, two on tablet, one on a phone.
 export function HouseRulesSection() {
+  const rules = useContent().welcome.houseRules;
+
   return (
     <section
       className="flex flex-col gap-6 px-5 pt-20 tablet:gap-9 tablet:px-10 tablet:pt-[110px] desktop:px-20"
     >
-      <WelcomeSectionHeading text="House rules" />
+      <WelcomeSectionHeading text={rules.heading} />
 
       <ul className="grid gap-4 tablet:grid-cols-2 tablet:gap-6 desktop:grid-cols-3">
-        <HouseRule
-          sprite={ruleLive}
-          title="Live, but private"
-          description="The session updates in real time, but nobody sees any Estimates until the Reveal."
-        />
-        <HouseRule
-          sprite={avatarFour}
-          title="No sign-up"
-          description="Open the link and type in a name. That’s all you need."
-        />
-        <HouseRule
-          sprite={ruleLink}
-          title="Unique link"
-          description="Every new session gets its own link. Share it with your team."
-        />
+        <HouseRule sprite={ruleLive} title={rules.livePrivate.title} description={rules.livePrivate.description} />
+        <HouseRule sprite={avatarFour} title={rules.noSignUp.title} description={rules.noSignUp.description} />
+        <HouseRule sprite={ruleLink} title={rules.uniqueLink.title} description={rules.uniqueLink.description} />
         <HouseRule
           sprite={ruleChange}
-          title="Change your mind"
-          description="Admin and users can change their estimates any time. Once a session has been revealed though, no latecomers can join the session to add their estimates"
+          title={rules.changeYourMind.title}
+          description={rules.changeYourMind.description}
         />
-        <HouseRule
-          sprite={ruleAxes}
-          title="Two axes, one grid"
-          description="Time and Resources are relative. Resources can mean effort, unknowns & complexities."
-        />
-        <HouseRule
-          sprite={ruleKept}
-          title="Nothing is kept"
-          description="Sessions only live in memory. No accounts, no history. We don't ask for or store anything about you."
-        />
+        <HouseRule sprite={ruleAxes} title={rules.twoAxes.title} description={rules.twoAxes.description} />
+        <HouseRule sprite={ruleKept} title={rules.nothingKept.title} description={rules.nothingKept.description} />
       </ul>
     </section>
   );

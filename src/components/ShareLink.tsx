@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { COPIED_FEEDBACK_MS } from '@/constants'
+import { useContent } from '@/hooks'
 import { cn } from '@/lib/utils'
 
 interface ShareLinkProps {
@@ -19,6 +20,7 @@ interface ShareLinkProps {
 // "Copied!" for 1.6s once the link is on the clipboard.
 export function ShareLink({ sessionId }: ShareLinkProps) {
   const [isCopied, setIsCopied] = useState(false)
+  const content = useContent()
   const url = `${window.location.origin}/${sessionId}/join`
 
   async function handleCopy() {
@@ -32,7 +34,7 @@ export function ShareLink({ sessionId }: ShareLinkProps) {
       <div className="mx-auto flex max-w-[366px] flex-col gap-2 tablet:max-w-[740px] tablet:flex-row tablet:items-center tablet:gap-3.5 desktop:max-w-[780px]">
         <span className="flex items-center gap-2 font-label text-[12px] whitespace-nowrap text-ink">
           <LinkIcon aria-hidden="true" className="size-[18px]" />
-          Share session link
+          {content.shareLink.label}
         </span>
 
         <div className="flex min-w-0 grow gap-2.5">
@@ -41,7 +43,7 @@ export function ShareLink({ sessionId }: ShareLinkProps) {
           <Input
             readOnly
             value={url}
-            aria-label="Session link"
+            aria-label={content.shareLink.fieldLabel}
             className="truncate font-label text-[11px] tablet:h-11 tablet:text-[13px]"
             onFocus={(event) => event.target.select()}
           />
@@ -51,7 +53,7 @@ export function ShareLink({ sessionId }: ShareLinkProps) {
             className={cn('min-w-[112px]', isCopied && 'bg-copied')}
             onClick={handleCopy}
           >
-            {isCopied ? 'Copied!' : 'Copy link'}
+            {isCopied ? content.shareLink.copied : content.shareLink.copy}
           </Button>
         </div>
       </div>

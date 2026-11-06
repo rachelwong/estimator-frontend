@@ -2,6 +2,7 @@ import { useRevalidator } from 'react-router'
 import { PixelProgressBar } from '@/components/PixelProgressBar'
 import { Button } from '@/components/ui/button'
 import { PixelBarSize } from '@/constants'
+import { useContent } from '@/hooks'
 import { cn } from '@/lib/utils'
 
 // An error screen's retry. It re-runs the page's loaders rather than reloading
@@ -13,6 +14,7 @@ import { cn } from '@/lib/utils'
 export function TryAgainButton() {
   const revalidator = useRevalidator()
   const isRetrying = revalidator.state !== 'idle'
+  const content = useContent()
 
   return (
     <Button
@@ -22,7 +24,7 @@ export function TryAgainButton() {
       onClick={() => revalidator.revalidate()}
     >
       {isRetrying && <PixelProgressBar size={PixelBarSize.INLINE} />}
-      {isRetrying ? 'Trying again…' : 'Try again'}
+      {isRetrying ? content.action.tryingAgain : content.action.tryAgain}
     </Button>
   )
 }

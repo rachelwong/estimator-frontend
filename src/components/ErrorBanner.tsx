@@ -1,4 +1,5 @@
 import { XIcon } from 'lucide-react'
+import { useContent } from '@/hooks'
 import type { SessionError } from '@/types'
 
 interface ErrorBannerProps {
@@ -13,7 +14,11 @@ interface ErrorBannerProps {
 // button's `danger` fill and the button edge and shadow (§4) — ink on danger
 // clears AA, and it reads as the same family as the one other alarming thing on
 // the screen.
+//
+// The message is the server's own, shown as it arrives, in either theme.
 export function ErrorBanner({ error, onDismiss }: ErrorBannerProps) {
+  const content = useContent()
+
   return (
     <div
       role="alert"
@@ -23,7 +28,7 @@ export function ErrorBanner({ error, onDismiss }: ErrorBannerProps) {
 
       <button
         type="button"
-        aria-label="Dismiss"
+        aria-label={content.action.dismiss}
         className="-m-1 cursor-pointer p-1 outline-none focus-visible:outline-[3px] focus-visible:outline-ink"
         onClick={onDismiss}
       >

@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useReducer, useRef, useState } from 'react'
 import type { AnimationEvent, FocusEvent, KeyboardEvent, PointerEvent } from 'react'
 import {
-  AXIS_LABEL,
   FOCUS_VISIBLE_SELECTOR,
   GRID_ARROW_STEP,
   GridMode,
@@ -9,7 +8,7 @@ import {
   MOUSE_POINTER_TYPE,
   SQUARE_GAP_PX,
 } from '@/constants'
-import { useBreakpoint, useEscapeKey, useFullyInView } from '@/hooks'
+import { useBreakpoint, useContent, useEscapeKey, useFullyInView } from '@/hooks'
 import type { GridMode as GridModeValue, HoveredSquare, RevealPayload, Selection } from '@/types'
 import {
   axisEmphasis,
@@ -92,6 +91,7 @@ export function EstimationGrid({
   const [, rerender] = useReducer((tick: number) => tick + 1, 0)
   const scrollerRef = useRef<HTMLDivElement>(null)
   const breakpoint = useBreakpoint()
+  const { grid: content } = useContent()
 
   const rows = [...axisValues].reverse()
   const cols = axisValues
@@ -224,12 +224,12 @@ export function EstimationGrid({
     // min-w-0: as a grid or flex item it would otherwise refuse to shrink below
     // its Squares, and push the page sideways instead of scrolling itself.
     <div className="relative flex min-w-0 flex-col gap-2">
-      <span className="font-label text-[11px] tablet:hidden">{AXIS_LABEL.RESOURCES}</span>
+      <span className="font-label text-[11px] tablet:hidden">{content.axisResources}</span>
 
       <div className="flex justify-center gap-2">
         <div className="hidden w-[18px] shrink-0 items-center tablet:flex">
           <span className="rotate-180 font-label text-[11px] [writing-mode:vertical-rl]">
-            {AXIS_LABEL.RESOURCES}
+            {content.axisResources}
           </span>
         </div>
 
@@ -279,11 +279,11 @@ export function EstimationGrid({
                         key={time}
                         squareKey={squareKey(time, resource)}
                         size={size}
-                        label={squareLabel(mode, square, selection, names, faceSize)}
+                        label={squareLabel(mode, square, selection, names, faceSize, content)}
                         labelSize={faceSize}
                         fillClass={squareFillClass(mode, square, selection, names)}
                         highlight={squareHighlight(mode, square, hovered, shownPinned)}
-                        ariaLabel={squareAriaLabel(mode, square, selection, names)}
+                        ariaLabel={squareAriaLabel(mode, square, selection, names, content)}
                         pressed={votes ? Boolean(selection && isSameSquare(selection, square)) : undefined}
                         expanded={isReadonly && names.length > 0 ? isPinned : undefined}
                         revealDelay={isInteractive ? undefined : revealDelay(axisValues, square)}
@@ -313,7 +313,7 @@ export function EstimationGrid({
             </div>
           </div>
 
-          <span className="self-end font-label text-[11px]">{AXIS_LABEL.TIME}</span>
+          <span className="self-end font-label text-[11px]">{content.axisTime}</span>
         </div>
       </div>
 
@@ -321,7 +321,7 @@ export function EstimationGrid({
         <SquareTooltip
           anchorKey={squareKey(tooltipSquare.time, tooltipSquare.resource)}
           boundsRef={scrollerRef}
-          text={tooltipText(mode, tooltipSquare, namesAt(tooltipSquare))}
+          text={tooltipText(mode, tooltipSquare, namesAt(tooltipSquare), content)}
         />
       )}
 
@@ -329,7 +329,7 @@ export function EstimationGrid({
         <SquarePopover
           anchorKey={squareKey(popoverSquare.time, popoverSquare.resource)}
           boundsRef={scrollerRef}
-          title={popoverTitle(popoverSquare)}
+          title={popoverTitle(popoverSquare, content)}
           names={namesAt(popoverSquare)}
         />
       )}

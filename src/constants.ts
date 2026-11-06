@@ -2,7 +2,21 @@
 // handful of values that come from the spec. Values only — the type derived
 // from each lives in src/types/constants.ts.
 
-import type { RevealPayload, Selection } from "@/types";
+import type { Selection } from "@/types";
+
+// The two looks the header switch flips between (docs/plans/themes.md). Play is
+// the default on every load; the choice is never stored.
+export const Theme = {
+  PLAY: "play",
+  WORK: "work",
+} as const;
+
+// Why an action failed when the server gave no message of its own. The page
+// words it from content, in the current theme.
+export const ActionFailure = {
+  COULD_NOT_CONNECT: "couldNotConnect",
+  COULD_NOT_REACH_SERVER: "couldNotReachServer",
+} as const;
 
 // Static paths. Session paths are built from the id where they're used.
 export const RoutePath = {
@@ -88,13 +102,6 @@ export const SocketLifecycleEvent = {
 export const FIBONACCI_SEQUENCE = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55] as const;
 
 export const NUMERICAL_MAX = 20;
-
-// What each point system is called on the Create form's segmented buttons
-// (DESIGN.md §7). The buttons sit in this object's order.
-export const POINT_SYSTEM_LABEL = {
-  [PointSystemType.NUMERICAL]: "Numerical",
-  [PointSystemType.FIBONACCI]: "Fibonacci",
-} as const;
 
 // Which of the slider's values get a Silkscreen tick beneath the track (§7):
 // every nth. Fibonacci's ten all fit; Numerical's twenty-one would run together
@@ -184,12 +191,6 @@ export const SQUARE_LABEL_SIZE_CLASS = {
   [SquareLabelSize.COMPACT]: "text-[10px]",
 } as const;
 
-// What your own Selection says on its face.
-export const SELECTION_LABEL = {
-  [SquareLabelSize.FULL]: "You",
-  [SquareLabelSize.COMPACT]: "★",
-} as const;
-
 // The tooltip's name length, ellipsis included (§6).
 export const TOOLTIP_NAME_MAX_CHARS = 14;
 
@@ -229,11 +230,6 @@ export const AxisValueEmphasis = {
 export const AXIS_VALUE_EMPHASIS_CLASS = {
   [AxisValueEmphasis.NONE]: "text-ink",
   [AxisValueEmphasis.ACTIVE]: "text-accent",
-} as const;
-
-export const AXIS_LABEL = {
-  TIME: "time →",
-  RESOURCES: "resources ↑",
 } as const;
 
 // KeyboardEvent.key → the step it takes across the grid, in axis indexes.
@@ -318,39 +314,6 @@ export const WINDOW_VARIANT_CLASS = {
   [WindowVariant.LOADING]: {
     window: "",
     body: "",
-  },
-} as const;
-
-// One layout for every error, only the words change (§7). The label is both
-// the window title and the Silkscreen line above the heading.
-//
-// Connection lost departs from §7's second sentence, "When you reconnect you'll
-// join as a new Participant". Only an Admin sees this screen — a Participant is
-// sent back to /join — and an Admin reconnects as the Admin, Selection intact.
-// The screen also stands in for a backend that can't be reached at all, which
-// on a free host is usually one still waking up.
-// The Reveal notice's body (§7). Everyone on the Reveal, latecomers too, reads
-// LIVE. Welcome's demo can't vote, so it gets its own line.
-export const REVEAL_NOTICE_BODY = {
-  LIVE: "Explore the grid to see how everyone estimated, click anywhere on the grid to change your estimate again. Latecomers to this session can see the estimates but they can't add their vote.",
-  DEMO: "Hover over the grid to see how everyone estimated.",
-} as const;
-
-export const ERROR_SCREEN_COPY = {
-  NOT_FOUND: {
-    label: "Sorry, please try again",
-    title: "Session not found",
-    body: "This link doesn’t match a live session. Please talk to your team to create another new session",
-  },
-  CONNECTION_LOST: {
-    label: "Sorry, please try again later",
-    title: "Connection lost",
-    body: "We can’t reach the session right now. If the server is waking up, give it a moment and try again.",
-  },
-  SOMETHING_WENT_WRONG: {
-    label: "Sorry, please try again later",
-    title: "Something went wrong",
-    body: "The session hit an error we didn’t expect. Try again, or start a fresh session.",
   },
 } as const;
 
@@ -532,63 +495,15 @@ export const DITHER_GLOW_DEPTH_PX = 160;
 // still fade a little way down rather than cutting off at the top.
 export const DITHER_GLOW_RADIUS_PERCENT = 60;
 
-// The sample Session the Welcome page demonstrates with (§7 item 3).
-// Real data shapes, so the demo is the real Reveal window rather
-// than a picture of it. Fibonacci to 13: a 7×7, the grid every artboard draws.
+// The sample Session the Welcome page demonstrates with (§7 item 3). The
+// grid's shape lives here; who landed where, and the ticket, are content
+// (src/content.ts), so each theme can tell its own story. Fibonacci to 13: a
+// 7×7, the grid every artboard draws.
 export const WELCOME_DEMO_AXIS_VALUES: number[] = [0, 1, 2, 3, 5, 8, 13];
 
-export const WELCOME_DEMO_REVEAL: RevealPayload = {
-  squares: [
-    { time: 8, resource: 5, names: ["Jim-2"] },
-    { time: 5, resource: 3, names: ["Mia", "Jim-1", "Noor"] },
-    { time: 5, resource: 2, names: ["Ben"] },
-    { time: 3, resource: 2, names: ["Priya"] },
-    { time: 5, resource: 1, names: ["Sam"] },
-  ],
-  abstained: ["Alex"],
-};
-
 // The hero's Reveal opens on the crowded Square, its popover already pinned.
+// Both themes' demo Reveals must put someone here.
 export const WELCOME_DEMO_PINNED: Selection = { time: 5, resource: 3 };
-
-// The sample Session's ticket, so the demo Reveal reads like a real one.
-export const WELCOME_DEMO_DESCRIPTION =
-  "Add a demo description to this feature here https://github.com/rachelwong/estimator-frontend";
-
-// What the crowd in the closing band says when someone hovers one of them — the
-// easter egg. A random line each time, never the same one twice running. Keep
-// each to about 28 characters: tablet and desktop set it on one line in the gap
-// between the headline and the crowd, and a longer one runs into the words.
-export const CROWD_CHATTER_LINES = [
-  "I’m a 3. Fight me.",
-  "Who put this on a 21?",
-  "Does that include testing?",
-  "Scope creep says hi.",
-  "Refill before the Reveal.",
-  "Gentle reminder: it's hard.",
-  "Merge conflicts? Add 3.",
-  "I'm with whoever's lowest.",
-  "I'm going big. Sorry.",
-  "Consensus? In this economy?",
-  "Edge cases entered the chat.",
-  "That's future me's problem.",
-  "Velocity? Never heard of it.",
-  "Pretty sure it's a 2. Ish.",
-  "I estimate in naps.",
-  "Coffee first, numbers later.",
-  "Is this before or after QA?",
-  "Can I phone a senior dev?",
-  "Nobody say 'just'.",
-  "Outlier and proud.",
-  "The Reveal is my cardio.",
-  "I changed my mind. Again.",
-  "Same Square? Great minds.",
-  "That's a spike, not a story.",
-  "Did anyone read the ticket?",
-  "The Admin has spoken.",
-  "Legacy code? Add a zero.",
-  "Is 'it depends' an Estimate?",
-] as const;
 
 // The least a crowd line leans, as a share of its 3deg maximum (set in
 // `crowd-chatter`), so every remark visibly tilts — about 1.2deg at least.

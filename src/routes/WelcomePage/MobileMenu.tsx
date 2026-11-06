@@ -4,6 +4,7 @@ import cardBack from "@/assets/sprites/cardback.svg";
 import laptop from "@/assets/sprites/laptop.svg";
 import { Window } from "@/components/Window";
 import { REPOSITORY_URL, WelcomeSection, WindowVariant } from "@/constants";
+import { useContent } from "@/hooks";
 import { MenuRow } from "./MenuRow";
 import { StartSessionButton } from "./StartSessionButton";
 
@@ -24,6 +25,9 @@ interface MobileMenuProps {
 // as a box it would be an empty flex item, and the row's gap after the toggle
 // would push the Close button left of where the Menu button sat.
 export function MobileMenu({ id, onClose }: MobileMenuProps) {
+  const content = useContent();
+  const navigation = content.welcome.navigation;
+
   return (
     <div className="contents tablet:hidden">
       <div
@@ -34,28 +38,28 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
 
       <nav
         id={id}
-        aria-label="Menu"
+        aria-label={navigation.menuLabel}
         className="fixed inset-x-3 top-[76px] max-h-[calc(100dvh-88px)] overflow-y-auto"
       >
-        <Window title="menu" variant={WindowVariant.MENU}>
+        <Window title={navigation.menuWindowTitle} variant={WindowVariant.MENU}>
           <ul>
             <MenuRow
               href={`#${WelcomeSection.HOW_TO_USE}`}
               sprite={cardBack}
-              label="How to use"
+              label={navigation.howToUse}
               onClick={onClose}
             />
             <MenuRow
               href={`#${WelcomeSection.WHY_I_MADE_THIS}`}
               sprite={avatarFour}
-              label="Why I made this"
+              label={navigation.whyIMadeThis}
               onClick={onClose}
             />
             <MenuRow
               href={`#${WelcomeSection.WHY_I_MADE_THIS}`}
               sprite={laptop}
-              label="GitHub"
-              sublabel="Frontend & backend repositories"
+              label={navigation.gitHub}
+              sublabel={navigation.gitHubSublabel}
               onClick={onClose}
             />
             {/* The header's Feedback tile has no room beside the Menu button on
@@ -63,7 +67,7 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
             <MenuRow
               href={REPOSITORY_URL.LINKEDIN}
               sprite={bug}
-              label="Feedback"
+              label={content.feedback.label}
               opensInNewTab
               onClick={onClose}
             />

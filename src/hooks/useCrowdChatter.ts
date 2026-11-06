@@ -1,13 +1,16 @@
 import { useState } from 'react'
-import { CROWD_CHATTER_LINES, CROWD_CHATTER_MIN_TILT } from '@/constants'
+import { CROWD_CHATTER_MIN_TILT } from '@/constants'
 import type { CrowdRemark } from '@/types'
+import { useContent } from './useContent'
 
 // The closing band's easter egg: hover a character and one of them says
 // something. Silent until the crowd has started gathering — before then they
 // wait below the band, clipped out of reach — and from then on every hover says
-// a new random line, cutting off whatever was mid-slide.
+// a new random line, cutting off whatever was mid-slide. The lines are the
+// current theme's (content: welcome.crowdChatter).
 export function useCrowdChatter(isGathered: boolean) {
   const [remark, setRemark] = useState<CrowdRemark | null>(null)
+  const lines = useContent().welcome.crowdChatter.lines
 
   function speak() {
     if (!isGathered) {
@@ -16,7 +19,7 @@ export function useCrowdChatter(isGathered: boolean) {
 
     setRemark({
       id: (remark?.id ?? 0) + 1,
-      line: anotherLine(remark?.line),
+      line: anotherLine(lines, remark?.line),
       jitter: Math.random(),
       tilt: anotherTilt(remark?.tilt),
     })
@@ -25,8 +28,8 @@ export function useCrowdChatter(isGathered: boolean) {
   return { remark, speak }
 }
 
-function anotherLine(previous: string | undefined): string {
-  const choices = CROWD_CHATTER_LINES.filter((line) => line !== previous)
+function anotherLine(lines: string[], previous: string | undefined): string {
+  const choices = lines.filter((line) => line !== previous)
   return choices[Math.floor(Math.random() * choices.length)]
 }
 

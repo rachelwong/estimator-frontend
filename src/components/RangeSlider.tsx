@@ -1,3 +1,4 @@
+import { useContent } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { PointSystemType } from "@/types";
 import { pointSystemValues, sliderTickIndexes } from "@/utils";
@@ -31,6 +32,7 @@ export function RangeSlider({
   onChange,
 }: RangeSliderProps) {
   const id = useId();
+  const content = useContent();
   const values = pointSystemValues(pointSystemType);
   const lastIndex = values.length - 1;
   const index = values.indexOf(value);
@@ -43,7 +45,7 @@ export function RangeSlider({
     <div className="flex flex-col gap-2.5">
       <div className="flex items-baseline justify-between">
         <label htmlFor={id} className="text-[15px] font-extrabold">
-          Max story point value
+          {content.create.sliderLabel}
         </label>
         <span className="font-display text-[23px] text-accent tabular-nums">
           {value}

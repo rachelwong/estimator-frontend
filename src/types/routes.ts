@@ -1,6 +1,7 @@
 // What routes/loaders.ts hands the pages: each loader's data and each
 // action's result, read back with useLoaderData / useActionData.
 import type { GetSessionResponse, RevealPayload, Selection } from './protocol'
+import type { ActionFailure } from './constants'
 import type { SessionError } from './session'
 
 // What joinLoader hands JoinSessionPage: only the description, so people know
@@ -12,9 +13,11 @@ export interface JoinLoaderData {
 // What an action hands back to its page when it failed — joinAction to
 // JoinSessionPage, createSessionAction to CreateSessionPage. A success
 // redirects instead, so there is no success shape.
-export interface ActionErrorData {
-  error: string
-}
+//
+// The server's own message when it gave one; otherwise which failure it was, so
+// the page can word it in the current theme. An action runs outside React and
+// can't read the theme itself.
+export type ActionErrorData = { serverMessage: string } | { failure: ActionFailure }
 
 // Who is looking at the Reveal, for its role chip: an admin token, and whether
 // this tab's connection identified. A refresh keeps the token and loses the

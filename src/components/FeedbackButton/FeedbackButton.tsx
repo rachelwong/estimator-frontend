@@ -1,6 +1,7 @@
 import bug from '@/assets/sprites/bug.svg'
 import { Sprite } from '@/components/Sprite'
 import { REPOSITORY_URL } from '@/constants'
+import { useContent } from '@/hooks'
 import { FeedbackConfetti } from './FeedbackConfetti'
 
 // The header's Feedback tile (artboard "Nav bug button", option D6). A 44px
@@ -18,12 +19,14 @@ import { FeedbackConfetti } from './FeedbackConfetti'
 // The label is only ever decoration — the link carries the same word as its
 // accessible name, so a screen reader hears it once rather than twice.
 export function FeedbackButton() {
+  const content = useContent()
+
   return (
     <span className="group relative inline-flex">
       <a
         href={REPOSITORY_URL.LINKEDIN}
         target="_blank"
-        aria-label="Feedback"
+        aria-label={content.feedback.label}
         className="inline-flex h-11 w-11 items-center justify-center border-[3px] border-ink bg-white shadow-[3px_3px_0_var(--color-ink)] outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink"
       >
         <Sprite
@@ -38,7 +41,7 @@ export function FeedbackButton() {
         aria-hidden="true"
         className="pointer-events-none absolute top-full left-1/2 z-10 hidden -translate-x-1/2 translate-y-3 bg-ink px-[9px] py-1.5 font-label text-[11px] whitespace-nowrap text-cream group-hover:block group-focus-within:block"
       >
-        Feedback
+        {content.feedback.label}
       </span>
     </span>
   )

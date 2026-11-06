@@ -1,5 +1,6 @@
 import { Chip } from "@/components/Chip";
 import { ChipSize, ChipVariant } from "@/constants";
+import { useContent } from "@/hooks";
 import type {
   HoveredSquare,
   HoverSource,
@@ -37,6 +38,8 @@ export function WhoLandedWhere({
   onPinnedChange,
   flashes,
 }: WhoLandedWhereProps) {
+  const content = useContent();
+
   // Ends only the preview this chip started: a Square the mouse has since
   // moved onto keeps its own.
   function endPreview(source: HoverSource) {
@@ -48,7 +51,7 @@ export function WhoLandedWhere({
   return (
     <section className="flex flex-col gap-2.5 border-t-2 border-dashed border-ink pt-3.5">
       <Heading className="font-label text-[11px] font-normal">
-        your team
+        {content.reveal.teamHeading}
       </Heading>
 
       <ul className="flex flex-wrap gap-2">
@@ -74,7 +77,7 @@ export function WhoLandedWhere({
             >
               <span className="max-w-[120px] truncate">{name}</span>
               <span className="font-label text-[10px] font-normal text-abstained">
-                Abstained
+                {content.reveal.abstained}
               </span>
             </Chip>
           </li>

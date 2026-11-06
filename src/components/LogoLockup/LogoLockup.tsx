@@ -1,3 +1,4 @@
+import { useContent } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "./LogoMark";
 
@@ -12,12 +13,14 @@ interface LogoLockupProps {
 // The mark's width drives its own number size — the card back is a size
 // container — so scaling the lockup is one class on the mark.
 export function LogoLockup({ className }: LogoLockupProps) {
+  const content = useContent();
+
   return (
     <span className={cn("inline-flex items-center gap-4", className)}>
       <LogoMark className="h-10 w-[30px] tablet:h-12 tablet:w-9" />
 
       <span className="font-display text-[20px] leading-none text-ink tablet:text-[24px]">
-        Fold & Flip
+        {content.brand.name}
       </span>
     </span>
   );

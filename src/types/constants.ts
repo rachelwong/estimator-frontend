@@ -6,6 +6,7 @@
 // binding to derive from. TypeScript keeps the imported value and the exported
 // type of the same name apart, since values and types are separate namespaces.
 import {
+  ActionFailure,
   AxisValueEmphasis,
   Breakpoint,
   ChipSize,
@@ -20,9 +21,14 @@ import {
   SocketLifecycleEvent,
   SquareHighlight,
   SquareLabelSize,
+  Theme,
   WebSocketEvent,
   WindowVariant,
 } from '../constants'
+
+export type Theme = (typeof Theme)[keyof typeof Theme]
+
+export type ActionFailure = (typeof ActionFailure)[keyof typeof ActionFailure]
 
 export type PointSystemType = (typeof PointSystemType)[keyof typeof PointSystemType]
 

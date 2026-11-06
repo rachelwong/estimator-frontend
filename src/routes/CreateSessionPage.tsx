@@ -7,17 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Window } from "@/components/Window";
 import { PixelBarSize, PointSystemType, WindowVariant } from "@/constants";
+import { useContent } from "@/hooks";
 import { cn } from "@/lib/utils";
 import {
-  descriptionError,
+  isDescriptionValid,
+  isNameValid,
   MAX_DESCRIPTION_LENGTH,
-  nameError,
   normalizeDescription,
 } from "@/lib/validation";
 import type {
   ActionErrorData,
   PointSystemType as PointSystemTypeValue,
 } from "@/types";
+import { actionErrorMessage } from "@/utils";
 import { useState } from "react";
 import { Form, useActionData, useNavigation } from "react-router";
 
@@ -36,17 +38,17 @@ export default function CreateSessionPage() {
 
   const navigation = useNavigation();
   const actionData = useActionData() as ActionErrorData | undefined;
+  const content = useContent();
 
-  const validationError = nameError(adminName);
+  const isNameOk = isNameValid(adminName);
   // Counted after the same clean-up the server does, so the two agree.
   const descriptionLength = normalizeDescription(description).length;
-  const descriptionRule = descriptionError(description);
+  const isDescriptionOk = isDescriptionValid(description);
   const isSubmitting = navigation.state === "submitting";
 
   // A max of 0 is the slider's starting point, and a grid of one Square is no
   // grid at all — so the form waits for both answers before it will go.
-  const canSubmit =
-    validationError === null && descriptionRule === null && sliderMax > 0;
+  const canSubmit = isNameOk && isDescriptionOk && sliderMax > 0;
 
   // Switching point system clears the max, so the admin consciously re-picks
   // instead of inheriting a full-size grid from the previous choice.
@@ -60,34 +62,33 @@ export default function CreateSessionPage() {
       <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
         <SpriteScatter />
 
-        <Window title="new-session" variant={WindowVariant.CREATE} chip="Admin">
+        <Window title={content.create.windowTitle} variant={WindowVariant.CREATE} chip={content.role.admin}>
           <div className="flex flex-col gap-1.5">
             <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[28px]">
-              New session
+              {content.create.heading}
             </h1>
             <p className="text-[14px] leading-[1.45] text-text-muted">
-              You are the Admin: you estimate like everyone else, and you can
-              share the session link and end the session.
+              {content.create.intro}
             </p>
           </div>
 
           <Form method="post" className="flex flex-col gap-5 tablet:gap-6">
             <div className="flex flex-col gap-2">
               <label htmlFor="adminName" className="text-[15px] font-extrabold">
-                Name
+                {content.nameField.label}
               </label>
               <Input
                 id="adminName"
                 name="adminName"
                 value={adminName}
-                placeholder="e.g. Rachel"
+                placeholder={content.nameField.placeholder}
                 autoComplete="off"
                 onChange={(event) => setAdminName(event.target.value)}
                 onBlur={() => setTouched(true)}
-                aria-invalid={touched && validationError !== null}
+                aria-invalid={touched && !isNameOk}
               />
-              {touched && validationError && (
-                <p className="text-[14px] text-abstained">{validationError}</p>
+              {touched && !isNameOk && (
+                <p className="text-[14px] text-abstained">{content.validation.nameRule}</p>
               )}
             </div>
 
@@ -97,7 +98,7 @@ export default function CreateSessionPage() {
                   htmlFor="description"
                   className="text-[15px] font-extrabold"
                 >
-                  Ticket or task description
+                  {content.create.descriptionLabel}
                 </label>
                 <span
                   id="description-count"
@@ -110,14 +111,16 @@ export default function CreateSessionPage() {
                 id="description"
                 name="description"
                 value={description}
-                placeholder="Optional, e.g. PROJ-12 https://…"
+                placeholder={content.create.descriptionPlaceholder}
                 autoComplete="off"
                 onChange={(event) => setDescription(event.target.value)}
                 aria-describedby="description-count"
-                aria-invalid={descriptionRule !== null}
+                aria-invalid={!isDescriptionOk}
               />
-              {descriptionRule && (
-                <p className="text-[14px] text-abstained">{descriptionRule}</p>
+              {!isDescriptionOk && (
+                <p className="text-[14px] text-abstained">
+                  {content.validation.descriptionRule(MAX_DESCRIPTION_LENGTH)}
+                </p>
               )}
             </div>
 
@@ -132,8 +135,10 @@ export default function CreateSessionPage() {
               onChange={setSliderMax}
             />
 
-            {actionData?.error && (
-              <p className="text-[14px] text-abstained">{actionData.error}</p>
+            {actionData && (
+              <p className="text-[14px] text-abstained">
+                {actionErrorMessage(actionData, content.actionFailure)}
+              </p>
             )}
 
             {/* Pressed, it carries the inline loader (§7) — held at full
@@ -145,7 +150,7 @@ export default function CreateSessionPage() {
               disabled={isSubmitting || !canSubmit}
             >
               {isSubmitting && <PixelProgressBar size={PixelBarSize.INLINE} />}
-              {isSubmitting ? "Creating session…" : "Create session"}
+              {isSubmitting ? content.create.submitting : content.create.submit}
             </Button>
           </Form>
         </Window>

@@ -6,7 +6,6 @@ import {
   HoverSource,
   REVEAL_WAVE_STEP_MS,
   SELECTION_AREA_CROWD_STEP,
-  SELECTION_LABEL,
   SELECTION_SQUARE_CLASS,
   SQUARE_FIT,
   SQUARE_FULL_LABEL_MIN_PX,
@@ -21,6 +20,7 @@ import {
 import type {
   AxisValueEmphasis as AxisValueEmphasisValue,
   Breakpoint,
+  GridContent,
   GridMode as GridModeValue,
   HoveredSquare,
   LandedPerson,
@@ -76,15 +76,17 @@ export function labelSize(size: number): SquareLabelSizeValue {
 //   3        3⏎people      ×3
 //
 // The name goes out whole; GridCell cuts it to the Square's width with "…".
+// The words come from content's `grid`, in the current theme.
 export function squareLabel(
   mode: GridModeValue,
   square: Selection,
   selection: Selection | null,
   names: string[],
   size: SquareLabelSizeValue,
+  content: GridContent,
 ): string {
   if (mode === GridMode.INTERACTIVE) {
-    return selection && isSameSquare(square, selection) ? SELECTION_LABEL[size] : ''
+    return selection && isSameSquare(square, selection) ? content.selectionLabel[size] : ''
   }
 
   if (names.length === 0) {
@@ -97,7 +99,7 @@ export function squareLabel(
     return isFull ? names[0] : names[0].slice(0, SQUARE_INITIALS_LENGTH)
   }
 
-  return isFull ? `${names.length}\npeople` : `×${names.length}`
+  return isFull ? content.crowdLabelFull(names.length) : content.crowdLabelCompact(names.length)
 }
 
 // "Time 5, resources 3", then who is there in the Reveal, then whether it is
@@ -107,13 +109,17 @@ export function squareAriaLabel(
   square: Selection,
   selection: Selection | null,
   names: string[],
+  content: GridContent,
 ): string {
-  const position = `Time ${square.time}, resources ${square.resource}`
-  const who = mode !== GridMode.INTERACTIVE ? `, ${names.length > 0 ? names.join(', ') : 'nobody'}` : ''
-  const yours = selection && isSameSquare(square, selection) ? ', your Selection' : ''
-  const vote = mode === GridMode.REVEAL_VOTING ? ', click to change your Estimate' : ''
+  const who = names.length > 0 ? names.join(', ') : content.ariaNobody
+  const parts = [
+    content.ariaPosition(square.time, square.resource),
+    mode !== GridMode.INTERACTIVE && who,
+    selection && isSameSquare(square, selection) && content.ariaYourSelection,
+    mode === GridMode.REVEAL_VOTING && content.ariaClickToVote,
+  ]
 
-  return `${position}${who}${yours}${vote}`
+  return parts.filter(Boolean).join(', ')
 }
 
 // When a revealed Square starts arriving (§8): one step per diagonal from the
@@ -134,23 +140,23 @@ export function landedPeople(reveal?: RevealPayload): LandedPerson[] {
 // pointer to the popover once there's a crowd. An empty revealed Square gets
 // no tooltip, so has no text here. Where a click votes, the
 // popover opens on hover, so the pointer says so.
-export function tooltipText(mode: GridModeValue, square: Selection, names: string[]): string {
+export function tooltipText(mode: GridModeValue, square: Selection, names: string[], content: GridContent): string {
   if (mode === GridMode.INTERACTIVE) {
-    return popoverTitle(square)
+    return popoverTitle(square, content)
   }
 
-  const position = `T${square.time} · R${square.resource}`
+  const position = content.shortPosition(square.time, square.resource)
 
   if (names.length < CROWDED_SQUARE_MINIMUM) {
     return `${position} · ${truncate(names[0], TOOLTIP_NAME_MAX_CHARS)}`
   }
 
-  const gesture = mode === GridMode.REVEAL_VOTING ? 'hover' : 'click'
-  return `${position} · ${names.length} people · ${gesture} for names`
+  const pointer = mode === GridMode.REVEAL_VOTING ? content.hoverForNames : content.clickForNames
+  return `${position} · ${content.crowdCount(names.length)} · ${pointer}`
 }
 
-export function popoverTitle(square: Selection): string {
-  return `Time ${square.time} · Resources ${square.resource}`
+export function popoverTitle(square: Selection, content: GridContent): string {
+  return content.position(square.time, square.resource)
 }
 
 // Cut to `max` characters, the ellipsis counted: ("Bartholomew", 8) → "Barthol…".

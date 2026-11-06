@@ -2,7 +2,8 @@ import { ErrorScreen } from "@/components/ErrorScreen";
 import { SiteFooter } from "@/components/SiteFooter";
 import { TryAgainButton } from "@/components/TryAgainButton";
 import { Button } from "@/components/ui/button";
-import { ERROR_SCREEN_COPY, RoutePath } from "@/constants";
+import { RoutePath } from "@/constants";
+import { useContent } from "@/hooks";
 import { NetworkError } from "@/lib/api";
 import { useEffect } from "react";
 import { Link, useRouteError } from "react-router";
@@ -12,6 +13,7 @@ import { Link, useRouteError } from "react-router";
 export function AppError() {
   const error = useRouteError();
   const isUnreachable = error instanceof NetworkError;
+  const content = useContent();
 
   // Once per error, not per render — retrying re-renders this page.
   useEffect(() => {
@@ -22,8 +24,8 @@ export function AppError() {
     <ErrorScreen
       copy={
         isUnreachable
-          ? ERROR_SCREEN_COPY.CONNECTION_LOST
-          : ERROR_SCREEN_COPY.SOMETHING_WENT_WRONG
+          ? content.errorScreen.connectionLost
+          : content.errorScreen.somethingWentWrong
       }
       footer={<SiteFooter />}
       actions={
@@ -31,11 +33,11 @@ export function AppError() {
           <TryAgainButton />
           {isUnreachable ? (
             <Button asChild size="lg" variant="secondary">
-              <Link to={RoutePath.WELCOME}>Back to Home</Link>
+              <Link to={RoutePath.WELCOME}>{content.action.backToHome}</Link>
             </Button>
           ) : (
             <Button asChild size="lg" variant="secondary">
-              <Link to={RoutePath.NEW}>Start a session</Link>
+              <Link to={RoutePath.NEW}>{content.action.startSession}</Link>
             </Button>
           )}
         </>

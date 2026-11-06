@@ -1,14 +1,15 @@
 import { SessionConnectionStatus } from '@/constants'
-import type { EndedView, RevealViewer, SessionConnectionState } from '@/types'
+import type { EndedView, RevealViewer, RoleContent, SessionConnectionState } from '@/types'
 
-// The role chip on the Reveal's window. A visitor who never joined gets none.
-export function revealChip(viewer: RevealViewer): string | undefined {
+// The role chip on the Reveal's window, in the current theme's words. A visitor
+// who never joined gets none.
+export function revealChip(viewer: RevealViewer, content: RoleContent): string | undefined {
   if (viewer.isAdmin) {
-    return 'Admin'
+    return content.admin
   }
 
   if (viewer.hasJoined) {
-    return 'Participant'
+    return content.participant
   }
 
   return undefined

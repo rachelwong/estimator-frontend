@@ -18,8 +18,8 @@ Canvas: https://claude.ai/artifact/B8xUuTAY1pmHCQcMD5FKRc. Switch visuals: Round
 | 1   | React context: `ThemeProvider` + `useTheme()`                                                   | Copy and imagery swaps need a re-render, so CSS alone can't do it. Theme changes rarely, so one context costs nothing. No store library                                                                                                                      |
 | 2   | Not persisted. Every load starts on Play                                                        | It's a display toggle. No localStorage, no pre-paint script. Play values are the `:root` default, so there's no flash                                                                                                                                       |
 | 3   | `data-theme="work"` on `<html>` while on                                                        | One selector swaps every role token, reaches raw CSS (keyframes, slider) and portalled content (popovers, dialogs), and drives the `work:` variant                                                                                                           |
-| 4   | **No i18n package.** One typed `src/content.ts`                                                 | Themes aren't locales. i18next adds a runtime, string keys and namespaces just to serve 2 variants. A typed object fails the build when a key is missing, which string keys don't. Its shape maps 1:1 onto i18next resources if real languages arrive later |
-| 5   | `WORK_CONTENT = { ...PLAY_CONTENT, ...overrides }`                                              | Work starts with the same copy and diverges where Round 14 differs (e.g. "Fold & Flip" vs "Fold and Flip"). Customising later means adding keys                                                                                                             |
+| 4   | **No i18n package.** One typed `src/content.ts`                                                 | Themes aren't locales. i18next adds a runtime, string keys and namespaces just to serve 2 variants. A typed object fails the build when a key is missing, which string keys don't. Turning it into per-language i18next resources later is a small transform |
+| 5   | **One `CONTENT` object, both versions per entry:** `heading: { play: '…', work: '…' }`         | Any string can differ by theme, in the same place. Both versions sit side by side for hand-editing. `satisfies ContentTree` fails the build when either is missing. Seeded identical; Work copy is written by hand later. `useContent()` returns the current theme's resolved object |
 | 6   | **Two-tier tokens, shadcn-style.** Primitives → roles. Themes swap role values, not classes     | shadcn's documented pattern, and the repo is already shadcn (`cssVariables: true`). One class per element (`bg-background`), not a `bg-play-x work:bg-work-y` pair on every colour                                                                         |
 | 7   | Primitives are plain `:root` vars, **not** in `@theme`                                          | So `bg-grape-500` can't be written in a component. Components only ever see roles                                                                                                                                                                           |
 | 8   | Roles split by job (atomic): one role, one job                                                  | `ink` does text, borders, outlines and dark fills today; `selection` colours both the own Square and primary buttons. In Work those jobs take different colours. Each job gets its own role even where Play's values coincide                              |
@@ -33,6 +33,8 @@ Canvas: https://claude.ai/artifact/B8xUuTAY1pmHCQcMD5FKRc. Switch visuals: Round
 | 16  | `color-scheme: dark` under `[data-theme='work']`                                                | Native scrollbars, autofill and form controls match the dark page                                                                                                                                                                                            |
 | 17  | Switch in `PageLayout` header, same spot on every screen, every breakpoint                      | Phone: next to the hamburger, not in the menu                                                                                                                                                                                                                |
 | 18  | `Theme.PLAY` / `Theme.WORK` in `constants.ts`, type in `types/constants.ts`                     | no-magic-strings. The switch's boolean is derived: `isWorkTheme = theme === Theme.WORK`                                                                                                                                                                     |
+| 19  | Copy outside React takes it as an argument or returns a code                                     | Grid helpers (`utils/grid.ts`) and `revealChip` take their content slice. Validation returns a boolean; the page shows `validation.*`. Actions return `{ failure: ActionFailure }` and the page words it. Server error messages pass through unchanged in both themes |
+| 20  | Smoke checks test behaviour, never wording                                                       | Copy can now change per theme and by hand. Checks that only confirmed words are gone; behaviour checks use `aria-invalid`, `data-square`, `aria-pressed`, h1 count, URLs and hrefs. Buttons and links are still found by their accessible name, so renaming one of those means updating its selector |
 
 ---
 
@@ -240,14 +242,18 @@ Squares stay radius 0 in both. Pills (switch 999px, knob 50%) are fixed shapes, 
 
 ```
 src/
-  content.ts                 PLAY_CONTENT, WORK_CONTENT (one file)
-  types/content.ts           Content type (centralized-types)
-  constants.ts               + Theme
+  content.ts                 CONTENT: every entry { play, work }, grouped by screen          ✓
+  types/content.ts           ThemeVariants, ContentTree, ResolvedContent, Content            ✓
+  types/theme.ts             ThemeContextValue                                               ✓
+  constants.ts               + Theme, ActionFailure                                          ✓
+  lib/themeContext.ts        the React context                                               ✓
   components/
-    ThemeProvider.tsx        useState(Theme.PLAY), sets <html data-theme>, lazy-loads Work fonts on first switch
-    ThemeSwitch.tsx          role="switch", aria-checked, aria-label="Work theme", label from content
-  hooks/useTheme.ts          { theme, toggleTheme }
-  hooks/useContent.ts        returns the theme's content object
+    ThemeProvider.tsx        useState(Theme.PLAY), sets <html data-theme>                    ✓ (fonts: phase 3)
+    ThemeSwitch.tsx          role="switch", aria-checked, label + aria-label from content    ✓ (plain; styled in phase 3)
+  hooks/useTheme.ts          { theme, toggleTheme }                                          ✓
+  hooks/useContent.ts        the theme's resolved content (both resolved once at load)       ✓
+  utils/content.ts           resolveContent(tree, theme)                                     ✓
+  utils/actionError.ts       server message, or the theme's words for an ActionFailure       ✓
   utils/loadWorkFonts.ts     one cached promise of the @fontsource imports
   assets/sprites/work/       Round 14 SVGs (wordmark, house-rule illustrations, knob slash) + Work copies of shared icons
 ```
@@ -258,12 +264,12 @@ src/
 
 Each phase ships on its own, and each is checked before the next starts (kill servers, run frontend and backend, smoke-test).
 
-1. **Centralise copy (no visual change).** Add `Content` type and `PLAY_CONTENT`, plus `useContent()` reading a fixed Play value. Move strings across screen by screen: Welcome, Create, Join, Session, Reveal, errors, loaders, aria-labels, the `ErrorCode` messages. Counts and names become functions (`people: (count) => …`). Inline emphasis uses `html-react-parser` (already a dependency) or small `ReactNode` fields. `index.html` meta stays static. Smoke scenarios pass unchanged.
+1. **Centralise copy + theme state (no visual change).** ✓ Done. `CONTENT` holds every visible string, aria-label, window title, chip, validation and action message, the demo Reveal's names and description, and the crowd chatter, each as `{ play, work }`. Counts and positions are functions; inline emphasis and links are HTML parsed with `html-react-parser`. Copy that left `constants.ts`: `POINT_SYSTEM_LABEL`, `SELECTION_LABEL`, `AXIS_LABEL`, `REVEAL_NOTICE_BODY`, `ERROR_SCREEN_COPY`, `WELCOME_DEMO_REVEAL`, `WELCOME_DEMO_DESCRIPTION`, `CROWD_CHATTER_LINES`. Pulled forward from phase 3 so the swap can be seen: `Theme`, `ThemeProvider` around `RouterProvider`, `useTheme`, and a plain `ThemeSwitch` in `PageLayout`. Not moved: server error messages (they come from the backend), `index.html` meta. Smoke suite rewritten to test behaviour only (decision 20), plus a switch check: starts on Play, flips `aria-checked` and `<html data-theme>`, reload returns to Play.
 2. **Two-tier tokens, Play only (no visual change).** Add Play primitives and every role above with its Play value (resolve each "today"); map roles in `@theme inline`; drop the old `@theme` names. Assign each existing use to a role: `ink` (77 uses), `white` (24), `selection` (6) and `accent` (9) all split by job. Shadows and radii move onto their roles. Raw CSS in `index.css` (keyframes, slider) moves onto roles. Update the hex comments in sprites. Update `DESIGN.md` §2, §4 and §11 to the role names.
-3. **Theme plumbing + switch.** `Theme` const, `ThemeProvider` in `App` (wrapping `RouterProvider`), `ThemeSwitch` in `PageLayout`, lazy Work fonts. Play look: pill, lavender track, spade knob, Silkscreen "Play". Work look: Round 14 pill, "Work". Work doesn't look right yet. That's expected. Verify `cn` merges classes carrying the `work:` variant without dropping any.
+3. **Switch look + fonts.** The plumbing landed in phase 1; what's left is lazy Work fonts and styling the switch. Play look: pill, lavender track, spade knob, Silkscreen "Play". Work look: Round 14 pill, "Work". Work doesn't look right yet. That's expected. Verify `cn` merges classes carrying the `work:` variant without dropping any.
 4. **Work tokens + layout.** Add Work primitives and the `[data-theme='work']` overrides for every role, plus `color-scheme: dark`. Then walk every screen at 3 breakpoints against the `NL-*` boards and add `work:` classes only where tokens can't reach: borders 3px→1px (dashed stays dashed), gapless grid (G6), header layout, admin bar, popovers and the end-session dialog.
 5. **Imagery + motion.** Work: `FOLD / FLIP` wordmark in place of the card lockup. Pixel sprites hidden (hero, team, demo, scatter, dither band). House-rules line illustrations from `NL-HouseRules-*` (their stroke alphas live in the SVGs). Work copies (`sprites/work/`) of every shared icon still visible in Work, starting with `menu`, `close`, `bug`. Swaps go in the component via `useTheme()` (17 files import sprites today). Work SVGs carry hardcoded Work hex (svgs-live-in-sprites). Motion off in Work: logo, change flash, confetti, chatter, Reveal wave, Feedback tile; pixel loader → plain bar.
-6. **Document + verify.** `DESIGN.md` gets a "Work theme" section (tokens, type, shape, imagery, no motion) and the pointer at its top is updated. Lint, build, smoke both themes; new smoke scenario: switch to Work, check switch state and one Work string, reload, back on Play. Check: a live session survives toggling mid-estimate, first switch loads fonts once, reduced motion, AA contrast on every Work foreground/background role pair.
+6. **Document + verify.** `DESIGN.md` gets a "Work theme" section (tokens, type, shape, imagery, no motion) and the pointer at its top is updated. Lint, build, smoke both themes (the switch check landed in phase 1; it reads no copy, per decision 20). Check: a live session survives toggling mid-estimate, first switch loads fonts once, reduced motion, AA contrast on every Work foreground/background role pair.
 
 ---
 
@@ -273,7 +279,8 @@ Each phase ships on its own, and each is checked before the next starts (kill se
 - Analytics event for the toggle (Vercel custom events need Pro; project is on the free tier)
 - Per-theme favicon, `<title>`, OG meta
 - Real localisation / languages
-- Custom Work copy beyond what Round 14 already shows (shape supports it; content comes later)
+- Writing the Work copy (every entry is seeded with the Play text; it's edited by hand in `src/content.ts`)
+- Theming server error messages (the backend's wording shows as-is in both themes)
 - Auto theme from `prefers-color-scheme`
 - Component-tier tokens
 - Preloading Work fonts before the first switch

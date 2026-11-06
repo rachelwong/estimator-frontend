@@ -10,6 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useContent } from "@/hooks";
 import { cn } from "@/lib/utils";
 
 interface AdminControlsProps {
@@ -22,6 +23,8 @@ interface AdminControlsProps {
 // irreversible. No navigation here — the session-ended broadcast moves every
 // tab, this one included, to /ended.
 export function AdminControls({ onEndSession, className }: AdminControlsProps) {
+  const content = useContent();
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -29,22 +32,22 @@ export function AdminControls({ onEndSession, className }: AdminControlsProps) {
           variant="destructive"
           className={cn("font-display font-normal", className)}
         >
-          End session &amp; reveal
+          {content.endSession.trigger}
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>End this session?</AlertDialogTitle>
+          <AlertDialogTitle>{content.endSession.dialogTitle}</AlertDialogTitle>
           <AlertDialogDescription>
-            All estimates are revealed to everyone. No more changes.
+            {content.endSession.dialogBody}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{content.endSession.cancel}</AlertDialogCancel>
           <AlertDialogAction variant="destructive" onClick={onEndSession}>
-            End session &amp; Reveal
+            {content.endSession.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

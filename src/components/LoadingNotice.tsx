@@ -1,6 +1,6 @@
 import { PixelProgressBar } from '@/components/PixelProgressBar'
 import { LOADING_NOTICE_DELAY_MS, PixelBarSize } from '@/constants'
-import { useDelayedVisibility } from '@/hooks'
+import { useContent, useDelayedVisibility } from '@/hooks'
 
 // The inline loader (DESIGN.md §7): the small bar before a line of text, in a
 // framed box pinned to the bottom of the page.
@@ -10,6 +10,7 @@ import { useDelayedVisibility } from '@/hooks'
 // strip rather than the full-window loader.
 export function LoadingNotice() {
   const isVisible = useDelayedVisibility(LOADING_NOTICE_DELAY_MS)
+  const content = useContent()
 
   if (!isVisible) {
     return null
@@ -22,7 +23,7 @@ export function LoadingNotice() {
     >
       <PixelProgressBar size={PixelBarSize.INLINE} />
 
-      <span className="font-label text-[11px] text-ink">loading…</span>
+      <span className="font-label text-[11px] text-ink">{content.loading.notice}</span>
     </div>
   )
 }

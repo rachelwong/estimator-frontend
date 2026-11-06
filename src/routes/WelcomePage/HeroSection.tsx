@@ -1,13 +1,8 @@
 import { RevealWindow } from "@/components/RevealWindow";
 import { Button } from "@/components/ui/button";
-import {
-  REVEAL_NOTICE_BODY,
-  WELCOME_DEMO_AXIS_VALUES,
-  WELCOME_DEMO_DESCRIPTION,
-  WELCOME_DEMO_PINNED,
-  WELCOME_DEMO_REVEAL,
-  WelcomeSection,
-} from "@/constants";
+import { WELCOME_DEMO_AXIS_VALUES, WELCOME_DEMO_PINNED, WelcomeSection } from "@/constants";
+import { useContent } from "@/hooks";
+import parse from "html-react-parser";
 import { DemoSprites } from "./DemoSprites";
 import { HeroSprites } from "./HeroSprites";
 import { StartSessionButton } from "./StartSessionButton";
@@ -21,28 +16,26 @@ import { StartSessionButton } from "./StartSessionButton";
 // rather than the page's 20, so the window is the 366 the grid is sized for.
 // The hero line is the page's h1, so the sample Reveal's own heading drops to h2.
 export function HeroSection() {
+  const content = useContent();
+  const hero = content.welcome.hero;
+
   return (
     <div className="bg-page-top pb-16 tablet:pb-24">
       <section className="relative isolate flex flex-col items-center gap-[18px] px-5 pt-12 text-center tablet:gap-6 tablet:px-10 tablet:pt-[84px] desktop:px-20">
         <HeroSprites />
 
         <span className="border-2 border-ink bg-white px-3 py-1.5 font-label text-[12px] tablet:text-[14px]">
-          Planning poker for agile product teams
+          {hero.badge}
         </span>
 
         <h1 className="max-w-[1000px] font-display text-[36px] leading-none text-ink tablet:text-[58px] desktop:text-[78px]">
-          Teams who
+          {parse(hero.headlineLead)}
           <br />
-          estimate together
-          <br />
-          <span className="text-accent">ship together</span>
+          <span className="text-accent">{hero.headlineAccent}</span>
         </h1>
 
         <p className="max-w-[600px] leading-[1.5] text-text-muted text-[18px] leading-[1.5] tablet:text-[21px]">
-          A visual tool for estimating story points as a team without anchoring.
-          Share a session link, pick your estimate on the <br />
-          Time × Resources grid in private, then reveal together and <br />
-          talk through what it takes to ship.
+          {parse(hero.body)}
         </p>
 
         <div className="flex w-full flex-col gap-4 pt-1.5 tablet:w-auto tablet:flex-row">
@@ -53,7 +46,7 @@ export function HeroSection() {
             variant="secondary"
             className="h-[52px] font-display text-[14px] font-normal"
           >
-            <a href={`#${WelcomeSection.HOW_TO_USE}`}>How to use</a>
+            <a href={`#${WelcomeSection.HOW_TO_USE}`}>{content.welcome.navigation.howToUse}</a>
           </Button>
         </div>
       </section>
@@ -63,11 +56,11 @@ export function HeroSection() {
 
         <RevealWindow
           axisValues={WELCOME_DEMO_AXIS_VALUES}
-          reveal={WELCOME_DEMO_REVEAL}
+          reveal={content.welcome.demo.reveal}
           selection={null}
-          description={WELCOME_DEMO_DESCRIPTION}
+          description={content.welcome.demo.description}
           initialPinned={WELCOME_DEMO_PINNED}
-          noticeBody={REVEAL_NOTICE_BODY.DEMO}
+          noticeBody={content.reveal.noticeDemo}
           holdsWaveUntilInView
         />
       </div>

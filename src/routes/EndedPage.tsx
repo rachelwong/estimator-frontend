@@ -5,7 +5,7 @@ import { PageLayout } from '@/components/PageLayout'
 import { RevealWindow } from '@/components/RevealWindow'
 import { SpriteScatter } from '@/components/SpriteScatter'
 import { StartSessionLink } from '@/components/StartSessionLink'
-import { useChangeFlash, useSessionConnection } from '@/hooks'
+import { useChangeFlash, useContent, useSessionConnection } from '@/hooks'
 import type { EndedLoaderData } from '@/types'
 import { endedView, revealChip } from '@/utils'
 
@@ -25,6 +25,7 @@ export default function EndedPage() {
   const live = endedView(state)
   const reveal = live.reveal ?? session.reveal
   const flashes = useChangeFlash(reveal, live.name)
+  const content = useContent()
 
   return (
     <PageLayout actions={<StartSessionLink className="hidden text-[12px] tablet:inline-flex" />}>
@@ -38,7 +39,7 @@ export default function EndedPage() {
           onSelect={live.canVote ? ({ time, resource }) => select(time, resource) : undefined}
           flashes={flashes}
           description={session.description}
-          chip={revealChip(viewer)}
+          chip={revealChip(viewer, content.role)}
           isScreenHeading
         >
           {live.error && <ErrorBanner error={live.error} onDismiss={dismissError} />}

@@ -3,6 +3,7 @@ import { PageLayout } from '@/components/PageLayout'
 import { SpriteScatter } from '@/components/SpriteScatter'
 import { Window } from '@/components/Window'
 import { WindowVariant } from '@/constants'
+import { useContent } from '@/hooks'
 import type { ErrorScreenCopy } from '@/types'
 import { BrokenGrid } from './BrokenGrid'
 
@@ -22,6 +23,8 @@ interface ErrorScreenProps {
 // The header carries the logo only. Side by side from tablet up, stacked on a
 // phone, where the buttons also go full width.
 export function ErrorScreen({ copy, actions, footer }: ErrorScreenProps) {
+  const content = useContent()
+
   return (
     <PageLayout footer={footer}>
       <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10">
@@ -30,7 +33,7 @@ export function ErrorScreen({ copy, actions, footer }: ErrorScreenProps) {
         <Window
           title={copy.label}
           variant={WindowVariant.ERROR}
-          chip="error"
+          chip={content.errorScreen.chip}
         >
           <BrokenGrid />
 

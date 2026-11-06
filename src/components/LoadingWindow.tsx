@@ -2,7 +2,7 @@ import { PageLayout } from '@/components/PageLayout'
 import { PixelProgressBar } from '@/components/PixelProgressBar'
 import { Window } from '@/components/Window'
 import { LOADING_NOTICE_DELAY_MS, WindowVariant } from '@/constants'
-import { useDelayedVisibility } from '@/hooks'
+import { useContent, useDelayedVisibility } from '@/hooks'
 
 // The large loader (DESIGN.md §7): the 220px bar centred in its own window,
 // above a Silkscreen line.
@@ -15,19 +15,20 @@ import { useDelayedVisibility } from '@/hooks'
 // The header shows at once; only the window waits out the delay.
 export function LoadingWindow() {
   const isVisible = useDelayedVisibility(LOADING_NOTICE_DELAY_MS)
+  const content = useContent()
 
   return (
     <PageLayout>
       {isVisible && (
         <div className="mx-auto w-full max-w-[366px] px-5 py-10 tablet:max-w-[420px]">
-          <Window title="loading" variant={WindowVariant.LOADING}>
+          <Window title={content.loading.windowTitle} variant={WindowVariant.LOADING}>
             <div
               role="status"
               className="flex min-h-[150px] flex-col items-center justify-center gap-6"
             >
               <PixelProgressBar />
 
-              <span className="font-label text-[12px] text-ink">loading session…</span>
+              <span className="font-label text-[12px] text-ink">{content.loading.windowMessage}</span>
             </div>
           </Window>
         </div>

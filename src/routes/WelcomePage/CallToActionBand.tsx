@@ -1,5 +1,6 @@
+import parse from 'html-react-parser'
 import { useRef } from 'react'
-import { useCrowdChatter, useFullyInView } from '@/hooks'
+import { useContent, useCrowdChatter, useFullyInView } from '@/hooks'
 import { StartSessionButton } from './StartSessionButton'
 import { TeamSprites } from './TeamSprites'
 
@@ -14,6 +15,7 @@ export function CallToActionBand() {
   const bandRef = useRef<HTMLElement>(null)
   const isGathered = useFullyInView(bandRef, true)
   const { remark, speak } = useCrowdChatter(isGathered)
+  const content = useContent()
 
   return (
     <section
@@ -24,10 +26,7 @@ export function CallToActionBand() {
 
       <div className="flex w-fit flex-col items-start gap-[22px] px-5 pt-8 tablet:px-14 tablet:pt-16">
         <h2 className="font-display text-[23px] leading-[1.05] text-white tablet:text-[31px] desktop:text-[41px]">
-          Flip the points
-          <br />
-          Align the team
-          <br />
+          {parse(content.welcome.callToAction.headline)}
         </h2>
 
         <StartSessionButton className="h-[52px] text-[14px]" />

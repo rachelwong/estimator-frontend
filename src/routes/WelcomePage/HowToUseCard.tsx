@@ -1,16 +1,18 @@
 import { Card } from "@/components/Card";
 import { Sprite } from "@/components/Sprite";
+import { useContent } from "@/hooks";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
+import parse from "html-react-parser";
 
 interface HowToUseCardProps {
   level: number;
   title: string;
+  /** HTML from content: a sentence or two, and maybe a link. */
+  description: string;
   /** A `.svg` imported from `@/assets/sprites`. */
   sprite: string;
   /** The card's fill — one of the four How to use tints (§2). */
   tintClass: string;
-  children: ReactNode;
 }
 
 // One step of How to use (§7 item 5): an ink "LV.n" tag and a sprite across
@@ -21,10 +23,12 @@ interface HowToUseCardProps {
 export function HowToUseCard({
   level,
   title,
+  description,
   sprite,
   tintClass,
-  children,
 }: HowToUseCardProps) {
+  const content = useContent();
+
   return (
     <li className="flex">
       <Card
@@ -35,7 +39,7 @@ export function HowToUseCard({
       >
         <div className="flex items-start justify-between">
           <span className="bg-ink px-2 py-1 font-label text-[13px] text-cream">
-            Step.{level}
+            {content.welcome.howToUse.stepLabel(level)}
           </span>
           <Sprite source={sprite} className="h-auto w-[52px] tablet:w-16" />
         </div>
@@ -47,7 +51,7 @@ export function HowToUseCard({
         >
           {title}
         </h3>
-        <p className="text-[16px] leading-[1.55] text-text-muted">{children}</p>
+        <p className="text-[16px] leading-[1.55] text-text-muted">{parse(description)}</p>
       </Card>
     </li>
   );
