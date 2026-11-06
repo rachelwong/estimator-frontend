@@ -14,10 +14,10 @@ import { cn } from '@/lib/utils'
 // phone and a tablet get a mug and a speech bubble in the top corners; desktop
 // moves those two in among four more stickers and a character each side.
 //
-// Behind the words, as everywhere, and deaf to the pointer.
+// Behind the words, as everywhere, and deaf to the pointer. Play only: Work hides it.
 export function HeroSprites() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 work:hidden">
       <Sprite
         source={mug}
         className="sprite-sticker absolute top-1 left-2 h-[37px] w-auto rotate-[-8deg] tablet:top-2.5 tablet:left-6 tablet:h-[50px] desktop:top-[250px] desktop:left-[290px] desktop:h-[65px] desktop:rotate-[8deg]"

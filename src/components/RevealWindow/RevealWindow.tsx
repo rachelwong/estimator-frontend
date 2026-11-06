@@ -23,6 +23,8 @@ interface RevealWindowProps {
   description?: string | null;
   /** The window's status chip: the viewer's role, when there is one. */
   chip?: string;
+  /** Work only: the icon before the chip's word. */
+  chipIcon?: string;
   /** A Square whose popover is open from the start. */
   initialPinned?: Selection | null;
   /** The dark notice's body, when not the live one. Welcome's demo can't vote, so it says so. */
@@ -50,6 +52,7 @@ export function RevealWindow({
   flashes,
   description = null,
   chip,
+  chipIcon,
   initialPinned = null,
   noticeBody,
   holdsWaveUntilInView = false,
@@ -62,7 +65,7 @@ export function RevealWindow({
   const subheading = isScreenHeading ? "h2" : "h3";
 
   return (
-    <Window title={content.reveal.windowTitle} variant={WindowVariant.SESSION} chip={chip}>
+    <Window title={content.reveal.windowTitle} variant={WindowVariant.SESSION} chip={chip} chipIcon={chipIcon}>
       <RevealNotice body={noticeBody ?? content.reveal.noticeLive} />
 
       <SessionDescription description={description} />

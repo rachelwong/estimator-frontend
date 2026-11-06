@@ -423,16 +423,18 @@ export const PixelBarSize = {
 // Whole literal class strings, as everywhere else — Tailwind's scanner and
 // `cn build` only see classes written in source. `blocks` is the white gap
 // overlay; its utility is in src/index.css, where the repeating gradient can be
-// written out.
+// written out. The inline bar sits inside buttons, so it has its own colours:
+// Work's is white on a 25% white track (NL-Components), where the large one is
+// the primary blue. The `work:` sizes are the board's 200×4 and 40×3.
 export const PIXEL_BAR_CLASS = {
   [PixelBarSize.LARGE]: {
-    track: "h-[18px] w-[220px]",
-    fill: "animate-pixel-bar-large",
+    track: "h-[18px] w-[220px] bg-progress-track work:h-1 work:w-[200px]",
+    fill: "animate-pixel-bar-large bg-progress",
     blocks: "pixel-bar-blocks-large",
   },
   [PixelBarSize.INLINE]: {
-    track: "h-[6px] w-[40px]",
-    fill: "animate-pixel-bar-inline",
+    track: "h-[6px] w-[40px] bg-progress-track-inline work:h-[3px] work:w-10",
+    fill: "animate-pixel-bar-inline bg-progress-inline",
     blocks: "pixel-bar-blocks-inline",
   },
 } as const;

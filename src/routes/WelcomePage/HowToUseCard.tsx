@@ -1,3 +1,4 @@
+import stepBadge from "@/assets/sprites/work/step-badge.svg";
 import { Card } from "@/components/Card";
 import { Sprite } from "@/components/Sprite";
 import { useContent } from "@/hooks";
@@ -20,6 +21,9 @@ interface HowToUseCardProps {
 //
 // Hovered, it slides 6px down onto its shadow — a Square's hover lift run in
 // reverse, at the same 90ms.
+//
+// Work (NL-Welcome-*) has no sprite, and the tag becomes a 28px blue badge
+// carrying the bare numeral; the full step label stays for screen readers.
 export function HowToUseCard({
   level,
   title,
@@ -38,10 +42,17 @@ export function HowToUseCard({
         )}
       >
         <div className="flex items-start justify-between">
-          <span className="bg-inverse px-2 py-1 font-label text-[13px] text-inverse-foreground">
+          <span className="bg-inverse px-2 py-1 font-label text-[13px] text-inverse-foreground work:hidden">
             {content.welcome.howToUse.stepLabel(level)}
           </span>
-          <Sprite source={sprite} className="h-auto w-[52px] tablet:w-16" />
+          <span className="relative hidden size-7 place-items-center font-display text-[14px] font-semibold text-link tabular-nums work:grid">
+            <Sprite source={stepBadge} className="absolute inset-0" />
+            <span className="sr-only">{content.welcome.howToUse.stepLabel(level)}</span>
+            <span aria-hidden="true" className="relative">
+              {level}
+            </span>
+          </span>
+          <Sprite source={sprite} className="h-auto w-[52px] tablet:w-16 work:hidden" />
         </div>
 
         <h3

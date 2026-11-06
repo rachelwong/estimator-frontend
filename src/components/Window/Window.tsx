@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Chip } from '@/components/Chip'
+import { Sprite } from '@/components/Sprite'
 import { WINDOW_VARIANT_CLASS } from '@/constants'
 import { cn } from '@/lib/utils'
 import type { WindowVariant } from '@/types'
@@ -12,6 +13,8 @@ interface WindowProps {
   variant: WindowVariant
   /** The status chip beside the chrome — "Admin", "Participant", "error". */
   chip?: string
+  /** Work only: the line icon before the chip's word (`work/person.svg`, `work/shield.svg`). */
+  chipIcon?: string
   children: ReactNode
 }
 
@@ -31,8 +34,9 @@ interface WindowProps {
 // Work has no window costume (NL-* boards): the frame is a plain card, 1px
 // edge and 12px corners, with no title bar. The title goes with the bar — the
 // h1 inside already names the screen — and the chip turns into a quiet role
-// label in the card's top-right corner, level with the heading.
-export function Window({ title, variant, chip, children }: WindowProps) {
+// label in the card's top-right corner, level with the heading. A role label
+// leads with its icon there (NL-Join-*, NL-Reveal-*): a person or a shield.
+export function Window({ title, variant, chip, chipIcon, children }: WindowProps) {
   const variantClass = WINDOW_VARIANT_CLASS[variant]
 
   return (
@@ -49,7 +53,8 @@ export function Window({ title, variant, chip, children }: WindowProps) {
 
         <span className="flex shrink-0 items-center gap-2.5 work:absolute work:top-4 work:right-4 work:tablet:top-8 work:tablet:right-8">
           {chip && (
-            <Chip className="work:border-0 work:bg-transparent work:p-0 work:font-body work:text-[13px] work:leading-4 work:font-medium work:text-muted-foreground">
+            <Chip className="work:gap-2 work:border-0 work:bg-transparent work:p-0 work:font-body work:text-[13px] work:leading-4 work:font-medium work:text-muted-foreground">
+              {chipIcon && <Sprite source={chipIcon} className="hidden size-3.5 opacity-80 work:block" />}
               {chip}
             </Chip>
           )}

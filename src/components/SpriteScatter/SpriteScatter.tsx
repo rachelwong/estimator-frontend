@@ -32,11 +32,12 @@ interface SpriteScatterProps {
 // The layer is absolutely positioned inside the nearest positioned ancestor and
 // pinned behind with a negative z-index, so the window always sits on top (§9).
 // `pointer-events-none` stops a character swallowing a click meant for the grid.
+// Pixel sprites are Play only: Work hides the whole cast.
 export function SpriteScatter({ className }: SpriteScatterProps) {
   return (
     <div
       aria-hidden="true"
-      className={cn('pointer-events-none absolute inset-0 -z-10 overflow-hidden', className)}
+      className={cn('pointer-events-none absolute inset-0 -z-10 overflow-hidden work:hidden', className)}
     >
       {/* Peeking over the top edge — the only pair mobile shows. */}
       <Sprite

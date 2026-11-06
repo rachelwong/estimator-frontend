@@ -7,7 +7,7 @@ import { SpriteScatter } from '@/components/SpriteScatter'
 import { StartSessionLink } from '@/components/StartSessionLink'
 import { useChangeFlash, useContent, useSessionConnection } from '@/hooks'
 import type { EndedLoaderData } from '@/types'
-import { endedView, revealChip } from '@/utils'
+import { endedView, revealChip, revealChipIcon } from '@/utils'
 
 // The Reveal screen (DESIGN.md §7). endedLoader's REST read draws it first;
 // the live connection endedLoader opened takes over once it sends a Reveal of
@@ -40,6 +40,7 @@ export default function EndedPage() {
           flashes={flashes}
           description={session.description}
           chip={revealChip(viewer, content.role)}
+          chipIcon={revealChipIcon(viewer)}
           isScreenHeading
         >
           {live.error && <ErrorBanner error={live.error} onDismiss={dismissError} />}

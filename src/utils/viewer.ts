@@ -1,3 +1,5 @@
+import person from '@/assets/sprites/work/person.svg'
+import shield from '@/assets/sprites/work/shield.svg'
 import { SessionConnectionStatus } from '@/constants'
 import type { EndedView, RevealViewer, RoleContent, SessionConnectionState } from '@/types'
 
@@ -10,6 +12,20 @@ export function revealChip(viewer: RevealViewer, content: RoleContent): string |
 
   if (viewer.hasJoined) {
     return content.participant
+  }
+
+  return undefined
+}
+
+// The icon Work puts before that chip: a shield for the Admin, a person for a
+// Participant. Nothing for a visitor, who has no chip.
+export function revealChipIcon(viewer: RevealViewer): string | undefined {
+  if (viewer.isAdmin) {
+    return shield
+  }
+
+  if (viewer.hasJoined) {
+    return person
   }
 
   return undefined

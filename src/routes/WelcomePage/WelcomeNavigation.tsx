@@ -1,9 +1,11 @@
 import close from "@/assets/sprites/close.svg";
 import menu from "@/assets/sprites/menu.svg";
+import workClose from "@/assets/sprites/work/close.svg";
+import workMenu from "@/assets/sprites/work/menu.svg";
 import { FeedbackButton } from "@/components/FeedbackButton";
 import { Sprite } from "@/components/Sprite";
-import { WelcomeSection } from "@/constants";
-import { useContent, useEscapeKey } from "@/hooks";
+import { Theme, WelcomeSection } from "@/constants";
+import { useContent, useEscapeKey, useTheme } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useId, useState } from "react";
 import { MobileMenu } from "./MobileMenu";
@@ -20,6 +22,10 @@ export function WelcomeNavigation() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
   const navigation = useContent().welcome.navigation;
+  const { theme } = useTheme();
+  const isWorkTheme = theme === Theme.WORK;
+  const menuIcon = isWorkTheme ? workMenu : menu;
+  const closeIcon = isWorkTheme ? workClose : close;
 
   useEscapeKey(isMenuOpen ? () => setMenuOpen(false) : null);
 
@@ -45,14 +51,16 @@ export function WelcomeNavigation() {
         <StartSessionButton className="text-[12px] work:h-9 work:px-4 work:text-[14px] work:font-semibold" />
       </nav>
 
-      {/* Icon only. Open, it turns yellow, drops its shadow and shows a cross. */}
+      {/* Icon only. Open, it turns yellow, drops its shadow and shows a cross.
+          Work's is a ghost either way (NL-Welcome-Mobile, -Menu-Mobile): only
+          the icon changes. */}
       <button
         type="button"
         aria-label={isMenuOpen ? navigation.closeMenu : navigation.openMenu}
         aria-expanded={isMenuOpen}
         aria-controls={menuId}
         className={cn(
-          "inline-flex size-11 cursor-pointer items-center justify-center rounded-control border-[3px] border-ghost-border outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring tablet:hidden work:border work:focus-visible:outline-2 work:focus-visible:outline-offset-2",
+          "inline-flex size-11 cursor-pointer items-center justify-center rounded-control border-[3px] border-ghost-border outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring tablet:hidden work:border work:bg-ghost work:hover:bg-ghost-hover work:focus-visible:outline-2 work:focus-visible:outline-offset-2",
           isMenuOpen
             ? "bg-action"
             : "bg-secondary shadow-icon",
@@ -60,9 +68,9 @@ export function WelcomeNavigation() {
         onClick={() => setMenuOpen(!isMenuOpen)}
       >
         {isMenuOpen ? (
-          <Sprite source={close} className="w-[15px]" />
+          <Sprite source={closeIcon} className="w-[15px] work:w-5" />
         ) : (
-          <Sprite source={menu} className="w-[18px]" />
+          <Sprite source={menuIcon} className="w-[18px] work:w-5" />
         )}
       </button>
 

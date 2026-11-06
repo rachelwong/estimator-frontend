@@ -156,6 +156,8 @@
   --axis-label: var(--plum-950);
   --progress: var(--grape-500);
   --progress-track: var(--white);
+  --progress-inline: var(--grape-500);
+  --progress-track-inline: var(--white);
   --destructive: var(--coral-400);
   --error-foreground: var(--brick-700);
   --error-surface: var(--coral-400);
@@ -302,6 +304,8 @@
   --axis-label: var(--steel-300);
   --progress: var(--sky-600);
   --progress-track: var(--night-700);
+  --progress-inline: var(--white);
+  --progress-track-inline: var(--white-a25);
   --destructive: var(--red-500);
   --error-foreground: var(--red-300);
   --error-surface: var(--red-500-a10);
@@ -444,6 +448,8 @@
   --color-axis-label: var(--axis-label);
   --color-progress: var(--progress);
   --color-progress-track: var(--progress-track);
+  --color-progress-inline: var(--progress-inline);
+  --color-progress-track-inline: var(--progress-track-inline);
   --color-destructive: var(--destructive);
   --color-error-foreground: var(--error-foreground);
   --color-error-surface: var(--error-surface);
@@ -523,6 +529,11 @@
        which leaves the bar full and still rather than mid-step. */
   --animate-pixel-bar-large: ffBar 1.6s steps(8) infinite;
   --animate-pixel-bar-inline: ffBar 1.6s steps(5) infinite;
+
+  /* Work's loader (NL-Components "Loader"): a 40% fill sliding across a thin
+       track and out the far side. Under reduced motion it stops where it
+       starts, still, as the board asks. */
+  --animate-loader-slide: ffSlide 1.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 
   /* The Reveal's diagonal wave (§8). `backwards` holds each Square at the
        first keyframe through its delay, which GridCell sets per Square. */
@@ -770,6 +781,17 @@
   }
 }
 
+/* Work's loader fill: from just off the track's left edge to past its right.
+   The track clips it, so it reads as one bar travelling through. */
+@keyframes ffSlide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
 /* The gaps between the loader's blocks, in the track's own colour,, laid over the fill rather than
    cut into it — the fill is one growing element, so it has no block edges of
    its own to separate. Each stripe repeats on the block pitch (track width ÷
@@ -787,7 +809,7 @@
   background: repeating-linear-gradient(
     90deg,
     transparent 0 5px,
-    var(--progress-track) 5px 8px
+    var(--progress-track-inline) 5px 8px
   );
 }
 
@@ -908,6 +930,11 @@
    pinned here too. */
 @utility sprite-pixels {
   image-rendering: pixelated;
+
+  /* Work's art is line drawing, not pixels: scaled, it wants smoothing. */
+  &:where([data-theme="work"] *) {
+    image-rendering: auto;
+  }
 }
 
 /* A sprite set down as a sticker (§9): a soft ink drop at 18%, the one shadow

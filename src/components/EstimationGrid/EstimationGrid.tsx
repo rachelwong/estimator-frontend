@@ -6,8 +6,9 @@ import {
   GridMode,
   HoverSource,
   MOUSE_POINTER_TYPE,
+  Theme,
 } from '@/constants'
-import { useBreakpoint, useContent, useEscapeKey, useFullyInView } from '@/hooks'
+import { useBreakpoint, useContent, useEscapeKey, useFullyInView, useTheme } from '@/hooks'
 import type { GridMode as GridModeValue, HoveredSquare, RevealPayload, Selection } from '@/types'
 import {
   axisEmphasis,
@@ -91,6 +92,7 @@ export function EstimationGrid({
   const scrollerRef = useRef<HTMLDivElement>(null)
   const breakpoint = useBreakpoint()
   const { grid: content } = useContent()
+  const { theme } = useTheme()
 
   const rows = [...axisValues].reverse()
   const cols = axisValues
@@ -107,17 +109,22 @@ export function EstimationGrid({
   // A held wave waits blank for the whole grid to scroll into view, then rolls
   // once. A pin it opened with stays shut until the last Square lands, rather
   // than floating over blank ones — the Welcome demo opens pinned.
+  //
+  // Work has no wave (docs/plans/themes.md decision 15): every Square is in
+  // place from the first frame, so there is nothing to wait for.
   const isWaveStarted = useFullyInView(scrollerRef, holdsWaveUntilInView)
   const [isWaveLanded, setWaveLanded] = useState(!holdsWaveUntilInView)
+  const hasWave = !isInteractive && theme !== Theme.WORK
+  const isWaveDone = isWaveLanded || !hasWave
   const lastAxisValue = axisValues[axisValues.length - 1]
   const lastSquareKey = squareKey(lastAxisValue, lastAxisValue)
-  const shownPinned = isWaveLanded ? pinned : null
+  const shownPinned = isWaveDone ? pinned : null
 
   // Voting, the popover follows hover onto a Square with people, and a chip's
   // pin otherwise. No tooltip over the popover's Square: it already says who.
   const hoveredSquare = hovered?.square ?? null
   const isHoveringNames =
-    isVoting && isWaveLanded && hoveredSquare !== null && namesAt(hoveredSquare).length > 0
+    isVoting && isWaveDone && hoveredSquare !== null && namesAt(hoveredSquare).length > 0
   const popoverSquare = isHoveringNames ? hoveredSquare : shownPinned
   const isHoveringPopover =
     hoveredSquare !== null && popoverSquare !== null && isSameSquare(popoverSquare, hoveredSquare)
@@ -271,7 +278,7 @@ export function EstimationGrid({
               <div
                 className="grid gap-1 work:-mr-px work:-mb-px work:gap-0"
                 style={{ gridTemplateColumns: template }}
-                onAnimationEnd={isWaveLanded ? undefined : handleWaveEnd}
+                onAnimationEnd={isWaveDone ? undefined : handleWaveEnd}
                 onPointerLeave={() => {
                   if (hovered?.source === HoverSource.POINTER) {
                     onHoveredChange(null)
@@ -297,7 +304,7 @@ export function EstimationGrid({
                           ariaLabel={squareAriaLabel(mode, square, selection, names, content)}
                           pressed={votes ? Boolean(selection && isSameSquare(selection, square)) : undefined}
                           expanded={isReadonly && names.length > 0 ? isPinned : undefined}
-                          revealDelay={isInteractive ? undefined : revealDelay(axisValues, square)}
+                          revealDelay={hasWave ? revealDelay(axisValues, square) : undefined}
                           isWavePaused={!isWaveStarted}
                           flashId={flashes?.get(squareKey(time, resource))}
                           hasPointerCursor={votes || names.length > 0}

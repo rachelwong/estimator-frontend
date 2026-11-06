@@ -1,4 +1,6 @@
 import cardBack from "@/assets/sprites/cardback.svg";
+import eyeOff from "@/assets/sprites/work/eye-off.svg";
+import person from "@/assets/sprites/work/person.svg";
 import { PageLayout } from "@/components/PageLayout";
 import { PixelProgressBar } from "@/components/PixelProgressBar";
 import { SessionDescription } from "@/components/SessionDescription";
@@ -7,8 +9,8 @@ import { SpriteScatter } from "@/components/SpriteScatter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Window } from "@/components/Window";
-import { PixelBarSize, WindowVariant } from "@/constants";
-import { useContent } from "@/hooks";
+import { PixelBarSize, Theme, WindowVariant } from "@/constants";
+import { useContent, useTheme } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { isNameValid } from "@/lib/validation";
 import type { ActionErrorData, JoinLoaderData } from "@/types";
@@ -32,6 +34,7 @@ export function JoinSessionPage() {
   const navigation = useNavigation();
   const actionData = useActionData() as ActionErrorData | undefined;
   const content = useContent();
+  const isWorkTheme = useTheme().theme === Theme.WORK;
 
   // Checked here so "Jim@Bob" never reaches the wire. The server's
   // INVALID_NAME stays the backstop.
@@ -43,7 +46,7 @@ export function JoinSessionPage() {
       <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10 work:pt-4 work:tablet:pt-12 work:desktop:pt-16 work:desktop:pb-20">
         <SpriteScatter />
 
-        <Window title={content.join.windowTitle} variant={WindowVariant.JOIN} chip={content.role.participant}>
+        <Window title={content.join.windowTitle} variant={WindowVariant.JOIN} chip={content.role.participant} chipIcon={person}>
           <h1 className="font-display text-[22px] leading-[1.05] text-foreground tablet:text-[30px] work:text-[24px] work:leading-[1.2] work:font-medium work:tracking-[-0.01em] work:tablet:text-[28px]">
             {content.join.heading}
           </h1>
@@ -90,9 +93,10 @@ export function JoinSessionPage() {
           </Form>
 
           <div className="flex items-start gap-3 border-2 border-border-subtle bg-note px-4 py-3.5 work:border-0 work:border-t work:px-0 work:pt-5 work:pb-0">
+            {/* Work's note leads with a hidden-eye icon, not the card (NL-Join-*). */}
             <Sprite
-              source={cardBack}
-              className="sprite-sticker h-[29px] w-6 shrink-0"
+              source={isWorkTheme ? eyeOff : cardBack}
+              className="sprite-sticker h-[29px] w-6 shrink-0 work:mt-0.5 work:size-[18px] work:filter-none"
             />
             <p className="text-[14px] leading-normal work:leading-[22px] work:text-muted-foreground">{content.join.privacyNote}</p>
           </div>

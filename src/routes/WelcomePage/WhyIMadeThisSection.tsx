@@ -1,8 +1,9 @@
 import code from "@/assets/sprites/code.svg";
+import workCode from "@/assets/sprites/work/code.svg";
 import { Sprite } from "@/components/Sprite";
 import { Button } from "@/components/ui/button";
-import { REPOSITORY_URL, WelcomeSection } from "@/constants";
-import { useContent } from "@/hooks";
+import { REPOSITORY_URL, Theme, WelcomeSection } from "@/constants";
+import { useContent, useTheme } from "@/hooks";
 import { MakerNote } from "./MakerNote";
 import { WelcomeSectionHeading } from "./WelcomeSectionHeading";
 
@@ -13,6 +14,8 @@ import { WelcomeSectionHeading } from "./WelcomeSectionHeading";
 // everything.
 export function WhyIMadeThisSection() {
   const why = useContent().welcome.whyIMadeThis;
+  const { theme } = useTheme();
+  const codeIcon = theme === Theme.WORK ? workCode : code;
 
   return (
     <section
@@ -28,7 +31,7 @@ export function WhyIMadeThisSection() {
           className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px] work:h-12 work:text-[15px] work:tablet:w-auto work:desktop:px-5"
         >
           <a href={REPOSITORY_URL.FRONTEND} target="_blank">
-            <Sprite source={code} className="w-[18px]" />
+            <Sprite source={codeIcon} className="w-[18px]" />
             {why.frontendLink}
           </a>
         </Button>
@@ -38,7 +41,7 @@ export function WhyIMadeThisSection() {
           className="h-[52px] w-full text-[16px] desktop:w-auto desktop:px-[22px] work:h-12 work:text-[15px] work:tablet:w-auto work:desktop:px-5"
         >
           <a href={REPOSITORY_URL.BACKEND} target="_blank">
-            <Sprite source={code} className="w-[18px]" />
+            <Sprite source={codeIcon} className="w-[18px]" />
             {why.backendLink}
           </a>
         </Button>

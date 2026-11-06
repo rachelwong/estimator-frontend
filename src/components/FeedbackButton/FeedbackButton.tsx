@@ -1,7 +1,8 @@
 import bug from '@/assets/sprites/bug.svg'
+import feedbackIcon from '@/assets/sprites/work/feedback.svg'
 import { Sprite } from '@/components/Sprite'
-import { REPOSITORY_URL } from '@/constants'
-import { useContent } from '@/hooks'
+import { REPOSITORY_URL, Theme } from '@/constants'
+import { useContent, useTheme } from '@/hooks'
 import { FeedbackConfetti } from './FeedbackConfetti'
 
 // The header's Feedback tile (artboard "Nav bug button", option D6). A 44px
@@ -18,8 +19,27 @@ import { FeedbackConfetti } from './FeedbackConfetti'
 //
 // The label is only ever decoration — the link carries the same word as its
 // accessible name, so a screen reader hears it once rather than twice.
+//
+// Work draws it as a header link instead (NL-* headers): a speech bubble and
+// the word from tablet up, a 44px ghost icon button on a phone. Still, with no
+// bug, burst or hover label.
 export function FeedbackButton() {
   const content = useContent()
+  const { theme } = useTheme()
+
+  if (theme === Theme.WORK) {
+    return (
+      <a
+        href={REPOSITORY_URL.LINKEDIN}
+        target="_blank"
+        aria-label={content.feedback.label}
+        className="inline-flex size-11 shrink-0 items-center justify-center gap-2 rounded-control border border-ghost-border text-[14px] leading-none font-medium text-nav-foreground outline-none hover:text-nav-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring tablet:size-auto tablet:border-0"
+      >
+        <Sprite source={feedbackIcon} className="size-5 tablet:size-4" />
+        <span className="hidden tablet:inline">{content.feedback.label}</span>
+      </a>
+    )
+  }
 
   return (
     <span className="group relative inline-flex">

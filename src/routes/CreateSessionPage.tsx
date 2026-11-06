@@ -1,3 +1,4 @@
+import shield from "@/assets/sprites/work/shield.svg";
 import { PageLayout } from "@/components/PageLayout";
 import { PixelProgressBar } from "@/components/PixelProgressBar";
 import { PointSystemPicker } from "@/components/PointSystemPicker";
@@ -62,7 +63,7 @@ export default function CreateSessionPage() {
       <div className="relative isolate flex justify-center px-3 pt-8 pb-16 tablet:px-10 tablet:pt-10 work:pt-4 work:tablet:pt-12 work:desktop:pt-16 work:desktop:pb-20">
         <SpriteScatter />
 
-        <Window title={content.create.windowTitle} variant={WindowVariant.CREATE} chip={content.role.admin}>
+        <Window title={content.create.windowTitle} variant={WindowVariant.CREATE} chip={content.role.admin} chipIcon={shield}>
           <div className="flex flex-col gap-1.5 work:gap-2 work:pr-20">
             <h1 className="font-display text-[20px] leading-[1.05] text-foreground tablet:text-[28px] work:text-[24px] work:leading-[1.2] work:font-medium work:tracking-[-0.01em] work:tablet:text-[28px]">
               {content.create.heading}

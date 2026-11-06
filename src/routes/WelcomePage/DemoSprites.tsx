@@ -13,9 +13,11 @@ import { cn } from '@/lib/utils'
 //   mobile   two characters peeking over the window's top edge
 //   tablet   the same pair taller, each with a sticker above
 //   desktop  a character and a sticker floating out beside each side
+//
+// Play only: Work hides it.
 export function DemoSprites() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 work:hidden">
       <Sprite
         source={personFour}
         className={cn(SPRITE_SCATTER_CLASS.HIDDEN_ON_DESKTOP, 'sprite-sticker absolute top-1 left-0.5 h-[82px] w-auto rotate-[-5deg] tablet:-top-[60px] tablet:left-2 tablet:h-[105px]')}

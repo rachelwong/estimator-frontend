@@ -1,4 +1,7 @@
-import { useContent } from "@/hooks";
+import wordmark from "@/assets/sprites/work/wordmark.svg";
+import { Sprite } from "@/components/Sprite";
+import { Theme } from "@/constants";
+import { useContent, useTheme } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "./LogoMark";
 
@@ -12,8 +15,17 @@ interface LogoLockupProps {
 //
 // The mark's width drives its own number size — the card back is a size
 // container — so scaling the lockup is one class on the mark.
+//
+// Work swaps the whole lockup for the FOLD / FLIP wordmark (NL-* headers), 22px
+// tall at every width. It stands still, so the card's 7s cycle doesn't run.
+// The link around it carries the name, so the sprite stays decorative.
 export function LogoLockup({ className }: LogoLockupProps) {
   const content = useContent();
+  const { theme } = useTheme();
+
+  if (theme === Theme.WORK) {
+    return <Sprite source={wordmark} className={cn("block h-[22px] w-auto", className)} />;
+  }
 
   return (
     <span className={cn("inline-flex items-center gap-4", className)}>

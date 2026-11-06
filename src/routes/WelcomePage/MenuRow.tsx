@@ -1,4 +1,8 @@
+import chevronRight from '@/assets/sprites/work/chevron-right.svg'
+import external from '@/assets/sprites/work/external.svg'
 import { Sprite } from '@/components/Sprite'
+import { Theme } from '@/constants'
+import { useTheme } from '@/hooks'
 
 interface MenuRowProps {
   href: string
@@ -14,7 +18,14 @@ interface MenuRowProps {
 
 // One 60px row of the phone's menu (§7): a sprite, the label, and an arrow,
 // over a 2px dashed ink rule.
+//
+// Work (NL-Welcome-Menu-Mobile) drops the sprite and draws the arrow as a line
+// icon: a chevron for a row that stays on the page, an out-arrow for one that
+// opens a new tab.
 export function MenuRow({ href, sprite, label, sublabel, opensInNewTab, onClick }: MenuRowProps) {
+  const { theme } = useTheme()
+  const workArrow = opensInNewTab ? external : chevronRight
+
   return (
     <li>
       <a
@@ -24,7 +35,7 @@ export function MenuRow({ href, sprite, label, sublabel, opensInNewTab, onClick 
         onClick={onClick}
       >
         <span className="flex items-center gap-3.5">
-          <Sprite source={sprite} className="h-auto w-[30px] shrink-0" />
+          <Sprite source={sprite} className="h-auto w-[30px] shrink-0 work:hidden" />
 
           <span className="flex flex-col gap-0.5">
             <span className="text-[19px] leading-tight font-extrabold work:text-[17px] work:font-medium">{label}</span>
@@ -32,9 +43,13 @@ export function MenuRow({ href, sprite, label, sublabel, opensInNewTab, onClick 
           </span>
         </span>
 
-        <span aria-hidden="true" className="font-label text-[14px]">
-          →
-        </span>
+        {theme === Theme.WORK ? (
+          <Sprite source={workArrow} className="size-4 shrink-0" />
+        ) : (
+          <span aria-hidden="true" className="font-label text-[14px]">
+            →
+          </span>
+        )}
       </a>
     </li>
   )

@@ -1,3 +1,5 @@
+import person from "@/assets/sprites/work/person.svg";
+import shield from "@/assets/sprites/work/shield.svg";
 import { AdminControls } from "@/components/AdminControls";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { EstimationGrid } from "@/components/EstimationGrid";
@@ -61,6 +63,7 @@ export function ActiveSessionView({
           title={content.active.windowTitle}
           variant={WindowVariant.SESSION}
           chip={state.isAdmin ? content.role.admin : content.role.participant}
+          chipIcon={state.isAdmin ? shield : person}
         >
           <div className="flex flex-col gap-1.5 work:gap-2 work:pr-20">
             <h1 className="font-display text-[20px] leading-[1.05] text-foreground tablet:text-[27px] work:text-[24px] work:leading-[1.2] work:font-medium work:tracking-[-0.01em] work:tablet:text-[28px]">
