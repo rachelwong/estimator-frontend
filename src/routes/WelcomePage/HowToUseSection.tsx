@@ -20,7 +20,7 @@ export function HowToUseSection() {
       className="flex flex-col gap-7 px-5 pt-8 scroll-mt-16 tablet:gap-10 tablet:px-10 tablet:pt-12 tablet:scroll-mt-[72px] desktop:px-20 desktop:scroll-mt-[84px]"
     >
       <WelcomeSectionHeading text={howToUse.heading} />
-      <div className="max-w-3xl mx-auto text-center flex flex-col gap-y-6 text-[18px] leading-[1.5] text-text-muted tablet:text-[18px]">
+      <div className="max-w-3xl mx-auto text-center flex flex-col gap-y-6 text-[18px] leading-[1.5] text-muted-foreground tablet:text-[18px]">
         <p>{parse(howToUse.intro)}</p>
       </div>
       <ol className="grid gap-5 tablet:grid-cols-2 tablet:gap-7 desktop:grid-cols-4">
@@ -29,28 +29,28 @@ export function HowToUseSection() {
           title={howToUse.startSession.title}
           description={howToUse.startSession.description}
           sprite={sessionStart}
-          tintClass="bg-white"
+          tintClass="bg-tint-plain"
         />
         <HowToUseCard
           level={2}
           title={howToUse.cardsDown.title}
           description={howToUse.cardsDown.description}
           sprite={gridPick}
-          tintClass="bg-butter"
+          tintClass="bg-tint-butter"
         />
         <HowToUseCard
           level={3}
           title={howToUse.theFlip.title}
           description={howToUse.theFlip.description}
           sprite={gridReveal}
-          tintClass="bg-copied"
+          tintClass="bg-tint-mint"
         />
         <HowToUseCard
           level={4}
           title={howToUse.talkItThrough.title}
           description={howToUse.talkItThrough.description}
           sprite={avatar}
-          tintClass="bg-crowd-0"
+          tintClass="bg-tint-lavender"
         />
       </ol>
     </section>

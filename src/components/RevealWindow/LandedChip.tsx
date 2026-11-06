@@ -24,7 +24,7 @@ export function LandedChip({ name, expanded, flashId, onPreview, onPreviewEnd, o
     <button
       type="button"
       aria-expanded={expanded}
-      className="group cursor-pointer outline-none focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-ink"
+      className="group cursor-pointer outline-none focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-ring"
       onClick={onClick}
       onPointerEnter={(event) => event.pointerType === MOUSE_POINTER_TYPE && onPreview(HoverSource.POINTER)}
       onPointerLeave={() => onPreviewEnd(HoverSource.POINTER)}
@@ -33,7 +33,7 @@ export function LandedChip({ name, expanded, flashId, onPreview, onPreviewEnd, o
     >
       <Chip
         size={ChipSize.NAME}
-        className="relative transition-colors duration-[120ms] group-hover:bg-crowd-0 group-focus-visible:bg-crowd-0"
+        className="relative transition-colors duration-[120ms] group-hover:bg-row-hover group-focus-visible:bg-row-hover"
       >
         <ChangeFlash flashId={flashId} />
         <span className="max-w-[120px] truncate">{name}</span>

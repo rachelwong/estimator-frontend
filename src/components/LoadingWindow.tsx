@@ -28,7 +28,7 @@ export function LoadingWindow() {
             >
               <PixelProgressBar />
 
-              <span className="font-label text-[12px] text-ink">{content.loading.windowMessage}</span>
+              <span className="font-label text-[12px] text-foreground">{content.loading.windowMessage}</span>
             </div>
           </Window>
         </div>

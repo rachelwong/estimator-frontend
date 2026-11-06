@@ -48,17 +48,17 @@ export function WhyIMadeThisSection() {
         <MakerNote
           label={why.experience.label}
           text={why.experience.text}
-          className="tablet:border-r-2 tablet:border-ink tablet:pr-7 tablet:pb-7 desktop:pr-9 desktop:pb-0"
+          className="tablet:border-r-2 tablet:border-border-subtle tablet:pr-7 tablet:pb-7 desktop:pr-9 desktop:pb-0"
         />
         <MakerNote
           label={why.idea.label}
           text={why.idea.text}
-          className="tablet:pb-7 tablet:pl-7 desktop:border-r-2 desktop:border-ink desktop:px-9 desktop:pb-0"
+          className="tablet:pb-7 tablet:pl-7 desktop:border-r-2 desktop:border-border-subtle desktop:px-9 desktop:pb-0"
         />
         <MakerNote
           label={why.build.label}
           text={why.build.text}
-          className="tablet:col-span-2 tablet:border-t-2 tablet:border-ink tablet:pt-7 desktop:col-span-1 desktop:border-t-0 desktop:pt-0 desktop:pl-9"
+          className="tablet:col-span-2 tablet:border-t-2 tablet:border-border-subtle tablet:pt-7 desktop:col-span-1 desktop:border-t-0 desktop:pt-0 desktop:pl-9"
         />
       </div>
     </section>

@@ -115,7 +115,7 @@ export const SLIDER_TICK_EVERY = {
 // the notice anyway flashes it for a frame on every navigation.
 export const LOADING_NOTICE_DELAY_MS = 400;
 
-// How long the copy button wears its `copied` fill and reads "Copied!"
+// How long the copy button wears its `success` fill and reads "Copied!"
 // (DESIGN.md §7).
 export const COPIED_FEEDBACK_MS = 1600;
 
@@ -136,19 +136,20 @@ export const BREAKPOINT_PX = {
 // Whole literal class strings: Tailwind's scanner and `cn build` only see
 // classes that appear in the source.
 export const CROWD_CLASS = [
-  "bg-crowd-0 text-ink",
-  "bg-crowd-1 text-ink",
-  "bg-crowd-2 text-ink",
-  "bg-crowd-3 text-white",
-  "bg-crowd-4 text-white",
+  "bg-crowd-0 text-crowd-foreground",
+  "bg-crowd-1 text-crowd-foreground",
+  "bg-crowd-2 text-crowd-foreground",
+  "bg-crowd-3 text-crowd-3-foreground",
+  "bg-crowd-4 text-crowd-4-foreground",
 ] as const;
 
-// The ramp step a Square inside the Selection's Area wears while the Session
-// runs (§6). The same lavender as one person in the Reveal.
-export const SELECTION_AREA_CROWD_STEP = 1;
+// A Square inside the Selection's Area while the Session runs (§6). Its own
+// role, though Play draws it the same lavender as one person in the Reveal:
+// Work gives the two different fills.
+export const AREA_SQUARE_CLASS = "bg-area text-crowd-foreground";
 
 // Your own Selection while the Session runs.
-export const SELECTION_SQUARE_CLASS = "bg-selection text-ink";
+export const SELECTION_SQUARE_CLASS = "bg-selection text-selection-foreground";
 
 // The headcount at which a Square stops being one person's and becomes a
 // crowd: its face says a count instead of a name.
@@ -212,7 +213,7 @@ export const SQUARE_HIGHLIGHT_CLASS = {
   [SquareHighlight.NONE]: "z-0",
   [SquareHighlight.AREA_PREVIEW]: "z-0 shadow-area-preview",
   [SquareHighlight.LIFTED]:
-    "z-10 -translate-x-[3px] -translate-y-[3px] shadow-px",
+    "z-10 -translate-x-[3px] -translate-y-[3px] shadow-lift",
 } as const;
 
 // How a Square came to be hovered. The Area preview follows the mouse only.
@@ -221,15 +222,15 @@ export const HoverSource = {
   KEYBOARD: "keyboard",
 } as const;
 
-// An axis value lights up in `accent` while its row or column is hovered.
+// An axis value lights up in `primary` while its row or column is hovered.
 export const AxisValueEmphasis = {
   NONE: "none",
   ACTIVE: "active",
 } as const;
 
 export const AXIS_VALUE_EMPHASIS_CLASS = {
-  [AxisValueEmphasis.NONE]: "text-ink",
-  [AxisValueEmphasis.ACTIVE]: "text-accent",
+  [AxisValueEmphasis.NONE]: "text-axis-foreground",
+  [AxisValueEmphasis.ACTIVE]: "text-primary",
 } as const;
 
 // KeyboardEvent.key → the step it takes across the grid, in axis indexes.
@@ -379,12 +380,12 @@ export const SPRITE_SCATTER_CLASS = {
 // (DESIGN.md §2). Decorative: they are not buttons and nothing reads them.
 export const WINDOW_CHROME_DOT_CLASS = [
   "bg-selection",
-  "bg-chrome-green",
-  "bg-danger",
+  "bg-chrome-dot",
+  "bg-emphasis",
 ] as const;
 
 // A Chip's border treatment. Abstained is the dashed one — the design gives it
-// a dashed `text-subtle` edge rather than the solid ink every other chip wears
+// a dashed `absent-border` edge rather than the solid one every other chip wears
 // (§4), so a Participant who held no Selection reads as an absence.
 export const ChipVariant = {
   SOLID: "solid",
@@ -399,8 +400,8 @@ export const ChipSize = {
 } as const;
 
 export const CHIP_VARIANT_CLASS = {
-  [ChipVariant.SOLID]: "border-ink bg-white",
-  [ChipVariant.DASHED]: "border-dashed border-text-subtle",
+  [ChipVariant.SOLID]: "border-border bg-card",
+  [ChipVariant.DASHED]: "border-dashed border-absent-border",
 } as const;
 
 export const CHIP_SIZE_CLASS = {
@@ -457,20 +458,20 @@ export const REPOSITORY_URL = {
 // tidy ring. One keyframe animates all fourteen — each piece hands its own
 // distance and turn to `--confetti-x`, `--confetti-y` and `--confetti-turn`.
 export const FEEDBACK_CONFETTI_PIECES = [
-  { size: 7, color: "var(--color-selection)", x: 0, y: -34, turn: 0 },
-  { size: 5, color: "var(--color-danger)", x: 25, y: -33, turn: 47 },
-  { size: 5, color: "var(--color-accent)", x: 38, y: -30, turn: 94 },
-  { size: 7, color: "var(--color-crowd-1)", x: 37, y: -1, turn: 141 },
-  { size: 5, color: "var(--color-chrome-green)", x: 43, y: 10, turn: 188 },
-  { size: 5, color: "var(--color-ink)", x: 33, y: 39, turn: 235 },
-  { size: 7, color: "var(--color-crowd-2)", x: 17, y: 36, turn: 282 },
-  { size: 5, color: "var(--color-selection)", x: -9, y: 46, turn: 329 },
-  { size: 5, color: "var(--color-danger)", x: -16, y: 32, turn: 16 },
-  { size: 7, color: "var(--color-accent)", x: -38, y: 20, turn: 63 },
-  { size: 5, color: "var(--color-crowd-1)", x: -49, y: 11, turn: 110 },
-  { size: 5, color: "var(--color-chrome-green)", x: -36, y: -16, turn: 157 },
-  { size: 7, color: "var(--color-ink)", x: -36, y: -29, turn: 204 },
-  { size: 5, color: "var(--color-crowd-2)", x: -9, y: -34, turn: 251 },
+  { size: 7, color: "var(--sun-400)", x: 0, y: -34, turn: 0 },
+  { size: 5, color: "var(--coral-400)", x: 25, y: -33, turn: 47 },
+  { size: 5, color: "var(--grape-500)", x: 38, y: -30, turn: 94 },
+  { size: 7, color: "var(--grape-200)", x: 37, y: -1, turn: 141 },
+  { size: 5, color: "var(--mint-400)", x: 43, y: 10, turn: 188 },
+  { size: 5, color: "var(--plum-950)", x: 33, y: 39, turn: 235 },
+  { size: 7, color: "var(--grape-400)", x: 17, y: 36, turn: 282 },
+  { size: 5, color: "var(--sun-400)", x: -9, y: 46, turn: 329 },
+  { size: 5, color: "var(--coral-400)", x: -16, y: 32, turn: 16 },
+  { size: 7, color: "var(--grape-500)", x: -38, y: 20, turn: 63 },
+  { size: 5, color: "var(--grape-200)", x: -49, y: 11, turn: 110 },
+  { size: 5, color: "var(--mint-400)", x: -36, y: -16, turn: 157 },
+  { size: 7, color: "var(--plum-950)", x: -36, y: -29, turn: 204 },
+  { size: 5, color: "var(--grape-400)", x: -9, y: -34, turn: 251 },
 ] as const;
 
 // The band where the Welcome page's lavender top breaks into pixels over the

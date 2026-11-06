@@ -15,8 +15,8 @@ interface ChipProps {
 // and a person's name in the Reveal's "who landed where" row.
 //
 // The fill is left to the caller, because it carries meaning the chip itself
-// doesn't know — `copied` for a live session, `crowd-0` for a note. Solid chips
-// start white; a dashed one stays transparent so the page shows through, which
+// doesn't know — `success` for a live session, `row-hover` under the pointer.
+// Solid chips start on `card`; a dashed one stays transparent so the page shows through, which
 // is what makes Abstained read as an absence rather than another entry.
 export function Chip({
   children,
@@ -27,7 +27,7 @@ export function Chip({
   return (
     <span
       className={cn(
-        'inline-flex w-fit items-center whitespace-nowrap border-2 text-ink',
+        'inline-flex w-fit items-center whitespace-nowrap rounded-control border-2 text-foreground',
         CHIP_VARIANT_CLASS[variant],
         CHIP_SIZE_CLASS[size],
         className,

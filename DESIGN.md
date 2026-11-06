@@ -42,40 +42,78 @@ offset shadow (canvas: Spec · Logo marks, option B). No "A", no corner pips.
 
 All corners are square. Text on every fill below meets WCAG AA for its size.
 
-### Core
+Colours are two tiers. **Primitives** are named by hue (`plum-950`, `grape-500`) and live only in `src/index.css`'s
+`:root`; no utility exists for them. **Roles** are named by job and are the only colour classes a component writes
+(`bg-card`, `text-muted-foreground`). Each role does one job, so roles that share a Play value here stay separate:
+Work gives them different ones. The full role list, with Work values, is in
+[`docs/plans/themes.md`](docs/plans/themes.md#roles--colour).
 
-| Token          | Hex       | Use                                                                                |
-| -------------- | --------- | ---------------------------------------------------------------------------------- |
-| `ink`          | `#1E1B2E` | Text, every border, every offset shadow                                            |
-| `cream`        | `#FFF6E5` | Page background                                                                    |
-| `white`        | `#FFFFFF` | Windows, cards, inputs, secondary buttons                                          |
-| `text-muted`   | `#3E3852` | Body copy on cream/white                                                           |
-| `text-subtle`  | `#5B5570` | Secondary labels, Abstained chip border                                            |
-| `accent`       | `#6A4FF0` | Window title bars, "ship together", active axis label, CTA band (white text on it) |
-| `page-top`     | `#DCD3FB` | Top of the Welcome page, share bar                                                 |
-| `selection`    | `#FFC53D` | The Participant's own Selection, primary buttons (ink text)                        |
-| `danger`       | `#FF5A5F` | End session & reveal (ink text)                                                    |
-| `copied`       | `#D7F2E4` | "Copied!" state, live status chip                                                  |
-| `abstained`    | `#B42318` | The word "Abstained"                                                               |
-| `on-ink-muted` | `#C9C3DA` | Secondary text on ink (notice, popover)                                            |
+### Primitives
+
+| Primitive   | Hex       | Primitive   | Hex       |
+| ----------- | --------- | ----------- | --------- |
+| `plum-950`  | `#1E1B2E` | `grape-600` | `#5A3FD6` |
+| `plum-800`  | `#3E3852` | `grape-900` | `#2A1F5C` |
+| `plum-700`  | `#5B5570` | `cream`     | `#FFF6E5` |
+| `plum-300`  | `#C9C3DA` | `butter`    | `#FFE8A8` |
+| `grape-50`  | `#F2EDFF` | `mint-100`  | `#D7F2E4` |
+| `grape-100` | `#DCD3FB` | `mint-400`  | `#4CC38A` |
+| `grape-200` | `#C9BCF7` | `sun-400`   | `#FFC53D` |
+| `grape-400` | `#8E77F2` | `coral-400` | `#FF5A5F` |
+| `grape-500` | `#6A4FF0` | `brick-700` | `#B42318` |
+|             |           | `white`     | `#FFFFFF` |
+
+### Core roles
+
+| Role                                    | Play        | Use                                                                   |
+| --------------------------------------- | ----------- | --------------------------------------------------------------------- |
+| `background`                            | `cream`     | Page background                                                       |
+| `foreground`                            | `plum-950`  | Text                                                                  |
+| `muted-foreground`                      | `plum-800`  | Body copy on cream/white                                              |
+| `subtle-foreground`                     | `plum-700`  | Secondary labels                                                      |
+| `card` · `input` · `header`             | `white`     | Windows and cards · fields · header and footer                        |
+| `border` · `border-subtle`              | `plum-950`  | Fields, chips, dialog, notices · Windows, cards, Squares, dividers    |
+| `header-border` · `ghost-border`        | `plum-950`  | Header and footer rules · secondary and icon buttons                  |
+| `absent-border`                         | `plum-700`  | Abstained chip, missing Squares on the error grid                     |
+| `ring`                                  | `plum-950`  | Focus outline                                                         |
+| `primary` · `primary-foreground`        | `grape-500` · `white` | Window title bars, "ship together", active axis value, CTA band |
+| `action` · `action-foreground`          | `sun-400` · `plum-950` | Primary buttons                                              |
+| `emphasis` · `emphasis-foreground`      | `coral-400` · `plum-950` | End session & reveal                                       |
+| `new-session` · `new-session-foreground` | `sun-400` · `plum-950` | Start a new session (Reveal)                              |
+| `secondary`                             | `white`     | Secondary and icon buttons                                            |
+| `selection` · `selection-foreground`    | `sun-400` · `plum-950` | The Participant's own Selection                              |
+| `area`                                  | `grape-200` | The Area during Active                                                |
+| `page-top` · `share-bar`                | `grape-100` | Top of the Welcome page · share bar                                   |
+| `note` · `row-hover`                    | `grape-50`  | The Join note · hovered Reveal chip                                   |
+| `inverse` · `inverse-foreground`        | `plum-950` · `cream` | Dark notice, tooltips, step badges                             |
+| `inverse-muted`                         | `plum-300`  | Secondary text on `inverse`                                           |
+| `popover` · `popover-foreground`        | `plum-950` · `cream` | The Reveal popover                                             |
+| `success`                               | `mint-100`  | "Copied!" state, live status chip                                     |
+| `error-surface` · `error-foreground`    | `coral-400` · `brick-700` | Error banner fill · field error messages                  |
+| `destructive`                           | `coral-400` | Invalid field border                                                  |
+| `abstained`                             | `brick-700` | The word "Abstained"                                                  |
+| `link`                                  | `grape-500` | Inline links                                                          |
+| `scrim`                                 | `plum-950` at 45% | Behind the dialog and mobile menu                               |
 
 ### Square ramp (crowd size, Reveal only)
 
-| Step      | Hex       | Text  | Meaning                                         |
-| --------- | --------- | ----- | ----------------------------------------------- |
-| `crowd-0` | `#F2EDFF` | ink   | Idle Square / nobody landed                     |
-| `crowd-1` | `#C9BCF7` | ink   | 1 person — also the **Area** tint during Active |
-| `crowd-2` | `#8E77F2` | ink   | 2 people                                        |
-| `crowd-3` | `#5A3FD6` | white | 3 people                                        |
-| `crowd-4` | `#2A1F5C` | white | 4 or more                                       |
+| Step      | Play        | Text role                      | Meaning                     |
+| --------- | ----------- | ------------------------------ | --------------------------- |
+| `crowd-0` | `grape-50`  | `crowd-foreground` (`plum-950`) | Idle Square / nobody landed |
+| `crowd-1` | `grape-200` | `crowd-foreground`             | 1 person                    |
+| `crowd-2` | `grape-400` | `crowd-foreground`             | 2 people                    |
+| `crowd-3` | `grape-600` | `crowd-3-foreground` (`white`) | 3 people                    |
+| `crowd-4` | `grape-900` | `crowd-4-foreground` (`white`) | 4 or more                   |
 
 The ramp reflects how many people landed on a Square, never Time or Resources:
 the two axes are never collapsed into one colour (Product principle 3).
 
 ### Decorative
 
-- Window chrome dots: `#FFC53D`, `#4CC38A`, `#FF5A5F`.
-- "How to use" card tints: `#FFFFFF`, `#FFE8A8`, `#D7F2E4`, `#F2EDFF`.
+- Window chrome dots: `selection`, `chrome-dot` (`mint-400`), `emphasis`.
+- "How to use" card tints: `tint-plain`, `tint-butter`, `tint-mint`, `tint-lavender`.
+- The change-flash rainbow and the Feedback confetti read primitives directly: they're decoration with no job, and
+  Work switches them off rather than recolouring them. Pixel sprites carry primitive hex in the SVG.
 
 ---
 
@@ -117,19 +155,25 @@ All three are free on Google Fonts.
 
 ## 4. Shape, borders, shadows
 
-| Thing                                       | Border                                        | Shadow                         |
-| ------------------------------------------- | --------------------------------------------- | ------------------------------ |
-| Window (Active, Reveal, Create, Join, hero) | 3px ink                                       | `8px 8px 0 ink`                |
-| Card (How to use, House rules, source bar)  | 3px ink                                       | `6px 6px 0 ink`                |
-| Button / input / icon button                | 3px ink                                       | `4px 4px 0 ink` (inputs: none) |
-| Square                                      | 2px ink                                       | none; hover: see §6            |
-| Chip                                        | 2px ink (Abstained: 2px dashed `text-subtle`) | none                           |
-| Dark notice & popover                       | none                                          | `4px 4px 0 accent`             |
+Shadows and radii are role tokens too (`shadow-control`, `rounded-control`), so Work can swap them without new classes.
 
-`border-radius: 0` everywhere.
+| Thing                                       | Border                                        | Shadow role (Play value)                  |
+| ------------------------------------------- | --------------------------------------------- | ----------------------------------------- |
+| Window (Active, Reveal, Create, Join, hero) | 3px `border-subtle`                           | `shadow-window` (`8px 8px 0 plum-950`)    |
+| Card (How to use, House rules, source bar)  | 3px `border-subtle`                           | `shadow-card` (`6px 6px 0 plum-950`)      |
+| Button                                      | 3px `action-border` / `secondary-border` / `emphasis-border` / `new-session-border` | `shadow-control` (`4px 4px 0 plum-950`)   |
+| Icon button                                 | 3px `ghost-border`                            | `shadow-icon` (`3px 3px 0 plum-950`)      |
+| Input                                       | 3px `border`                                  | none                                      |
+| Square                                      | 2px `border-subtle`                           | none; lifted: `shadow-lift`; see §6       |
+| Chip                                        | 2px `border` (Abstained: 2px dashed `absent-border`) | none                               |
+| Notices, loader                             | 3px `border` (error: `error-border`)          | `shadow-notice` (`4px 4px 0 plum-950`)    |
+| Dialog                                      | 3px `border`                                  | `shadow-dialog` (`8px 8px 0 plum-950`)    |
+| Dark notice & popover                       | none                                          | `shadow-float` (`4px 4px 0 grape-500`)    |
 
-**Window chrome:** 44px title bar in `accent`, white Silkscreen 12px title on
-the left, a status chip and the three chrome dots on the right, 3px ink rule
+Every radius role (`control`, `panel`, `bar`, `card`, `strip`, `track`) is `0` in Play: square corners everywhere.
+
+**Window chrome:** 44px title bar in `primary`, `primary-foreground` Silkscreen 12px title on
+the left, a status chip and the three chrome dots on the right, 3px `border-subtle` rule
 beneath.
 
 ---
@@ -167,17 +211,17 @@ axes share the same Axis values (`CONTEXT.md`).
   column; Silkscreen 11px.
 - "resources ↑" rotated vertically to the left (desktop, tablet) or above the
   grid (mobile); "time →" under the bottom-right.
-- The hovered Square's row and column values turn `accent`.
+- The hovered Square's row and column values turn `primary`.
 
 ### States
 
 | State          | When                        | Look                                                                                     |
 | -------------- | --------------------------- | ---------------------------------------------------------------------------------------- |
-| Idle           | always                      | `crowd-0`, 2px ink border                                                                |
+| Idle           | always                      | `crowd-0`, 2px `border-subtle`                                                               |
 | Hover          | mouse over / keyboard focus | `translate(-3px, -3px)` + `4px 4px 0 ink`, raised z-index. Kept in Active **and** Reveal |
-| Area preview   | Active, mouse only          | Squares from origin to the hovered Square get an `accent` 15% overlay (`#6A4FF026`)      |
+| Area preview   | Active, mouse only          | Squares from origin to the hovered Square get a `primary` 15% overlay (`#6A4FF026`)      |
 | Selection      | Active                      | `selection` fill, "You" (★ on small Squares)                                             |
-| Selection Area | Active                      | Squares from origin to the Selection use `crowd-1`                                       |
+| Selection Area | Active                      | Squares from origin to the Selection use `area`                                          |
 | Revealed       | Reveal                      | fill from the crowd ramp                                                                 |
 | Your Square    | Reveal                      | 3px `selection` outline inset 7px                                                        |
 | Pinned         | Reveal, popover open        | stays lifted                                                                             |
@@ -250,8 +294,8 @@ border flashes with their new Square's (§8).
 ### Session description (Join, Active, Reveal)
 
 The ticket or task the Admin typed on Create, shown under the screen heading
-(under the dark notice on the Reveal). Figtree 15/500 (16 from tablet), `ink`,
-centred. Any URL in it becomes a bold `accent` underlined link that opens in a
+(under the dark notice on the Reveal). Figtree 15/500 (16 from tablet), `foreground`,
+centred. Any URL in it becomes a bold `link` underlined link that opens in a
 new tab. Rendered as text, never HTML. Nothing at all when the Admin left it
 blank.
 
@@ -266,7 +310,7 @@ blank.
    menu button.
 2. Hero on `page-top` — Silkscreen badge "Planning poker for agile product
    teams", Bungee hero "Teams who / estimate together / ship together" (last
-   line in `accent`), paragraph, Start a session + How to use.
+   line in `primary`), paragraph, Start a session + How to use.
 3. Hero demo — the real Reveal window (notice, a sample description, grid with
    a lifted Square and open popover, "your team" chips), 780px max.
 4. Pixel-dither glow — `page-top` breaks into 2px pixels (Bayer 4×4 ordered
@@ -284,7 +328,7 @@ blank.
 7. House rules — six feature cards: Live, but private / No sign-up / Unique
    link / Change your mind / Two axes, one grid / Nothing is kept.
    3 → 2 → 1 columns.
-8. CTA band in `accent` — "Flip the points / Align the team" + Start a
+8. CTA band in `primary` — "Flip the points / Align the team" + Start a
    session, with pixel characters.
 9. Footer.
 
@@ -311,14 +355,14 @@ Window "new-session", chip "Admin".
 - "New session" + one line explaining the Admin role (14px).
 - Name (input, placeholder "e.g. Rachel").
 - Ticket or task description (input, optional, placeholder "Optional, e.g.
-  PROJ-12 https://…"). A Silkscreen 12px `text-subtle` counter sits opposite
+  PROJ-12 https://…"). A Silkscreen 12px `subtle-foreground` counter sits opposite
   the label, `n/300`, counted after trimming and collapsing whitespace. Past 300
   it shows "Keep description to 300 characters or fewer." and Create session
   waits.
 - Point system: two-up segmented buttons, Numerical / Fibonacci; the active one
-  fills `accent` with a 4px shadow.
-- Highest axis value: value in Bungee `accent` beside the label; pixel slider
-  (10px track filled `accent`, 28px square white thumb with a 3px shadow);
+  fills `option-selected` with a 4px shadow.
+- Highest axis value: value in Bungee `primary` beside the label; pixel slider
+  (10px track filled `range-fill`, 28px square `range-thumb` thumb with a 3px shadow);
   Silkscreen ticks beneath.
 - Create session (`selection`, full width). Success goes straight to the
   Session, where the Admin's share bar holds the link. No ready screen.
@@ -329,12 +373,12 @@ No grid preview.
 
 Window "join", chip "Participant". Only: "Join session" heading, the Session
 description (if any), one input labelled "Name" (placeholder "e.g. Rachel"),
-Join session button, and a `crowd-0` note: "Your estimate stays private until
+Join session button, and a `note`: "Your estimate stays private until
 the Admin ends the session and the Reveal shows everyone’s estimates."
 
 ### Active (`/:id/start`)
 
-- Header: logo · Feedback · End session & reveal (Admin, `danger`). On mobile
+- Header: logo · Feedback · End session & reveal (Admin, `emphasis`). On mobile
   the End button moves to full width under the grid.
 - Share bar under the header, Admin only (option below).
 - Window title "live", chip "Admin" / "Participant".
@@ -380,14 +424,14 @@ the Admin ends the session and the Reveal shows everyone’s estimates."
 
 Three designed options; **bar** is the default.
 
-- **bar** — full-width `page-top` strip under the header: link icon +
+- **bar** — full-width `share-bar` strip under the header: link icon +
   Silkscreen "Share session link", the full URL in a white 3px-bordered box, and a
   `selection` Copy link button. Stacks on mobile.
 - **header** — a `selection` "Share session link" button in the header
   ("Share" on mobile). The URL isn't visible.
 - **window** — the same row as the bar, inside the window above the heading.
 
-Copy feedback: the button fills `copied` and reads "Copied!" for 1.6s.
+Copy feedback: the button fills `success` and reads "Copied!" for 1.6s.
 
 ### Error (not found, connection lost, something went wrong)
 
@@ -400,7 +444,7 @@ only the copy changes.
   "error".
 - Left (above on mobile): a 5×5 Square illustration with five Squares fallen
   out. They lie tilted below the grid with the hover lift shadow, one in
-  `selection` yellow; dashed `text-subtle` outlines mark where they were.
+  `selection` yellow; dashed `absent-border` outlines mark where they were.
   Squares are 50 / 44 / 30px. Decorative, `aria-hidden`.
 - Right (below on mobile): Silkscreen label, Bungee heading, one paragraph,
   primary (`selection`) and secondary (white) buttons. Buttons go full width
@@ -419,7 +463,7 @@ only the copy changes.
 Option C, "Pixel progress bar" (canvas: Spec · Loader options).
 
 - A bar with a 3px ink border, white fill and a `4px 4px 0 ink` shadow. An
-  `accent` fill steps across it in whole blocks, then starts again: large is
+  `progress` fill steps across it in whole blocks, then starts again: large is
   220×18px in 8 blocks, inline is 40×6px in 5 blocks. White 3px gaps between
   blocks come from a repeating gradient laid over the fill.
 - Animation: `width 0 → 100%`, `1.6s steps(8) infinite` (`steps(5)` inline).
@@ -507,8 +551,8 @@ is a plain bar.
   grid.
 
 - **Change flash** (Reveal): the Square's 2px ink border, and the mover's
-  chip's, turn to a conic gradient of `danger`, `selection`, chrome green,
-  `accent` and back to `danger`. It rolls one full turn, holds, then fades
+  chip's, turn to a conic gradient of `coral-400`, `sun-400`, `mint-400`,
+  `grape-500` and back to `coral-400`. It rolls one full turn, holds, then fades
   back to ink over its last 20%: 1.4s in all. No second border: the rainbow
   lies over the ink one. The reveal wave never replays on a change.
 
@@ -580,37 +624,35 @@ live in the code; none is a placeholder any more.
   `play` and a `work` version, read through `useContent()`. The copy quoted in
   this document is the Play version.
 
-Tokens as CSS custom properties (map into `@theme` on Tailwind v4, or
-`theme.extend` on v3):
+Tokens live in `src/index.css`, in two tiers:
 
 ```css
 :root {
-  --color-ink: #1e1b2e;
-  --color-cream: #fff6e5;
-  --color-accent: #6a4ff0;
-  --color-page-top: #dcd3fb;
-  --color-selection: #ffc53d;
-  --color-danger: #ff5a5f;
-  --color-copied: #d7f2e4;
-  --color-abstained: #b42318;
-  --color-text-muted: #3e3852;
-  --color-text-subtle: #5b5570;
-  --color-crowd-0: #f2edff;
-  --color-crowd-1: #c9bcf7;
-  --color-crowd-2: #8e77f2;
-  --color-crowd-3: #5a3fd6;
-  --color-crowd-4: #2a1f5c;
+  /* tier 1: primitives, never in @theme, so no utility can name them */
+  --plum-950: #1e1b2e;
+  --grape-500: #6a4ff0;
+  /* … */
 
+  /* tier 2: roles, Play values */
+  --background: var(--cream);
+  --card: var(--white);
+  --shadow-control: 4px 4px 0 var(--plum-950);
+  --radius-control: 0;
   --font-display: "Bungee", sans-serif;
-  --font-body: "Figtree", system-ui, sans-serif;
-  --font-label: "Silkscreen", monospace;
+  /* … */
+}
 
-  --shadow-px: 4px 4px 0 var(--color-ink);
-  --shadow-px-card: 6px 6px 0 var(--color-ink);
-  --shadow-px-window: 8px 8px 0 var(--color-ink);
-  --shadow-px-accent: 4px 4px 0 var(--color-accent);
+@theme inline {
+  --color-*: initial; /* Tailwind's palette off: only roles generate utilities */
+  --color-background: var(--background);
+  --shadow-control: var(--shadow-control);
+  --radius-control: var(--radius-control);
+  /* … */
 }
 ```
+
+Shadows go through `@theme inline` rather than `@theme` because Tailwind bakes a `@theme` shadow's value into the
+utility, which a theme override couldn't reach.
 
 ---
 

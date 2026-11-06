@@ -19,7 +19,7 @@ export function LogoLockup({ className }: LogoLockupProps) {
     <span className={cn("inline-flex items-center gap-4", className)}>
       <LogoMark className="h-10 w-[30px] tablet:h-12 tablet:w-9" />
 
-      <span className="font-display text-[20px] leading-none text-ink tablet:text-[24px]">
+      <span className="font-display text-[20px] leading-none text-foreground tablet:text-[24px]">
         {content.brand.name}
       </span>
     </span>

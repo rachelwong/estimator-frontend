@@ -10,10 +10,10 @@ export function SiteFooter() {
 
   return (
     <footer
-      className="mt-16 flex flex-col gap-3 border-t-[3px] border-ink bg-white px-5 py-7 font-label text-[12px] tablet:mt-24 tablet:flex-row tablet:justify-between tablet:px-10 desktop:px-20"
+      className="mt-16 flex flex-col gap-3 border-t-[3px] border-header-border bg-header px-5 py-7 font-label text-[12px] tablet:mt-24 tablet:flex-row tablet:justify-between tablet:px-10 desktop:px-20"
     >
       <span>{content.footer.stack}</span>
-      <a href={REPOSITORY_URL.PORTFOLIO} className="hover:text-text-subtle">
+      <a href={REPOSITORY_URL.PORTFOLIO} className="hover:text-nav-hover">
         {content.footer.copyright(new Date().getFullYear())}
       </a>
     </footer>

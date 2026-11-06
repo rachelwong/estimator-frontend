@@ -38,7 +38,7 @@ export function HowToUseCard({
         )}
       >
         <div className="flex items-start justify-between">
-          <span className="bg-ink px-2 py-1 font-label text-[13px] text-cream">
+          <span className="bg-inverse px-2 py-1 font-label text-[13px] text-inverse-foreground">
             {content.welcome.howToUse.stepLabel(level)}
           </span>
           <Sprite source={sprite} className="h-auto w-[52px] tablet:w-16" />
@@ -46,12 +46,12 @@ export function HowToUseCard({
 
         <h3
           className={
-            "font-display text-[17px] leading-[1.1] text-ink tablet:text-[19px] desktop:text-[20px]"
+            "font-display text-[17px] leading-[1.1] text-foreground tablet:text-[19px] desktop:text-[20px]"
           }
         >
           {title}
         </h3>
-        <p className="text-[16px] leading-[1.55] text-text-muted">{parse(description)}</p>
+        <p className="text-[16px] leading-[1.55] text-muted-foreground">{parse(description)}</p>
       </Card>
     </li>
   );

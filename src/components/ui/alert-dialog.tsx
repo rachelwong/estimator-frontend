@@ -39,7 +39,7 @@ function AlertDialogOverlay({
     <AlertDialogPrimitive.Overlay
       data-slot="alert-dialog-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-ink/45",
+        "fixed inset-0 z-50 bg-scrim",
         className
       )}
       {...props}
@@ -61,7 +61,7 @@ function AlertDialogContent({
         data-slot="alert-dialog-content"
         data-size={size}
         className={cn(
-          "group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-24px)] -translate-x-1/2 -translate-y-1/2 gap-6 border-[3px] border-ink bg-white p-5 text-ink shadow-px-window outline-none data-[size=default]:max-w-[366px] data-[size=sm]:max-w-xs data-[size=default]:tablet:max-w-[440px] tablet:p-7",
+          "group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-24px)] -translate-x-1/2 -translate-y-1/2 gap-6 rounded-card border-[3px] border-border bg-card p-5 text-foreground shadow-dialog outline-none data-[size=default]:max-w-[366px] data-[size=sm]:max-w-xs data-[size=default]:tablet:max-w-[440px] tablet:p-7",
           className
         )}
         {...props}
@@ -126,7 +126,7 @@ function AlertDialogDescription({
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
       className={cn(
-        "font-body text-[15px] leading-[1.45] text-pretty text-text-muted tablet:text-[16px]",
+        "font-body text-[15px] leading-[1.45] text-pretty text-muted-foreground tablet:text-[16px]",
         className
       )}
       {...props}

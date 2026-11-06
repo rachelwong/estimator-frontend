@@ -9,7 +9,7 @@ interface PointSystemPickerProps {
   onChange: (value: PointSystemTypeValue) => void
 }
 
-// Two-up segmented buttons (DESIGN.md §7): the pressed one fills `accent` and
+// Two-up segmented buttons (DESIGN.md §7): the pressed one fills `option-selected` and
 // stands on a 4px shadow, the other sits flat in white. The swap is instant:
 // a faded fill would flash white text on a pale button. Hover only dims, and
 // that eases in, like every Button's. Toggle buttons with
@@ -36,8 +36,8 @@ export function PointSystemPicker({ value, onChange }: PointSystemPickerProps) {
             aria-pressed={type === value}
             onClick={() => onChange(type)}
             className={cn(
-              'h-13 cursor-pointer border-[3px] border-ink transition-[filter] hover:brightness-95 font-body text-[16px] font-extrabold outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink',
-              type === value ? 'bg-accent text-white shadow-px' : 'bg-white text-ink',
+              'h-13 cursor-pointer border-[3px] border-border transition-[filter] hover:brightness-95 font-body text-[16px] font-extrabold outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring',
+              type === value ? 'bg-option-selected text-option-selected-foreground shadow-control' : 'bg-input text-foreground',
             )}
           >
             {content.create.pointSystemName[type]}

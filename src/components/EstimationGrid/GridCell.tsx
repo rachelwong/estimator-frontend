@@ -73,7 +73,7 @@ export function GridCell({
       aria-pressed={pressed}
       aria-expanded={expanded}
       className={cn(
-        'relative border-2 border-ink p-0.5 text-center font-label leading-tight outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
+        'relative border-2 border-border-subtle p-0.5 text-center font-label leading-tight outline-none transition-[translate,box-shadow,background-color] duration-[90ms,90ms,120ms]',
         hasPointerCursor ? 'cursor-pointer' : 'cursor-default',
         fillClass,
         SQUARE_LABEL_SIZE_CLASS[labelSize],

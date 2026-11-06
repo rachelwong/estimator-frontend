@@ -149,58 +149,74 @@ Flagged near-duplicates, kept as drawn: `night-850`/`night-800`, `sky-925`/`sky-
 
 ### Roles — colour
 
-"today" = the Play value the element uses now, confirmed per use in phase 2.
+"today" = the Play value the element used before phase 2; phase 2 resolved each one. Rows marked _added_ were split out in phase 2, where one role in this table turned out to cover jobs Play draws differently. Work values for _added_ rows were read off the `NL-*` boards and drawn as a swatch row on `NL-Components`.
 
 | Role                         | Job                                              | Play         | Work            |
 | ---------------------------- | ------------------------------------------------ | ------------ | --------------- |
 | `background`                 | Page                                             | `cream`      | `night-900`     |
 | `foreground`                 | Body and heading text                            | `plum-950`   | `steel-100`     |
 | `muted-foreground`           | Secondary copy                                   | `plum-800`   | `steel-300`     |
-| `subtle-foreground`          | Labels, hints, axis numbers                      | `plum-700`   | `steel-400`     |
-| `placeholder`                | Input placeholder                                | today        | `steel-400`     |
+| `subtle-foreground`          | Labels, hints                                    | `plum-700`   | `steel-400`     |
+| `axis-foreground`            | Axis numbers (_added_: ink in Play)              | `plum-950`   | `steel-400`     |
+| `placeholder`                | Input placeholder                                | `plum-700` 70% | `steel-400`   |
 | `card`                       | Windows, cards, dialog, share bar                | `white`      | `night-800`     |
 | `input`                      | Field background                                 | `white`      | `night-900`     |
-| `raised`                     | Description panel, axis strips, admin bar, popover | `white`    | `night-700`     |
-| `row-hover`                  | List-row hover                                   | today        | `night-700`     |
-| `header`                     | Header background                                | today        | `night-950`     |
+| `raised`                     | Description panel, axis strips, admin bar        | `white`      | `night-700`     |
+| `popover` / `popover-foreground` | Reveal popover (_added_: dark in Play)       | `plum-950` / `cream` | `night-700` / `steel-100` |
+| `row-hover`                  | List-row hover                                   | `grape-50`   | `night-700`     |
+| `header`                     | Header and footer background                     | `white`      | `night-950`     |
 | `header-border`              | Header bottom rule                               | `plum-950`   | `white-a06`     |
 | `nav-foreground`             | Header links, icon buttons                       | `plum-950`   | `steel-200`     |
+| `nav-hover`                  | Header and footer link hover (_added_)           | `plum-700`   | `white`         |
 | `inverse`                    | Dark notice, tooltip in Play                     | `plum-950`   | `steel-100`     |
 | `inverse-foreground`         | Text on `inverse`                                | `cream`      | `night-950`     |
 | `inverse-muted`              | Secondary text on `inverse`                      | `plum-300`   | `steel-300` _pick_ |
 | `page-top`                   | Welcome top band                                 | `grape-100`  | `night-900` _pick_ |
+| `share-bar`                  | Share bar (_added_: `page-top` in Play, `card` in Work) | `grape-100` | `night-800` |
+| `note`                       | The Join note (_added_). Work draws no fill, a `border-subtle` rule above it (phase 4 layout) | `grape-50` | `transparent` |
 | `border`                     | Fields, chips, grid frame, dialog, popover       | `plum-950`   | `steel-100-a16` |
 | `border-subtle`              | Card borders, grid lines, dividers               | `plum-950`   | `steel-100-a08` |
 | `border-hover`               | Chip and field hover                             | `plum-950`   | `steel-100-a32` |
 | `border-selected`            | Selected chip                                    | `plum-950`   | `steel-100-a40` |
+| `absent-border`              | Dashed Abstained chip, missing error-grid Squares (_added_: `plum-700` in Play) | `plum-700` | `steel-100-a16` |
 | `ghost-border`               | Ghost and icon buttons                           | `plum-950`   | `white-a20`     |
-| `ghost-hover`                | Ghost button hover                               | today        | `white-a06`     |
+| `ghost-hover`                | Ghost button hover                               | `white`      | `white-a06`     |
 | `ring`                       | Focus outline                                    | `plum-950`   | `sky-400`       |
 | `ring-halo`                  | Field focus halo                                 | none         | `sky-400-a22`   |
 | `primary`                    | Window title bars, CTA band, accent text         | `grape-500`  | `sky-600`       |
+| `primary-foreground`         | Text on `primary` (_added_)                      | `white`      | `white`         |
 | `action`                     | Primary buttons                                  | `sun-400`    | `sky-600`       |
 | `action-hover`               | Primary button hover                             | `sun-400`    | `sky-700`       |
 | `action-foreground`          | Text on primary buttons                          | `plum-950`   | `white`         |
-| `secondary-hover`            | Secondary button hover                           | today        | `night-600`     |
-| `emphasis`                   | The one decisive CTA ("End session & reveal", "Start a new session"), everywhere it appears: header, admin bar, dialog, every breakpoint. The boards' blue instances (Active-Confirm header, Active-Mobile) are overruled | `coral-400` / today | `amber-400` |
-| `emphasis-hover`             | Hover on `emphasis`                              | today        | `amber-500`     |
+| `action-border`              | Edge of primary buttons (_added_)                | `plum-950`   | `sky-600`       |
+| `secondary`                  | Secondary and icon button fill (_added_)         | `white`      | `night-700`     |
+| `secondary-border`           | Secondary button edge (_added_: ghost buttons keep `ghost-border`) | `plum-950` | `steel-100-a16` |
+| `secondary-hover`            | Secondary button hover                           | `white`      | `night-600`     |
+| `emphasis`                   | The one decisive CTA ("End session & reveal", "Start a new session"), everywhere it appears: header, admin bar, dialog, every breakpoint. The boards' blue instances (Active-Confirm header, Active-Mobile) are overruled. End session only: Start a new session has its own `new-session` roles below | `coral-400` | `amber-400` |
+| `emphasis-hover`             | Hover on `emphasis`                              | `coral-400`  | `amber-500`     |
+| `emphasis-border`            | Edge of the emphasis button (_added_)            | `plum-950`   | `amber-400`     |
+| `new-session` / `-hover` / `-foreground` / `-border` | "Start a new session" on the Reveal (_added_: yellow `action` in Play, the decisive CTA in Work) | `sun-400` / `sun-400` / `plum-950` / `plum-950` | `amber-400` / `amber-500` / `night-950` / `amber-400` |
 | `emphasis-foreground`        | Text on `emphasis`                               | `plum-950`   | `night-950`     |
 | `link`                       | Inline links                                     | `grape-500`  | `sky-250`       |
 | `link-hover`                 | Inline link hover                                | `grape-500`  | `steel-100`     |
-| `selection`                  | The Participant's own Square                     | `sun-400`    | `sky-600`       |
+| `selection`                  | The Participant's own Square, and its ring in the Reveal | `sun-400` | `sky-600`  |
+| `selection-foreground`       | Text on the own Square (_added_)                 | `plum-950`   | `white`         |
 | `selection-ring`             | Ring on own / hovered Square                     | `plum-950`   | `steel-100`     |
-| `option-selected`            | Selected radio row                               | today        | `sky-600-a14`   |
+| `option-selected`            | Selected radio row / Point system button         | `grape-500`  | `sky-600-a14`   |
+| `option-selected-foreground` | Text on `option-selected` (_added_)              | `white`      | `steel-100`     |
 | `range-track`                | Unfilled slider track                            | `grape-50`   | `night-600`     |
 | `range-fill`                 | Filled slider track                              | `grape-500`  | `sky-600`       |
+| `range-thumb`                | Slider thumb (_added_)                           | `white`      | `steel-100`     |
+| `range-tick-selected`        | Selected slider tick (_added_)                   | `grape-500`  | `sky-250`       |
 | `progress`                   | Loader fill                                      | `grape-500`  | `sky-600`       |
-| `progress-track`             | Loader track                                     | today        | `night-700`     |
+| `progress-track`             | Loader track                                     | `white`      | `night-700`     |
 | `destructive`                | Invalid field border                             | `coral-400`  | `red-500`       |
-| `error-foreground`           | Error message text and icon                      | today        | `red-300`       |
-| `error-surface`              | Error notice background                          | today        | `red-500-a10`   |
-| `error-border`               | Error notice border                              | today        | `red-300-a35`   |
+| `error-foreground`           | Field error message text and icon. The error banner's own text is `foreground` (ink on coral in Play) | `brick-700` | `red-300` |
+| `error-surface`              | Error notice background                          | `coral-400`  | `red-500-a10`   |
+| `error-border`               | Error notice border                              | `plum-950`   | `red-300-a35`   |
 | `abstained`                  | The word "Abstained"                             | `brick-700`  | `red-300` _pick_ |
 | `success`                    | "Copied!", live chip                             | `mint-100`   | `night-700` _pick_ |
-| `scrim`                      | Behind dialog and mobile menu                    | today        | `scrim`         |
+| `scrim`                      | Behind dialog and mobile menu                    | `plum-950` 45% | `scrim`       |
 | `area`                       | Area under the Selection (Active)                | `grape-200`  | `sky-925`       |
 | `crowd-0` … `crowd-4`        | Reveal ramp                                      | `grape-50`, `grape-200`, `grape-400`, `grape-600`, `grape-900` | `night-850`, `sky-900`, `sky-800`, `sky-650`, `sky-200` |
 | `crowd-foreground`           | Text on crowd 0–2                                | `plum-950`   | `steel-100`     |
@@ -209,19 +225,23 @@ Flagged near-duplicates, kept as drawn: `night-850`/`night-800`, `sky-925`/`sky-
 | `switch-track`               | Theme switch track                               | `grape-200`  | `sky-750`       |
 | `switch-track-hover`         | Theme switch hover                               | `grape-200`  | `sky-720`       |
 | `chrome-dot`                 | Window chrome middle dot                         | `mint-400`   | `night-700` _pick_ (Work has no chrome) |
-| `tint-butter`                | How-to-use card tint                             | `butter`     | `night-800` _pick_ |
+| `tint-plain`, `tint-butter`, `tint-mint`, `tint-lavender` | How-to-use card tints (plain, mint, lavender _added_) | `white`, `butter`, `mint-100`, `grape-50` | `night-800` _pick_ |
 
 ### Roles — shadow, radius, font
 
 | Role              | Job                                  | Play                         | Work                                                    |
 | ----------------- | ------------------------------------ | ---------------------------- | ------------------------------------------------------- |
-| `shadow-control`  | Buttons, icon buttons                | `4px 4px 0 plum-950`         | none                                                    |
+| `shadow-control`  | Buttons, selected Point system       | `4px 4px 0 plum-950`         | none                                                    |
+| `shadow-icon`     | Icon buttons (_added_: 3px in Play)  | `3px 3px 0 plum-950`         | none                                                    |
+| `shadow-notice`   | Light notices, error banner, loader (_added_) | `4px 4px 0 plum-950` | none                                             |
+| `shadow-lift`     | Lifted Square (_added_)              | `4px 4px 0 plum-950`         | none                                                    |
+| `shadow-thumb`    | Slider thumb (_added_)               | `3px 3px 0 plum-950`         | none                                                    |
 | `shadow-card`     | Cards                                | `6px 6px 0 plum-950`         | none                                                    |
 | `shadow-window`   | Windows                              | `8px 8px 0 plum-950`         | none                                                    |
-| `shadow-float`    | Popover, tooltip, dark notice        | `4px 4px 0 grape-500`        | `0 16px 40px rgba(0,0,0,.45)`                           |
-| `shadow-bar`      | Admin bar                            | today                        | `0 2px 4px rgba(0,0,0,.3), 0 16px 40px rgba(0,0,0,.5)`  |
-| `shadow-menu`     | Mobile menu                          | today                        | `0 24px 48px rgba(0,0,0,.5)`                            |
-| `shadow-dialog`   | End-session dialog                   | today                        | `0 24px 64px rgba(0,0,0,.55)`                           |
+| `shadow-float`    | Popover, dark notice (tooltips have none in Play) | `4px 4px 0 grape-500` | `0 16px 40px rgba(0,0,0,.45)`                   |
+| `shadow-bar`      | Admin bar (no Play consumer)         | `4px 4px 0 plum-950`         | `0 2px 4px rgba(0,0,0,.3), 0 16px 40px rgba(0,0,0,.5)`  |
+| `shadow-menu`     | Mobile menu (no consumer yet: the menu is a Window) | `8px 8px 0 plum-950` | `0 24px 48px rgba(0,0,0,.5)`                            |
+| `shadow-dialog`   | End-session dialog                   | `8px 8px 0 plum-950`         | `0 24px 64px rgba(0,0,0,.55)`                           |
 | `shadow-knob`     | Switch knob                          | none                         | `0 1px 2px rgba(0,0,0,.3)`                              |
 | `shadow-area-preview` | Area preview on hover            | `primary` 15% inset          | `primary` 15% inset                                     |
 | `radius-control`  | Buttons, fields, chips, tooltip, grid frame | 0                     | 6px                                                     |
@@ -265,7 +285,7 @@ src/
 Each phase ships on its own, and each is checked before the next starts (kill servers, run frontend and backend, smoke-test).
 
 1. **Centralise copy + theme state (no visual change).** ✓ Done. `CONTENT` holds every visible string, aria-label, window title, chip, validation and action message, the demo Reveal's names and description, and the crowd chatter, each as `{ play, work }`. Counts and positions are functions; inline emphasis and links are HTML parsed with `html-react-parser`. Copy that left `constants.ts`: `POINT_SYSTEM_LABEL`, `SELECTION_LABEL`, `AXIS_LABEL`, `REVEAL_NOTICE_BODY`, `ERROR_SCREEN_COPY`, `WELCOME_DEMO_REVEAL`, `WELCOME_DEMO_DESCRIPTION`, `CROWD_CHATTER_LINES`. Pulled forward from phase 3 so the swap can be seen: `Theme`, `ThemeProvider` around `RouterProvider`, `useTheme`, and a plain `ThemeSwitch` in `PageLayout`. Not moved: server error messages (they come from the backend), `index.html` meta. Smoke suite rewritten to test behaviour only (decision 20), plus a switch check: starts on Play, flips `aria-checked` and `<html data-theme>`, reload returns to Play.
-2. **Two-tier tokens, Play only (no visual change).** Add Play primitives and every role above with its Play value (resolve each "today"); map roles in `@theme inline`; drop the old `@theme` names. Assign each existing use to a role: `ink` (77 uses), `white` (24), `selection` (6) and `accent` (9) all split by job. Shadows and radii move onto their roles. Raw CSS in `index.css` (keyframes, slider) moves onto roles. Update the hex comments in sprites. Update `DESIGN.md` §2, §4 and §11 to the role names.
+2. **Two-tier tokens, Play only (no visual change).** ✓ Done. Pixel-diffed against the phase 1 build on every screen at 3 breakpoints. Tailwind's default palette, shadows and radii are cleared (`--color-*: initial`), so only roles generate utilities. Roles the table lacked, or whose Play value was wrong, are marked _added_ above. Decorative Play-only colours (change-flash rainbow, confetti, sprite sticker shadow) read primitives directly. Radius roles are applied where the job is unambiguous (buttons, fields, chips, tooltips, popover, notices, cards, dialog, House rules, loader, slider); the rest wait for the phase 4 walk. Was: Add Play primitives and every role above with its Play value (resolve each "today"); map roles in `@theme inline`; drop the old `@theme` names. Assign each existing use to a role: `ink` (77 uses), `white` (24), `selection` (6) and `accent` (9) all split by job. Shadows and radii move onto their roles. Raw CSS in `index.css` (keyframes, slider) moves onto roles. Update the hex comments in sprites. Update `DESIGN.md` §2, §4 and §11 to the role names.
 3. **Switch look + fonts.** The plumbing landed in phase 1; what's left is lazy Work fonts and styling the switch. Play look: pill, lavender track, spade knob, Silkscreen "Play". Work look: Round 14 pill, "Work". Work doesn't look right yet. That's expected. Verify `cn` merges classes carrying the `work:` variant without dropping any.
 4. **Work tokens + layout.** Add Work primitives and the `[data-theme='work']` overrides for every role, plus `color-scheme: dark`. Then walk every screen at 3 breakpoints against the `NL-*` boards and add `work:` classes only where tokens can't reach: borders 3px→1px (dashed stays dashed), gapless grid (G6), header layout, admin bar, popovers and the end-session dialog.
 5. **Imagery + motion.** Work: `FOLD / FLIP` wordmark in place of the card lockup. Pixel sprites hidden (hero, team, demo, scatter, dither band). House-rules line illustrations from `NL-HouseRules-*` (their stroke alphas live in the SVGs). Work copies (`sprites/work/`) of every shared icon still visible in Work, starting with `menu`, `close`, `bug`. Swaps go in the component via `useTheme()` (17 files import sprites today). Work SVGs carry hardcoded Work hex (svgs-live-in-sprites). Motion off in Work: logo, change flash, confetti, chatter, Reveal wave, Feedback tile; pixel loader → plain bar.

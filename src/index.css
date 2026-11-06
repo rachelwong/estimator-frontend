@@ -8,56 +8,285 @@
 @import "@fontsource-variable/figtree/wght.css";
 @import "@fontsource/silkscreen/latin-400.css";
 
-/* The Fold and Flip palette (DESIGN.md §2). This block is the only place in
-   the repo a hex is authored — everything else, shadcn's role names included,
-   points at it through var(). `white` is Tailwind's own and is not restated. */
-@theme {
-  --color-ink: #1e1b2e;
-  --color-cream: #fff6e5;
-  --color-text-muted: #3e3852;
-  --color-text-subtle: #5b5570;
-  --color-accent: #6a4ff0;
-  --color-page-top: #dcd3fb;
-  --color-selection: #ffc53d;
-  --color-danger: #ff5a5f;
-  --color-copied: #d7f2e4;
-  --color-abstained: #b42318;
-  --color-on-ink-muted: #c9c3da;
+/* Two tiers (docs/plans/themes.md, decisions 6–8).
 
-  /* The one decorative colour with no other home: the middle dot in a
-       Window's chrome (§2). Its neighbours are `selection` and `danger`, which
-       the palette already carries. */
-  --color-chrome-green: #4cc38a;
+   Tier 1, primitives: every colour the design draws, named by hue. Plain
+   :root custom properties and deliberately not in @theme, so `bg-grape-500`
+   can't be written in a component. This block is the only place in the repo a
+   hex is authored, SVG sprites aside (they can't read a var).
 
-  /* The one How to use card tint the palette doesn't already carry (§2).
-       The other three are white, `copied` and `crowd-0`. */
-  --color-butter: #ffe8a8;
+   Tier 2, roles: one job each. Components only ever use roles (`bg-card`,
+   `shadow-control`), and a theme swaps role values, never classes. Two roles
+   with the same Play value stay two roles, because Work gives them different
+   ones. Every role starts on its Play value; Work overrides arrive under
+   [data-theme='work'] in phase 4. */
+:root {
+  /* tier 1: Play primitives */
+  --plum-950: #1e1b2e;
+  --plum-800: #3e3852;
+  --plum-700: #5b5570;
+  --plum-300: #c9c3da;
+  --grape-50: #f2edff;
+  --grape-100: #dcd3fb;
+  --grape-200: #c9bcf7;
+  --grape-400: #8e77f2;
+  --grape-500: #6a4ff0;
+  --grape-600: #5a3fd6;
+  --grape-900: #2a1f5c;
+  --cream: #fff6e5;
+  --butter: #ffe8a8;
+  --mint-100: #d7f2e4;
+  --mint-400: #4cc38a;
+  --sun-400: #ffc53d;
+  --coral-400: #ff5a5f;
+  --brick-700: #b42318;
+  --white: #ffffff;
 
-  /* Crowd ramp: how many people landed on a Square, never Time or Resources
-       (§2). Text flips to white at crowd-3. */
-  --color-crowd-0: #f2edff;
-  --color-crowd-1: #c9bcf7;
-  --color-crowd-2: #8e77f2;
-  --color-crowd-3: #5a3fd6;
-  --color-crowd-4: #2a1f5c;
+  /* tier 2: colour roles, Play values */
+  --background: var(--cream);
+  --foreground: var(--plum-950);
+  --muted-foreground: var(--plum-800);
+  --subtle-foreground: var(--plum-700);
+  --placeholder: color-mix(in srgb, var(--plum-700) 70%, transparent);
+  --card: var(--white);
+  --input: var(--white);
+  --raised: var(--white);
+  --row-hover: var(--grape-50);
+  --header: var(--white);
+  --header-border: var(--plum-950);
+  --nav-foreground: var(--plum-950);
+  --nav-hover: var(--plum-700);
+  --inverse: var(--plum-950);
+  --inverse-foreground: var(--cream);
+  --inverse-muted: var(--plum-300);
+  --popover: var(--plum-950);
+  --popover-foreground: var(--cream);
+  --page-top: var(--grape-100);
+  --share-bar: var(--grape-100);
+  --note: var(--grape-50);
+  --border: var(--plum-950);
+  --border-subtle: var(--plum-950);
+  --border-hover: var(--plum-950);
+  --border-selected: var(--plum-950);
+  --absent-border: var(--plum-700);
+  --ghost-border: var(--plum-950);
+  --ghost-hover: var(--white);
+  --ring: var(--plum-950);
+  --ring-halo: transparent;
+  --primary: var(--grape-500);
+  --primary-foreground: var(--white);
+  --action: var(--sun-400);
+  --action-hover: var(--sun-400);
+  --action-foreground: var(--plum-950);
+  --action-border: var(--plum-950);
+  --secondary: var(--white);
+  --secondary-hover: var(--white);
+  --secondary-border: var(--plum-950);
+  --emphasis: var(--coral-400);
+  --emphasis-hover: var(--coral-400);
+  --emphasis-foreground: var(--plum-950);
+  --emphasis-border: var(--plum-950);
+  --new-session: var(--sun-400);
+  --new-session-hover: var(--sun-400);
+  --new-session-foreground: var(--plum-950);
+  --new-session-border: var(--plum-950);
+  --link: var(--grape-500);
+  --link-hover: var(--grape-500);
+  --selection: var(--sun-400);
+  --selection-foreground: var(--plum-950);
+  --selection-ring: var(--plum-950);
+  --option-selected: var(--grape-500);
+  --option-selected-foreground: var(--white);
+  --range-track: var(--grape-50);
+  --range-fill: var(--grape-500);
+  --range-thumb: var(--white);
+  --range-tick-selected: var(--grape-500);
+  --axis-foreground: var(--plum-950);
+  --progress: var(--grape-500);
+  --progress-track: var(--white);
+  --destructive: var(--coral-400);
+  --error-foreground: var(--brick-700);
+  --error-surface: var(--coral-400);
+  --error-border: var(--plum-950);
+  --abstained: var(--brick-700);
+  --success: var(--mint-100);
+  --scrim: color-mix(in srgb, var(--plum-950) 45%, transparent);
+  --area: var(--grape-200);
+  --crowd-0: var(--grape-50);
+  --crowd-1: var(--grape-200);
+  --crowd-2: var(--grape-400);
+  --crowd-3: var(--grape-600);
+  --crowd-4: var(--grape-900);
+  --crowd-foreground: var(--plum-950);
+  --crowd-3-foreground: var(--white);
+  --crowd-4-foreground: var(--white);
+  --switch-track: var(--grape-200);
+  --switch-track-hover: var(--grape-200);
+  --chrome-dot: var(--mint-400);
+  --tint-plain: var(--white);
+  --tint-butter: var(--butter);
+  --tint-mint: var(--mint-100);
+  --tint-lavender: var(--grape-50);
 
-  /* Hard offset shadows, no blur, always ink (§4). The accent one carries
-       the dark notice and the Reveal popover. */
-  --shadow-px: 4px 4px 0 var(--color-ink);
-  --shadow-px-card: 6px 6px 0 var(--color-ink);
-  --shadow-px-window: 8px 8px 0 var(--color-ink);
-  --shadow-px-accent: 4px 4px 0 var(--color-accent);
-
-  /* The Area preview on the running grid (§6): `accent` at 15% laid over
-       whatever fill the Square already has. A shadow rather than a background
-       so it composes with the Selection Area's crowd-1 underneath. */
+  /* tier 2: shadow roles. Play's are hard offsets, no blur (§4). Each sits
+     behind @theme inline below rather than in @theme itself: Tailwind bakes a
+     @theme shadow's value into the utility, which a theme couldn't then swap. */
+  --shadow-control: 4px 4px 0 var(--plum-950);
+  --shadow-icon: 3px 3px 0 var(--plum-950);
+  --shadow-card: 6px 6px 0 var(--plum-950);
+  --shadow-window: 8px 8px 0 var(--plum-950);
+  --shadow-float: 4px 4px 0 var(--grape-500);
+  --shadow-notice: 4px 4px 0 var(--plum-950);
+  --shadow-lift: 4px 4px 0 var(--plum-950);
+  --shadow-thumb: 3px 3px 0 var(--plum-950);
+  --shadow-bar: 4px 4px 0 var(--plum-950);
+  --shadow-menu: 8px 8px 0 var(--plum-950);
+  --shadow-dialog: 8px 8px 0 var(--plum-950);
+  --shadow-knob: none;
+  /* The Area preview on the running grid (§6): `primary` at 15% laid over
+     whatever fill the Square already has. A shadow rather than a background
+     so it composes with the Selection Area's fill underneath. */
   --shadow-area-preview: inset 0 0 0 999px
-    color-mix(in srgb, var(--color-accent) 15%, transparent);
+    color-mix(in srgb, var(--primary) 15%, transparent);
 
+  /* tier 2: radius roles. Play is square everywhere. Squares themselves take
+     no radius in either theme. */
+  --radius-control: 0;
+  --radius-panel: 0;
+  --radius-bar: 0;
+  --radius-card: 0;
+  --radius-strip: 0;
+  --radius-track: 0;
+
+  /* tier 2: font roles */
   --font-display: "Bungee", sans-serif;
   --font-body: "Figtree Variable", system-ui, sans-serif;
   --font-label: "Silkscreen", monospace;
+}
 
+/* Roles mapped to utilities. Tailwind's own palette is cleared, so a class
+   naming a colour that isn't a role (`bg-white`, `text-red-500`) generates
+   nothing — a visible failure rather than a silent bypass of the theme.
+   Shadow, radius and font roles share their utility's name, so Tailwind also
+   writes `--shadow-control: var(--shadow-control)` into @layer theme. That
+   copy never applies: the unlayered :root above wins the cascade. */
+@theme inline {
+  --color-*: initial;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --color-placeholder: var(--placeholder);
+  --color-card: var(--card);
+  --color-input: var(--input);
+  --color-raised: var(--raised);
+  --color-row-hover: var(--row-hover);
+  --color-header: var(--header);
+  --color-header-border: var(--header-border);
+  --color-nav-foreground: var(--nav-foreground);
+  --color-nav-hover: var(--nav-hover);
+  --color-inverse: var(--inverse);
+  --color-inverse-foreground: var(--inverse-foreground);
+  --color-inverse-muted: var(--inverse-muted);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-page-top: var(--page-top);
+  --color-share-bar: var(--share-bar);
+  --color-note: var(--note);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-hover: var(--border-hover);
+  --color-border-selected: var(--border-selected);
+  --color-absent-border: var(--absent-border);
+  --color-ghost-border: var(--ghost-border);
+  --color-ghost-hover: var(--ghost-hover);
+  --color-ring: var(--ring);
+  --color-ring-halo: var(--ring-halo);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-action-foreground: var(--action-foreground);
+  --color-action-border: var(--action-border);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-border: var(--secondary-border);
+  --color-emphasis: var(--emphasis);
+  --color-emphasis-hover: var(--emphasis-hover);
+  --color-emphasis-foreground: var(--emphasis-foreground);
+  --color-emphasis-border: var(--emphasis-border);
+  --color-new-session: var(--new-session);
+  --color-new-session-hover: var(--new-session-hover);
+  --color-new-session-foreground: var(--new-session-foreground);
+  --color-new-session-border: var(--new-session-border);
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
+  --color-selection: var(--selection);
+  --color-selection-foreground: var(--selection-foreground);
+  --color-selection-ring: var(--selection-ring);
+  --color-option-selected: var(--option-selected);
+  --color-option-selected-foreground: var(--option-selected-foreground);
+  --color-range-track: var(--range-track);
+  --color-range-fill: var(--range-fill);
+  --color-range-thumb: var(--range-thumb);
+  --color-range-tick-selected: var(--range-tick-selected);
+  --color-axis-foreground: var(--axis-foreground);
+  --color-progress: var(--progress);
+  --color-progress-track: var(--progress-track);
+  --color-destructive: var(--destructive);
+  --color-error-foreground: var(--error-foreground);
+  --color-error-surface: var(--error-surface);
+  --color-error-border: var(--error-border);
+  --color-abstained: var(--abstained);
+  --color-success: var(--success);
+  --color-scrim: var(--scrim);
+  --color-area: var(--area);
+  --color-crowd-0: var(--crowd-0);
+  --color-crowd-1: var(--crowd-1);
+  --color-crowd-2: var(--crowd-2);
+  --color-crowd-3: var(--crowd-3);
+  --color-crowd-4: var(--crowd-4);
+  --color-crowd-foreground: var(--crowd-foreground);
+  --color-crowd-3-foreground: var(--crowd-3-foreground);
+  --color-crowd-4-foreground: var(--crowd-4-foreground);
+  --color-switch-track: var(--switch-track);
+  --color-switch-track-hover: var(--switch-track-hover);
+  --color-chrome-dot: var(--chrome-dot);
+  --color-tint-plain: var(--tint-plain);
+  --color-tint-butter: var(--tint-butter);
+  --color-tint-mint: var(--tint-mint);
+  --color-tint-lavender: var(--tint-lavender);
+
+  --shadow-*: initial;
+  --shadow-control: var(--shadow-control);
+  --shadow-icon: var(--shadow-icon);
+  --shadow-card: var(--shadow-card);
+  --shadow-window: var(--shadow-window);
+  --shadow-float: var(--shadow-float);
+  --shadow-notice: var(--shadow-notice);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-thumb: var(--shadow-thumb);
+  --shadow-bar: var(--shadow-bar);
+  --shadow-menu: var(--shadow-menu);
+  --shadow-dialog: var(--shadow-dialog);
+  --shadow-knob: var(--shadow-knob);
+  --shadow-area-preview: var(--shadow-area-preview);
+
+  --radius-*: initial;
+  --radius-control: var(--radius-control);
+  --radius-panel: var(--radius-panel);
+  --radius-bar: var(--radius-bar);
+  --radius-card: var(--radius-card);
+  --radius-strip: var(--radius-strip);
+  --radius-track: var(--radius-track);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-label: var(--font-label);
+  --font-sans: var(--font-body);
+}
+
+@theme {
   /* ≤767 mobile · 768–1199 tablet · ≥1200 desktop (§12). Tailwind's own
        sm/md/lg/xl scale is cleared so there is one breakpoint vocabulary and
        it is the design's three artboards — `lg:` at 1024px sits inside the
@@ -71,7 +300,7 @@
   --animate-logo-shake: ffShake 7s ease-in-out infinite;
   --animate-logo-flip: ffFlip 7s ease-in-out infinite;
 
-  /* The loader's accent fill, stepping across its track in whole blocks (§7).
+  /* The loader's `progress` fill, stepping across its track in whole blocks (§7).
        The step count is the block count, so the fill can only ever rest on a
        block edge — eight blocks across the large bar, five across the inline
        one. Under reduced motion the global rule below collapses the duration,
@@ -137,16 +366,16 @@
    hover or popover re-render doesn't replay it. */
 @keyframes ffRevealIn {
   0% {
-    background: var(--color-crowd-0);
+    background: var(--crowd-0);
     color: transparent;
     transform: none;
     box-shadow: none;
   }
   45% {
-    background: var(--color-crowd-2);
+    background: var(--crowd-2);
     color: transparent;
     transform: translate(-2px, -2px);
-    box-shadow: 3px 3px 0 var(--color-ink);
+    box-shadow: 3px 3px 0 var(--selection-ring);
   }
 }
 
@@ -175,8 +404,9 @@
 
 /* Laid over the parent's 2px border: pulled out by the border's width, the
    gradient fills the box, and the mask cuts out all but that 2px of padding.
-   ChangeFlash sets the duration and removes it after, leaving the ink border
-   it faded back to. Reduced motion drops the animation outright rather than
+   ChangeFlash sets the duration and removes it after, leaving the border it
+   faded back to. The rainbow reads primitives, not roles: it's decoration with
+   no job to swap, and Work switches the flash off rather than recolouring it. Reduced motion drops the animation outright rather than
    collapsing it, so the rainbow shows still for that time instead of finishing
    faded. */
 @utility change-flash {
@@ -186,11 +416,11 @@
   pointer-events: none;
   background: conic-gradient(
     from var(--flash-angle),
-    var(--color-danger),
-    var(--color-selection),
-    var(--color-chrome-green),
-    var(--color-accent),
-    var(--color-danger)
+    var(--coral-400),
+    var(--sun-400),
+    var(--mint-400),
+    var(--grape-500),
+    var(--coral-400)
   );
   mask:
     linear-gradient(#000 0 0) content-box exclude,
@@ -324,7 +554,7 @@
   }
 }
 
-/* The white gaps between the loader's blocks, laid over the fill rather than
+/* The gaps between the loader's blocks, in the track's own colour,, laid over the fill rather than
    cut into it — the fill is one growing element, so it has no block edges of
    its own to separate. Each stripe repeats on the block pitch (track width ÷
    block count) with a 3px gap, which is why the two sizes need two utilities:
@@ -333,7 +563,7 @@
   background: repeating-linear-gradient(
     90deg,
     transparent 0 24.5px,
-    var(--color-white) 24.5px 27.5px
+    var(--progress-track) 24.5px 27.5px
   );
 }
 
@@ -341,48 +571,49 @@
   background: repeating-linear-gradient(
     90deg,
     transparent 0 5px,
-    var(--color-white) 5px 8px
+    var(--progress-track) 5px 8px
   );
 }
 
-/* The Create form's slider (§7): a 10px track with a 2px ink edge, filled
-   `accent` up to the thumb and `crowd-0` beyond it, and a 28px square white
+/* The Create form's slider (§7): a 10px track with a 2px edge, filled
+   `range-fill` up to the thumb and `range-track` beyond it, and a 28px square
    thumb on a 3px shadow. RangeSlider sets --slider-fill per render; the
-   gradient lives here so the colours stay palette tokens. */
+   gradient lives here so the colours stay role tokens. */
 @utility pixel-slider {
   appearance: none;
   width: 100%;
   height: 10px;
   margin: 0;
   cursor: pointer;
-  border: 2px solid var(--color-ink);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-track);
   background: linear-gradient(
     to right,
-    var(--color-accent) 0 var(--slider-fill),
-    var(--color-crowd-0) var(--slider-fill) 100%
+    var(--range-fill) 0 var(--slider-fill),
+    var(--range-track) var(--slider-fill) 100%
   );
 
   &::-webkit-slider-thumb {
     appearance: none;
     width: 28px;
     height: 28px;
-    border: 3px solid var(--color-ink);
-    background: var(--color-white);
-    box-shadow: 3px 3px 0 var(--color-ink);
+    border: 3px solid var(--border);
+    background: var(--range-thumb);
+    box-shadow: var(--shadow-thumb);
   }
 
   &::-moz-range-thumb {
     width: 28px;
     height: 28px;
     box-sizing: border-box;
-    border: 3px solid var(--color-ink);
+    border: 3px solid var(--border);
     border-radius: 0;
-    background: var(--color-white);
-    box-shadow: 3px 3px 0 var(--color-ink);
+    background: var(--range-thumb);
+    box-shadow: var(--shadow-thumb);
   }
 
   &:focus-visible {
-    outline: 3px solid var(--color-ink);
+    outline: 3px solid var(--ring);
     outline-offset: 8px;
   }
 }
@@ -403,7 +634,8 @@
    It's also tilted by --chatter-tilt (-1–1, a new one each time), at most 3deg
    either way so the words stay easy to read. `rotate` is its own property, so
    the tilt holds steady while the slide animates `translate`.
-   Its hard offset shadow is the band's own accent deepened with a little ink,
+   Its hard offset shadow is the band's own `primary` deepened with a little
+   `inverse`,
    so it reads as a shade of the band rather than the usual ink drop. */
 @utility crowd-chatter {
   --crowd-chatter-travel: 330px;
@@ -413,7 +645,7 @@
   translate: 0 var(--crowd-chatter-travel);
   rotate: calc(var(--chatter-tilt) * 3deg);
   box-shadow: 4px 4px 0
-    color-mix(in srgb, var(--color-accent) 65%, var(--color-ink));
+    color-mix(in srgb, var(--primary) 65%, var(--inverse));
   will-change: translate;
   animation: ffChatter var(--crowd-chatter-duration) ease-in-out;
 
@@ -430,29 +662,6 @@
   }
 }
 
-/* shadcn's role names aliased onto the palette above — var() only, no value of
-   their own. `bg-ink` and `bg-foreground` resolve to the same custom property,
-   so the primitives keep working while we author in the design's vocabulary.
-   These are the role names src/ still references (Stage 3's button restyle
-   retired `secondary` and its foreground, Stage 5's dialog restyle `popover`
-   and its foreground, Stage 7's form errors `destructive`): a primitive added later that reads another
-   renders unstyled until its alias joins the list, which is a visible failure
-   rather than a silent drift. */
-@theme inline {
-  --color-background: var(--color-cream);
-  --color-foreground: var(--color-ink);
-  --color-border: var(--color-ink);
-  --color-input: var(--color-ink);
-  --color-ring: var(--color-accent);
-  --color-primary: var(--color-selection);
-  --color-primary-foreground: var(--color-ink);
-  --color-muted: var(--color-crowd-0);
-  --color-muted-foreground: var(--color-text-muted);
-
-  --font-sans: var(--font-body);
-  --font-heading: var(--font-display);
-}
-
 /* Sprites are drawn at 8px per art pixel. The SVGs carry crispEdges, but a
    browser scaling the rasterised result still smooths it, so the pixel grid is
    pinned here too. */
@@ -462,10 +671,11 @@
 
 /* A sprite set down as a sticker (§9): a soft ink drop at 18%, the one shadow
    in the design that isn't a hard offset. The white outline is already drawn
-   into the sprite. */
+   into the sprite. A primitive, like the sprite's own hex: pixel sprites are
+   Play only. */
 @utility sprite-sticker {
   filter: drop-shadow(
-    3px 3px 0 color-mix(in srgb, var(--color-ink) 18%, transparent)
+    3px 3px 0 color-mix(in srgb, var(--plum-950) 18%, transparent)
   );
 }
 
@@ -485,9 +695,13 @@
 
   a.link,
   .link {
-    color: var(--color-accent);
+    color: var(--link);
     font-weight: bold;
     text-decoration: underline;
+
+    &:hover {
+      color: var(--link-hover);
+    }
   }
 
   /* §8: reduced motion switches off every animation and transition in the

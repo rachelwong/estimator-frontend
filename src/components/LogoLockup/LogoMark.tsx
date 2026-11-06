@@ -54,7 +54,7 @@ export function LogoMark({ className }: LogoMarkProps) {
             source={logoCardBack}
             className="absolute inset-0 h-full w-full"
           />
-          <span className="relative font-display text-[50cqw] leading-none text-ink">
+          <span className="relative font-display text-[50cqw] leading-none text-foreground">
             {value}
           </span>
         </span>

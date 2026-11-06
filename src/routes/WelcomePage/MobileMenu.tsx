@@ -32,7 +32,7 @@ export function MobileMenu({ id, onClose }: MobileMenuProps) {
     <div className="contents tablet:hidden">
       <div
         aria-hidden="true"
-        className="fixed inset-x-0 top-16 bottom-0 bg-ink/45"
+        className="fixed inset-x-0 top-16 bottom-0 bg-scrim"
         onClick={onClose}
       />
 

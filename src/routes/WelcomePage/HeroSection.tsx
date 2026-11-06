@@ -24,17 +24,17 @@ export function HeroSection() {
       <section className="relative isolate flex flex-col items-center gap-[18px] px-5 pt-12 text-center tablet:gap-6 tablet:px-10 tablet:pt-[84px] desktop:px-20">
         <HeroSprites />
 
-        <span className="border-2 border-ink bg-white px-3 py-1.5 font-label text-[12px] tablet:text-[14px]">
+        <span className="rounded-control border-2 border-border bg-card px-3 py-1.5 font-label text-[12px] tablet:text-[14px]">
           {hero.badge}
         </span>
 
-        <h1 className="max-w-[1000px] font-display text-[36px] leading-none text-ink tablet:text-[58px] desktop:text-[78px]">
+        <h1 className="max-w-[1000px] font-display text-[36px] leading-none text-foreground tablet:text-[58px] desktop:text-[78px]">
           {parse(hero.headlineLead)}
           <br />
-          <span className="text-accent">{hero.headlineAccent}</span>
+          <span className="text-primary">{hero.headlineAccent}</span>
         </h1>
 
-        <p className="max-w-[600px] leading-[1.5] text-text-muted text-[18px] leading-[1.5] tablet:text-[21px]">
+        <p className="max-w-[600px] leading-[1.5] text-muted-foreground text-[18px] leading-[1.5] tablet:text-[21px]">
           {parse(hero.body)}
         </p>
 

@@ -42,13 +42,13 @@ export function ErrorScreen({ copy, actions, footer }: ErrorScreenProps) {
               wears, and need 470 to sit side by side, so the column takes the
               window's remaining 476. On tablet they wrap, as the artboard's do. */}
           <div className="flex min-w-0 flex-1 flex-col gap-3.5 tablet:max-w-[380px] desktop:max-w-none">
-            <span className="font-label text-[12px] text-ink">{copy.label}</span>
+            <span className="font-label text-[12px] text-foreground">{copy.label}</span>
 
-            <h1 className="font-display text-[26px] leading-[1.05] text-ink tablet:text-[32px] desktop:text-[36px]">
+            <h1 className="font-display text-[26px] leading-[1.05] text-foreground tablet:text-[32px] desktop:text-[36px]">
               {copy.title}
             </h1>
 
-            <p className="text-[16px] leading-[1.55] text-text-muted">{copy.body}</p>
+            <p className="text-[16px] leading-[1.55] text-muted-foreground">{copy.body}</p>
 
             <div className="flex flex-col gap-3.5 *:w-full tablet:flex-row tablet:flex-wrap tablet:*:w-auto">
               {actions}

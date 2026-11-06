@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Slot } from "radix-ui"
 
-// Fold and Flip's button (DESIGN.md §4): 3px ink edge, a 4px offset shadow,
+// Fold and Flip's button (DESIGN.md §4): 3px edge, a 4px offset shadow,
 // square corners. Pressing it moves the button onto its own shadow, which is
 // the whole depth model of this design — nothing ripples. Hover dims it a shade,
 // eased rather than snapped.
@@ -14,13 +14,16 @@ import { Slot } from "radix-ui"
 // had no caller, and a variant nobody uses is a variant nobody has checked
 // against the palette.
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 border-[3px] border-ink whitespace-nowrap shadow-px transition-[translate,box-shadow,background-color,filter] outline-none select-none hover:brightness-95 focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink active:translate-x-[4px] active:translate-y-[4px] active:shadow-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-[18px]",
+  "group/button inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-control border-[3px] whitespace-nowrap shadow-control transition-[translate,box-shadow,background-color,filter] outline-none select-none hover:brightness-95 focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring active:translate-x-[4px] active:translate-y-[4px] active:shadow-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-[18px]",
   {
     variants: {
       variant: {
-        default: "bg-selection text-ink",
-        secondary: "bg-white text-ink",
-        destructive: "bg-danger text-ink",
+        default: "border-action-border bg-action text-action-foreground hover:bg-action-hover",
+        secondary: "border-secondary-border bg-secondary text-foreground hover:bg-secondary-hover",
+        destructive: "border-emphasis-border bg-emphasis text-emphasis-foreground hover:bg-emphasis-hover",
+        // "Start a new session" on the Reveal: yellow like `default` in Play, but the
+        // one decisive CTA in Work, so it has its own roles.
+        newSession: "border-new-session-border bg-new-session text-new-session-foreground hover:bg-new-session-hover",
       },
       size: {
         // 44px: the header's own row height, and the minimum touch target.

@@ -39,8 +39,8 @@ export function BrokenGrid() {
             className={cn(
               "absolute size-(--square) border-2",
               crowdStep === null
-                ? "border-dashed border-text-subtle"
-                : cn("border-ink", CROWD_CLASS[crowdStep]),
+                ? "border-dashed border-absent-border"
+                : cn("border-border-subtle", CROWD_CLASS[crowdStep]),
             )}
             style={{
               left: `calc(var(--pitch) * ${column})`,
@@ -54,7 +54,7 @@ export function BrokenGrid() {
         <div
           key={`${column}-${row}`}
           className={cn(
-            "absolute size-(--square) border-2 border-ink",
+            "absolute size-(--square) border-2 border-border-subtle",
             fillClass,
           )}
           style={{

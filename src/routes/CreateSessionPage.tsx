@@ -64,10 +64,10 @@ export default function CreateSessionPage() {
 
         <Window title={content.create.windowTitle} variant={WindowVariant.CREATE} chip={content.role.admin}>
           <div className="flex flex-col gap-1.5">
-            <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[28px]">
+            <h1 className="font-display text-[20px] leading-[1.05] text-foreground tablet:text-[28px]">
               {content.create.heading}
             </h1>
-            <p className="text-[14px] leading-[1.45] text-text-muted">
+            <p className="text-[14px] leading-[1.45] text-muted-foreground">
               {content.create.intro}
             </p>
           </div>
@@ -88,7 +88,7 @@ export default function CreateSessionPage() {
                 aria-invalid={touched && !isNameOk}
               />
               {touched && !isNameOk && (
-                <p className="text-[14px] text-abstained">{content.validation.nameRule}</p>
+                <p className="text-[14px] text-error-foreground">{content.validation.nameRule}</p>
               )}
             </div>
 
@@ -102,7 +102,7 @@ export default function CreateSessionPage() {
                 </label>
                 <span
                   id="description-count"
-                  className="font-label text-[12px] text-text-subtle"
+                  className="font-label text-[12px] text-subtle-foreground"
                 >
                   {descriptionLength}/{MAX_DESCRIPTION_LENGTH}
                 </span>
@@ -118,7 +118,7 @@ export default function CreateSessionPage() {
                 aria-invalid={!isDescriptionOk}
               />
               {!isDescriptionOk && (
-                <p className="text-[14px] text-abstained">
+                <p className="text-[14px] text-error-foreground">
                   {content.validation.descriptionRule(MAX_DESCRIPTION_LENGTH)}
                 </p>
               )}
@@ -136,7 +136,7 @@ export default function CreateSessionPage() {
             />
 
             {actionData && (
-              <p className="text-[14px] text-abstained">
+              <p className="text-[14px] text-error-foreground">
                 {actionErrorMessage(actionData, content.actionFailure)}
               </p>
             )}

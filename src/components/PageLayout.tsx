@@ -49,7 +49,7 @@ export function PageLayout({ actions, children, footer, hasOwnFeedbackButton, on
       {/* The Feedback tile throws confetti well past its own 44px, and it sits
           at the right edge on a phone — so the bar clips sideways and stays
           open downwards, where the confetti and the tile's label belong. */}
-      <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-4 overflow-x-clip border-b-[3px] border-ink bg-white px-5 tablet:h-[72px] tablet:px-10 desktop:h-[84px] desktop:px-20">
+      <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-4 overflow-x-clip border-b-[3px] border-header-border bg-header px-5 tablet:h-[72px] tablet:px-10 desktop:h-[84px] desktop:px-20">
         <Link to={RoutePath.WELCOME} aria-label={content.brand.homeLinkLabel} onClick={onLogoLinkClick}>
           <LogoLockup />
         </Link>

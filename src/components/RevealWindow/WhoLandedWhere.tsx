@@ -49,7 +49,7 @@ export function WhoLandedWhere({
   }
 
   return (
-    <section className="flex flex-col gap-2.5 border-t-2 border-dashed border-ink pt-3.5">
+    <section className="flex flex-col gap-2.5 border-t-2 border-dashed border-border-subtle pt-3.5">
       <Heading className="font-label text-[11px] font-normal">
         {content.reveal.teamHeading}
       </Heading>
@@ -73,7 +73,7 @@ export function WhoLandedWhere({
             <Chip
               variant={ChipVariant.DASHED}
               size={ChipSize.NAME}
-              className="transition-colors duration-[120ms] hover:bg-crowd-0"
+              className="transition-colors duration-[120ms] hover:bg-row-hover"
             >
               <span className="max-w-[120px] truncate">{name}</span>
               <span className="font-label text-[10px] font-normal text-abstained">

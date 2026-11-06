@@ -9,7 +9,7 @@ export function WindowChrome() {
   return (
     <span aria-hidden="true" className="flex gap-[5px]">
       {WINDOW_CHROME_DOT_CLASS.map((dotClass) => (
-        <span key={dotClass} className={cn('size-3 border-2 border-ink', dotClass)} />
+        <span key={dotClass} className={cn('size-3 border-2 border-border-subtle', dotClass)} />
       ))}
     </span>
   )

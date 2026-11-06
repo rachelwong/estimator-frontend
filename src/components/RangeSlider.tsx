@@ -11,7 +11,7 @@ interface RangeSliderProps {
   onChange: (value: number) => void;
 }
 
-// The pixel slider (DESIGN.md §7): a 10px track filled `accent` up to the
+// The pixel slider (DESIGN.md §7): a 10px track filled `range-fill` up to the
 // thumb, a 28px square white thumb, and Silkscreen ticks beneath.
 //
 // The track steps by index, not by magnitude, so every value sits the same
@@ -47,7 +47,7 @@ export function RangeSlider({
         <label htmlFor={id} className="text-[15px] font-extrabold">
           {content.create.sliderLabel}
         </label>
-        <span className="font-display text-[23px] text-accent tabular-nums">
+        <span className="font-display text-[23px] text-primary tabular-nums">
           {value}
         </span>
       </div>
@@ -78,7 +78,7 @@ export function RangeSlider({
             key={tick}
             className={cn(
               "absolute top-0 -translate-x-1/2",
-              tick === index ? "text-accent" : "text-ink",
+              tick === index ? "text-range-tick-selected" : "text-foreground",
             )}
             style={{ left: `${position(tick)}%` }}
           >

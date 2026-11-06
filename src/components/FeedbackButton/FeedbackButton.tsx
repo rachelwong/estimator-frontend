@@ -27,7 +27,7 @@ export function FeedbackButton() {
         href={REPOSITORY_URL.LINKEDIN}
         target="_blank"
         aria-label={content.feedback.label}
-        className="inline-flex h-11 w-11 items-center justify-center border-[3px] border-ink bg-white shadow-[3px_3px_0_var(--color-ink)] outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink"
+        className="inline-flex h-11 w-11 items-center justify-center border-[3px] border-ghost-border bg-secondary shadow-icon outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring"
       >
         <Sprite
           source={bug}
@@ -39,7 +39,7 @@ export function FeedbackButton() {
 
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute top-full left-1/2 z-10 hidden -translate-x-1/2 translate-y-3 bg-ink px-[9px] py-1.5 font-label text-[11px] whitespace-nowrap text-cream group-hover:block group-focus-within:block"
+        className="pointer-events-none absolute top-full left-1/2 z-10 hidden -translate-x-1/2 translate-y-3 rounded-control bg-inverse px-[9px] py-1.5 font-label text-[11px] whitespace-nowrap text-inverse-foreground group-hover:block group-focus-within:block"
       >
         {content.feedback.label}
       </span>

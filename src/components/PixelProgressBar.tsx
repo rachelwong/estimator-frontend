@@ -7,9 +7,9 @@ interface PixelProgressBarProps {
   className?: string
 }
 
-// The loader (DESIGN.md §7, option C). An accent fill steps across a white
-// track in whole blocks and starts again; the white gaps are a repeating
-// gradient laid over the fill, since the fill is one growing element.
+// The loader (DESIGN.md §7, option C). A `progress` fill steps across its
+// track in whole blocks and starts again; the gaps are a repeating gradient in
+// the track's colour, laid over the fill, since the fill is one growing element.
 //
 // It reports nothing — the wait is unmeasured, so there is no value a
 // progressbar role could carry. The line of text beside it is what gets
@@ -25,7 +25,7 @@ export function PixelProgressBar({ size = PixelBarSize.LARGE, className }: Pixel
         // box-content, so the track is the width the block pitch was divided
         // from: 220/8 and 40/5 both only land on whole pixels inside the
         // border, not inside the border-box Tailwind would default to.
-        'relative inline-block box-content border-[3px] border-ink bg-white shadow-px',
+        'relative inline-block box-content rounded-track border-[3px] border-border bg-progress-track shadow-notice',
         sizeClass.track,
         className,
       )}
@@ -34,7 +34,7 @@ export function PixelProgressBar({ size = PixelBarSize.LARGE, className }: Pixel
           isn't running. Under reduced motion that leaves the bar full and
           still; without it the fill would shrink to nothing and read as an
           empty track rather than a wait. */}
-      <span className={cn('absolute inset-y-0 left-0 w-full bg-accent', sizeClass.fill)} />
+      <span className={cn('absolute inset-y-0 left-0 w-full bg-progress', sizeClass.fill)} />
       <span className={cn('absolute inset-0', sizeClass.blocks)} />
     </span>
   )

@@ -19,7 +19,7 @@ interface AdminControlsProps {
   className?: string;
 }
 
-// "End session & reveal" in `danger` (DESIGN.md §7). Confirmed first: ending is
+// "End session & reveal" in `emphasis` (DESIGN.md §7). Confirmed first: ending is
 // irreversible. No navigation here — the session-ended broadcast moves every
 // tab, this one included, to /ended.
 export function AdminControls({ onEndSession, className }: AdminControlsProps) {

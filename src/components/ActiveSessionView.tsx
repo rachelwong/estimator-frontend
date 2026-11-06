@@ -61,10 +61,10 @@ export function ActiveSessionView({
           chip={state.isAdmin ? content.role.admin : content.role.participant}
         >
           <div className="flex flex-col gap-1.5">
-            <h1 className="font-display text-[20px] leading-[1.05] text-ink tablet:text-[27px]">
+            <h1 className="font-display text-[20px] leading-[1.05] text-foreground tablet:text-[27px]">
               {content.active.heading}
             </h1>
-            <p className="font-body text-[14px] leading-[1.45] text-text-muted tablet:text-[14px]">
+            <p className="font-body text-[14px] leading-[1.45] text-muted-foreground tablet:text-[14px]">
               {content.active.intro}
             </p>
           </div>

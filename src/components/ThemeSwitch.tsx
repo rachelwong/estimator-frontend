@@ -15,7 +15,7 @@ export function ThemeSwitch() {
       role="switch"
       aria-checked={isWorkTheme}
       aria-label={content.themeSwitch.ariaLabel}
-      className="inline-flex h-9 cursor-pointer items-center border-2 border-ink bg-white px-2.5 font-label text-[11px] text-ink outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink"
+      className="inline-flex h-9 cursor-pointer items-center border-2 border-ghost-border bg-secondary px-2.5 font-label text-[11px] text-nav-foreground outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring"
       onClick={toggleTheme}
     >
       {content.themeSwitch.label}

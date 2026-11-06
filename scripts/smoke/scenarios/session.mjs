@@ -415,7 +415,7 @@ export async function session({ browser, reporter }) {
   );
   check(
     "The previewed Square lifts",
-    (await squareClasses(fresh, 2, 3)).includes("shadow-px"),
+    (await squareClasses(fresh, 2, 3)).includes("shadow-lift"),
   );
 
   const fayChip = fresh.getByRole("button", { name: "Fay", exact: true });

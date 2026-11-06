@@ -15,7 +15,7 @@ export function StartSessionLink({ className }: StartSessionLinkProps) {
   const content = useContent()
 
   return (
-    <Button asChild className={cn('font-display font-normal', className)}>
+    <Button asChild variant="newSession" className={cn('font-display font-normal', className)}>
       <Link to={RoutePath.NEW}>{content.action.startNewSession}</Link>
     </Button>
   )

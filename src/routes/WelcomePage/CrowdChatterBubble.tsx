@@ -15,7 +15,7 @@ export function CrowdChatterBubble({ line, jitter, tilt }: CrowdChatterBubblePro
   return (
     <span
       style={{ '--chatter-jitter': jitter, '--chatter-tilt': tilt } as CSSProperties}
-      className="crowd-chatter absolute z-10 w-[136px] border-2 border-white bg-ink px-2.5 py-[7px] text-[14px] leading-[1.3] font-bold text-white tablet:-z-10 tablet:w-auto tablet:whitespace-nowrap desktop:z-10"
+      className="crowd-chatter absolute z-10 w-[136px] border-2 border-primary-foreground bg-inverse px-2.5 py-[7px] text-[14px] leading-[1.3] font-bold text-primary-foreground tablet:-z-10 tablet:w-auto tablet:whitespace-nowrap desktop:z-10"
     >
       {line}
     </span>

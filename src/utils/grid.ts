@@ -1,11 +1,11 @@
 import {
   AxisValueEmphasis,
+  AREA_SQUARE_CLASS,
   CROWD_CLASS,
   CROWDED_SQUARE_MINIMUM,
   GridMode,
   HoverSource,
   REVEAL_WAVE_STEP_MS,
-  SELECTION_AREA_CROWD_STEP,
   SELECTION_SQUARE_CLASS,
   SQUARE_FIT,
   SQUARE_FULL_LABEL_MIN_PX,
@@ -30,8 +30,7 @@ import type {
   SquareLabelSize as SquareLabelSizeValue,
 } from '@/types'
 
-// Interactive: `selection` yellow for your own Selection, crowd-1 across its
-// Area. Revealed: the crowd ramp by headcount, no Areas, and a ring on the
+// Interactive: `selection` for your own Selection, `area` across its Area. Revealed: the crowd ramp by headcount, no Areas, and a ring on the
 // Square you hold.
 export function squareFillClass(
   mode: GridModeValue,
@@ -52,7 +51,7 @@ export function squareFillClass(
     return SELECTION_SQUARE_CLASS
   }
 
-  return inArea(square, selection) ? CROWD_CLASS[SELECTION_AREA_CROWD_STEP] : CROWD_CLASS[0]
+  return inArea(square, selection) ? AREA_SQUARE_CLASS : CROWD_CLASS[0]
 }
 
 // §5, floored at SQUARE_MIN_PX. Fibonacci's 7×7 gives 70 / 64 / 39.

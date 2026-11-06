@@ -15,9 +15,9 @@ interface WindowProps {
   children: ReactNode
 }
 
-// The frame around every working surface (DESIGN.md §4): 3px ink edge, an 8px
-// offset shadow, a 44px accent title bar with a white Silkscreen title, and a
-// 3px ink rule under the bar.
+// The frame around every working surface (DESIGN.md §4): 3px edge, an 8px
+// offset shadow, a 44px `primary` title bar with a Silkscreen title, and a 3px
+// rule under the bar.
 //
 // A plain <section>, not a dialog or a region: it is the page's own content in
 // a costume, and announcing a landmark on every screen would add a level to
@@ -32,9 +32,9 @@ export function Window({ title, variant, chip, children }: WindowProps) {
 
   return (
     <section
-      className={cn('border-[3px] border-ink bg-white shadow-px-window', variantClass.window)}
+      className={cn('border-[3px] border-border-subtle bg-card shadow-window', variantClass.window)}
     >
-      <div className="flex h-11 items-center justify-between gap-2.5 border-b-[3px] border-ink bg-accent px-3.5 font-label text-[12px] text-white">
+      <div className="flex h-11 items-center justify-between gap-2.5 border-b-[3px] border-border-subtle bg-primary px-3.5 font-label text-[12px] text-primary-foreground">
         <span className="truncate">{title}</span>
 
         <span className="flex shrink-0 items-center gap-2.5">

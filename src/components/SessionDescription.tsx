@@ -16,7 +16,7 @@ export function SessionDescription({ description }: SessionDescriptionProps) {
   return (
     <p
       data-description
-      className="font-body text-center font-medium text-[15px] leading-[1.45] break-words text-ink tablet:text-[16px]"
+      className="font-body text-center font-medium text-[15px] leading-[1.45] break-words text-foreground tablet:text-[16px]"
     >
       {description.split(URL_PATTERN).map((piece, index) =>
         index % 2 === 1 ? (
@@ -25,7 +25,7 @@ export function SessionDescription({ description }: SessionDescriptionProps) {
             href={piece}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-bold link text-accent underline underline-offset-2 outline-none focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="font-bold link text-link hover:text-link-hover underline underline-offset-2 outline-none focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
             {piece}
           </a>

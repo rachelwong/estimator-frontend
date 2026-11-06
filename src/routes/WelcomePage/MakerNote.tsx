@@ -18,7 +18,7 @@ export function MakerNote({ label, text, className }: MakerNoteProps) {
         <span className="font-label text-[13px]">{label}</span>
       </div>
 
-      <div className="text-[18px] leading-[1.6] text-text-muted tablet:text-[18px] text-text-muted">
+      <div className="text-[18px] leading-[1.6] text-muted-foreground tablet:text-[18px]">
         {parse(text)}
       </div>
     </div>

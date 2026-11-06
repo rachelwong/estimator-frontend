@@ -16,7 +16,7 @@ interface ShareLinkProps {
 // the window's widths (§5). On mobile the row stacks.
 //
 // Points at /join, the entry for anyone without an identity. The Admin's own
-// /start would bounce them there anyway. "Copy link" fills `copied` and reads
+// /start would bounce them there anyway. "Copy link" fills `success` and reads
 // "Copied!" for 1.6s once the link is on the clipboard.
 export function ShareLink({ sessionId }: ShareLinkProps) {
   const [isCopied, setIsCopied] = useState(false)
@@ -30,9 +30,9 @@ export function ShareLink({ sessionId }: ShareLinkProps) {
   }
 
   return (
-    <div className="relative z-10 border-b-[3px] border-ink bg-page-top px-3 py-3 tablet:px-10 tablet:py-3.5">
+    <div className="relative z-10 border-b-[3px] border-border-subtle bg-share-bar px-3 py-3 tablet:px-10 tablet:py-3.5">
       <div className="mx-auto flex max-w-[366px] flex-col gap-2 tablet:max-w-[740px] tablet:flex-row tablet:items-center tablet:gap-3.5 desktop:max-w-[780px]">
-        <span className="flex items-center gap-2 font-label text-[12px] whitespace-nowrap text-ink">
+        <span className="flex items-center gap-2 font-label text-[12px] whitespace-nowrap text-foreground">
           <LinkIcon aria-hidden="true" className="size-[18px]" />
           {content.shareLink.label}
         </span>
@@ -50,7 +50,7 @@ export function ShareLink({ sessionId }: ShareLinkProps) {
 
           <Button
             type="button"
-            className={cn('min-w-[112px]', isCopied && 'bg-copied')}
+            className={cn('min-w-[112px]', isCopied && 'bg-success')}
             onClick={handleCopy}
           >
             {isCopied ? content.shareLink.copied : content.shareLink.copy}

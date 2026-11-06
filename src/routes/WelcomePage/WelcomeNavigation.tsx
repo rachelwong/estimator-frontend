@@ -31,13 +31,13 @@ export function WelcomeNavigation() {
       >
         <a
           href={`#${WelcomeSection.HOW_TO_USE}`}
-          className="hover:text-text-subtle"
+          className="hover:text-nav-hover"
         >
           {navigation.howToUse}
         </a>
         <a
           href={`#${WelcomeSection.WHY_I_MADE_THIS}`}
-          className="hidden hover:text-text-subtle desktop:inline"
+          className="hidden hover:text-nav-hover desktop:inline"
         >
           {navigation.gitHub}
         </a>
@@ -52,10 +52,10 @@ export function WelcomeNavigation() {
         aria-expanded={isMenuOpen}
         aria-controls={menuId}
         className={cn(
-          "inline-flex size-11 cursor-pointer items-center justify-center border-[3px] border-ink outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ink tablet:hidden",
+          "inline-flex size-11 cursor-pointer items-center justify-center border-[3px] border-ghost-border outline-none focus-visible:outline-[3px] focus-visible:outline-offset-4 focus-visible:outline-ring tablet:hidden",
           isMenuOpen
-            ? "bg-selection"
-            : "bg-white shadow-[3px_3px_0_var(--color-ink)]",
+            ? "bg-action"
+            : "bg-secondary shadow-icon",
         )}
         onClick={() => setMenuOpen(!isMenuOpen)}
       >

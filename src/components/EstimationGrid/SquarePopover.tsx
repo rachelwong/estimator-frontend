@@ -20,7 +20,7 @@ export function SquarePopover({ anchorKey, boundsRef, title, names }: SquarePopo
       boundsRef={boundsRef}
       role="dialog"
       ariaLabel={title}
-      className="z-30 flex w-[190px] flex-col gap-2 bg-ink px-3 pt-3 pb-2.5 text-cream shadow-px-accent tablet:w-[210px]"
+      className="z-30 flex w-[190px] flex-col gap-2 rounded-panel bg-popover px-3 pt-3 pb-2.5 text-popover-foreground shadow-float tablet:w-[210px]"
     >
       <span className="font-label text-[11px]">{title}</span>
 

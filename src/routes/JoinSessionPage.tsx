@@ -44,7 +44,7 @@ export function JoinSessionPage() {
         <SpriteScatter />
 
         <Window title={content.join.windowTitle} variant={WindowVariant.JOIN} chip={content.role.participant}>
-          <h1 className="font-display text-[22px] leading-[1.05] text-ink tablet:text-[30px]">
+          <h1 className="font-display text-[22px] leading-[1.05] text-foreground tablet:text-[30px]">
             {content.join.heading}
           </h1>
 
@@ -66,12 +66,12 @@ export function JoinSessionPage() {
                 aria-invalid={touched && !isNameOk}
               />
               {touched && !isNameOk && (
-                <p className="text-[14px] text-abstained">{content.validation.nameRule}</p>
+                <p className="text-[14px] text-error-foreground">{content.validation.nameRule}</p>
               )}
             </div>
 
             {actionData && (
-              <p className="text-[14px] text-abstained">
+              <p className="text-[14px] text-error-foreground">
                 {actionErrorMessage(actionData, content.actionFailure)}
               </p>
             )}
@@ -89,7 +89,7 @@ export function JoinSessionPage() {
             </Button>
           </Form>
 
-          <div className="flex items-start gap-3 border-2 border-ink bg-crowd-0 px-4 py-3.5">
+          <div className="flex items-start gap-3 border-2 border-border-subtle bg-note px-4 py-3.5">
             <Sprite
               source={cardBack}
               className="sprite-sticker h-[29px] w-6 shrink-0"
