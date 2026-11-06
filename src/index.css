@@ -644,8 +644,7 @@
   left: calc(20px + var(--chatter-jitter) * max(0px, 100% - 353px));
   translate: 0 var(--crowd-chatter-travel);
   rotate: calc(var(--chatter-tilt) * 3deg);
-  box-shadow: 4px 4px 0
-    color-mix(in srgb, var(--primary) 65%, var(--inverse));
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--primary) 65%, var(--inverse));
   will-change: translate;
   animation: ffChatter var(--crowd-chatter-duration) ease-in-out;
 
