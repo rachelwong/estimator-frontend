@@ -17,9 +17,14 @@ import {
   landsOn,
   sameSquares,
   selectSquare,
-  squareAriaLabel,
   waitForChosen,
 } from '../lib.mjs'
+
+// A Square's aria-pressed: "true"/"false" where a click votes, null where it doesn't.
+async function squarePressed(page, time, resource) {
+  const length = Math.sqrt(await cells(page).count())
+  return cells(page).nth((length - 1 - resource) * length + time).getAttribute('aria-pressed')
+}
 
 // Long enough for the wave to land on a 5×5 grid.
 const WAVE_MS = 2000
@@ -68,8 +73,9 @@ export async function afterReveal({ browser, reporter }) {
   await settle(fresh, WAVE_MS)
 
   check('Fay holds her Square on the Reveal', sameSquares(await chosen(fay), [[1, 1]]))
-  check('Fay is told a click changes her Estimate', (await squareAriaLabel(fay, 3, 1)).endsWith(', click to change your Estimate'))
-  check('Fresh visitor is not', !(await squareAriaLabel(fresh, 3, 1)).includes('Estimate'))
+  // A Square that votes is a toggle (aria-pressed); a watcher's only opens names.
+  check('Fay’s Squares vote', (await squarePressed(fay, 3, 1)) !== null)
+  check('Fresh visitor’s do not', (await squarePressed(fresh, 3, 1)) === null)
   check('Nothing flashes on arrival', (await totalFlashes(admin, fay, fresh)) === 0)
 
   // --- Fay moves: everyone else sees it, and its new Square flashes -----------

@@ -1,4 +1,7 @@
 // The create form — PLAN.md Phase 3, fold-and-flip.md Stage 7.
+//
+// A rule's message is content and differs by theme, so a broken rule is read
+// off the field's aria-invalid rather than its wording.
 import {
   API,
   APP,
@@ -9,8 +12,6 @@ import {
   pageHeadings,
 } from "../lib.mjs";
 
-const NAME_RULE = "Use 1-20 letters, numbers or spaces, with no symbols.";
-const DESCRIPTION_RULE = "Keep description to 300 characters or fewer.";
 const DESCRIPTION = "PROJ-12 https://example.com/ticket/12.";
 const FIBONACCI_AT_55 = ["0", "1", "2", "3", "5", "8", "13", "21", "34", "55"];
 const DRAG_MOVES = 60;
@@ -29,10 +30,7 @@ export async function create({ browser, reporter }) {
   await page.getByRole("link", { name: "Start a session" }).first().click();
   check("Welcome button → /new", await landsOn(page, `${APP}/new`));
   await page.getByRole("heading", { name: "New session" }).waitFor();
-  check(
-    "New session is the one h1",
-    (await pageHeadings(page)).join() === "New session",
-  );
+  check("Create has one h1", (await pageHeadings(page)).length === 1);
 
   check("Create disabled with no name", await submit.isDisabled());
   check(
@@ -45,25 +43,16 @@ export async function create({ browser, reporter }) {
   // Validated on blur, before any request.
   await name.fill("Jim@Bob");
   await name.blur();
-  check(
-    "Symbol in name shows rule",
-    await page.getByText(NAME_RULE).isVisible(),
-  );
+  check("Symbol in name marks it invalid", await isInvalid(name));
   check("Create disabled for bad name", await submit.isDisabled());
 
   // A space is a name, not a symbol.
   await name.fill("Jim Bob");
   await name.blur();
-  check(
-    "Rule clears for a spaced name",
-    (await page.getByText(NAME_RULE).count()) === 0,
-  );
+  check("A spaced name is valid", !(await isInvalid(name)));
 
   await name.fill("Ada");
-  check(
-    "Rule clears for good name",
-    (await page.getByText(NAME_RULE).count()) === 0,
-  );
+  check("A good name is valid", !(await isInvalid(name)));
   check("Create disabled while max is 0", await submit.isDisabled());
 
   // Numerical ceiling is 20. Switching system resets the max to 0.
@@ -138,17 +127,11 @@ export async function create({ browser, reporter }) {
   );
 
   await description.fill("a".repeat(301));
-  check(
-    "301 characters shows the rule",
-    await page.getByText(DESCRIPTION_RULE).isVisible(),
-  );
+  check("301 characters marks it invalid", await isInvalid(description));
   check("Create disabled over 300", await submit.isDisabled());
 
   await description.fill(DESCRIPTION);
-  check(
-    "Rule clears at a good length",
-    (await page.getByText(DESCRIPTION_RULE).count()) === 0,
-  );
+  check("A good length is valid", !(await isInvalid(description)));
 
   // --- Created ----------------------------------------------------------------
   await submit.click();
@@ -199,6 +182,10 @@ export async function create({ browser, reporter }) {
     "Form keeps its name",
     (await offline.getByLabel("Name").inputValue()) === "Ada",
   );
+}
+
+async function isInvalid(field) {
+  return (await field.getAttribute("aria-invalid")) === "true";
 }
 
 // The axis value, not the slider's own index.

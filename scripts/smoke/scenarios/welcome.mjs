@@ -1,14 +1,10 @@
 // The Welcome page — fold-and-flip.md Stage 9. No backend involved: the demos
 // run on a sample Session the page carries itself.
-import {
-  APP,
-  descriptionBlock,
-  landsOn,
-  opensSafelyInNewTab,
-  pageHeadings,
-} from "../lib.mjs";
+//
+// Behaviour only. The copy, the demo's names and its description are content
+// (src/content.ts) and differ by theme, so no check here reads them.
+import { APP, landsOn, pageHeadings } from "../lib.mjs";
 
-const DEMO_CROWD = ["Mia", "Jim-1", "Noor"];
 const SIZES = { desktop: 1440, tablet: 834, mobile: 390 };
 const FRONTEND_REPO = "https://github.com/rachelwong/estimator-frontend";
 const BACKEND_REPO = "https://github.com/rachelwong/estimator-backend";
@@ -24,13 +20,12 @@ export async function welcome({ browser, reporter }) {
   );
   await desktop.goto(`${APP}/welcome`);
 
-  const hero = desktop.getByRole("heading", { name: /ship together/ });
+  const hero = desktop.getByRole("heading", { level: 1 });
   await hero.waitFor();
-  check("Hero heading shows", await hero.isVisible());
   const welcomeHeadings = await pageHeadings(desktop);
   check(
-    "Hero line is the one h1",
-    welcomeHeadings.length === 1 && /ship together/.test(welcomeHeadings[0]),
+    "Welcome has one h1",
+    welcomeHeadings.length === 1,
     welcomeHeadings.join(" | "),
   );
 
@@ -46,28 +41,6 @@ export async function welcome({ browser, reporter }) {
     "Demo popover waits while the grid is off screen",
     (await popover.count()) === 0,
   );
-  check(
-    "Demo is the real Reveal window",
-    await desktop.getByText("All estimates are now revealed!").isVisible(),
-  );
-  // The demo can't vote, so its notice says hover, not click.
-  check(
-    "Demo notice uses its own hover wording",
-    await desktop
-      .getByText("Hover over the grid to see how everyone estimated.")
-      .isVisible(),
-  );
-  // innerText collapses the constant's double space to one.
-  check(
-    "Demo Reveal shows the demo description",
-    (await descriptionBlock(desktop).innerText()) ===
-      `Add a demo description to this feature here ${FRONTEND_REPO}`,
-  );
-  check(
-    "Demo description links to the repo in a new tab",
-    await opensSafelyInNewTab(desktop, FRONTEND_REPO),
-  );
-
   // The hero demo is the first grid on the page.
   await desktop.evaluate(() =>
     document
@@ -77,9 +50,8 @@ export async function welcome({ browser, reporter }) {
   );
   await popover.waitFor();
   check(
-    "Demo popover opens once the wave lands, every name",
-    JSON.stringify(await popover.locator("li").allInnerTexts()) ===
-      JSON.stringify(DEMO_CROWD),
+    "Demo popover opens once the wave lands, listing names",
+    (await popover.locator("li").count()) > 0,
   );
 
   await desktop.keyboard.press("Escape");
@@ -111,7 +83,7 @@ export async function welcome({ browser, reporter }) {
     `${scrollStart} → ${scrollEnd}`,
   );
   const headingTop = await desktop
-    .getByRole("heading", { name: "How to use", level: 2 })
+    .locator("#how-to-use h2")
     .evaluate((el) => el.getBoundingClientRect().top);
   const headerBottom = await desktop
     .locator("header")
@@ -124,12 +96,33 @@ export async function welcome({ browser, reporter }) {
 
   check(
     "Repo cards link to both repos",
-    (await desktop
-      .getByRole("link", { name: "Frontend on GitHub" })
-      .getAttribute("href")) === FRONTEND_REPO &&
-      (await desktop
-        .getByRole("link", { name: "Backend on GitHub" })
-        .getAttribute("href")) === BACKEND_REPO,
+    (await desktop.locator(`main a[href="${FRONTEND_REPO}"]`).count()) > 0 &&
+      (await desktop.locator(`main a[href="${BACKEND_REPO}"]`).count()) > 0,
+  );
+
+  // --- Theme switch -----------------------------------------------------------
+  // Flips <html data-theme> and the switch's state. Never stored: a reload is
+  // back on Play.
+  const themeSwitch = desktop.getByRole("switch");
+  const htmlTheme = () =>
+    desktop.evaluate(() => document.documentElement.dataset.theme ?? "play");
+  check(
+    "Every load starts on Play",
+    (await themeSwitch.getAttribute("aria-checked")) === "false" &&
+      (await htmlTheme()) === "play",
+  );
+  await themeSwitch.click();
+  check(
+    "Switch turns Work on",
+    (await themeSwitch.getAttribute("aria-checked")) === "true" &&
+      (await htmlTheme()) === "work",
+  );
+  await desktop.reload();
+  await themeSwitch.waitFor();
+  check(
+    "Reload is back on Play",
+    (await themeSwitch.getAttribute("aria-checked")) === "false" &&
+      (await htmlTheme()) === "play",
   );
 
   // --- No sideways scroll at any size ----------------------------------------

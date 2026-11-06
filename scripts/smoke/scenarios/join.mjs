@@ -17,7 +17,9 @@ import {
   waitForChosen,
 } from '../lib.mjs'
 
-const NAME_RULE = 'Use 1-20 letters, numbers or spaces, with no symbols.'
+// A rule's message is content and differs by theme, so a broken rule is read
+// off the field's aria-invalid rather than its wording.
+const isInvalid = async (field) => (await field.getAttribute('aria-invalid')) === 'true'
 
 export async function join({ browser, reporter }) {
   const { check, openPage } = reporter
@@ -43,14 +45,14 @@ export async function join({ browser, reporter }) {
   check('No description block without one', (await descriptionBlock(page).count()) === 0)
   await name.fill('Jim@Bob')
   await name.blur()
-  check('Symbol in name shows rule', await page.getByText(NAME_RULE).isVisible())
+  check('Symbol in name marks it invalid', await isInvalid(name))
   check('Join disabled for bad name', await page.getByRole('button', { name: 'Join session' }).isDisabled())
   check('Bad name opens no socket', socketTraffic.length === 0)
 
   // A space is a name, not a symbol.
   await name.fill('Jim Bob')
   await name.blur()
-  check('Space in name clears the rule', (await page.getByText(NAME_RULE).count()) === 0)
+  check('A spaced name is valid', !(await isInvalid(name)))
 
   // --- Join, then Back must not create a second Participant ------------------
   await forgeNextSelection(page)
@@ -97,7 +99,7 @@ export async function join({ browser, reporter }) {
   check('Participant moves to /ended', await landsOn(page, /\/ended$/))
   sockets.close()
 
-  await page.getByText('All estimates are now revealed!').waitFor()
+  await page.locator('main [data-square]').first().waitFor()
   await page.mouse.move(0, 0)
   check('Crowded Square counts the people', ['3\npeople', '×3'].includes(await cellText(page, 1, 1)))
   // A live Participant can still vote here, so a click would vote. Names open on hover.
