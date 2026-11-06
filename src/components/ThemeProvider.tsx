@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { Theme } from '@/constants'
 import { ThemeContext } from '@/lib/themeContext'
+import { getInitialTheme, setStoredTheme } from '@/lib/themeStorage'
 import type { Theme as ThemeValue } from '@/types'
 import { loadWorkFonts } from '@/utils'
 
@@ -9,17 +10,19 @@ interface ThemeProviderProps {
   children: ReactNode
 }
 
-// Holds the theme the header switch flips (docs/plans/themes.md). Every load
-// starts on Play and nothing is stored, so there is no first-paint flash: Play
-// is the stylesheet's default.
+// Holds the theme the header switch flips (docs/plans/themes.md). A load starts
+// on a share link's ?theme=, else the theme this browser last used, else Play
+// (themeStorage.ts). Whichever it starts on, and every flip after, is stored.
 //
 // While Work is on, <html> carries data-theme="work", so CSS can swap its
-// tokens and reach portalled content (popovers, dialogs) too.
+// tokens and reach portalled content (popovers, dialogs) too. Play is the
+// stylesheet's default, so a Work load shows Play until the bundle runs.
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<ThemeValue>(Theme.PLAY)
+  const [theme, setTheme] = useState<ThemeValue>(getInitialTheme)
 
   useEffect(() => {
     const root = document.documentElement
+    setStoredTheme(theme)
 
     if (theme === Theme.WORK) {
       // Text shows in the fallback face until the fonts land (font-display: swap).

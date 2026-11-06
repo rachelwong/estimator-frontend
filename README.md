@@ -129,7 +129,7 @@ The estimator-plan.md was the original product plan that used MCPs to pull data 
 
 - [ ] adding a notes feature to allow participants to share more details beyond just their points selection
 - [ ] allowing participants to be anonymous. They can provide a name still, but their names could be hidden from other participants, and only the session creator (admin) can see all the names in full.
-- [ ] add a theme provider to toggle between fun and corporate visual modes for different team environments. A bit like [OpenJev](https://openjev.com/) but less obviously AI-slop.
+- [x] add a theme provider to toggle between fun and corporate visual modes for different team environments. A bit like [OpenJev](https://openjev.com/) but less obviously AI-slop.
 
 ### AI
 

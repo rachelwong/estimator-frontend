@@ -1,4 +1,4 @@
-// The only file that touches localStorage.
+// One of two files that touch localStorage; themeStorage.ts is the other.
 //
 // Plain functions rather than a hook: route loaders read the token and cannot
 // call hooks, and the token is written once at creation then read at entry, so

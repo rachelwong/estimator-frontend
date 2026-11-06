@@ -101,8 +101,8 @@ export async function welcome({ browser, reporter }) {
   );
 
   // --- Theme switch -----------------------------------------------------------
-  // Flips <html data-theme> and the switch's state. Never stored: a reload is
-  // back on Play.
+  // Flips <html data-theme> and the switch's state. Stored, so a reload keeps
+  // Work.
   const themeSwitch = desktop.getByRole("switch");
   const htmlTheme = () =>
     desktop.evaluate(() => document.documentElement.dataset.theme ?? "play");
@@ -120,9 +120,9 @@ export async function welcome({ browser, reporter }) {
   await desktop.reload();
   await themeSwitch.waitFor();
   check(
-    "Reload is back on Play",
-    (await themeSwitch.getAttribute("aria-checked")) === "false" &&
-      (await htmlTheme()) === "play",
+    "Reload keeps Work",
+    (await themeSwitch.getAttribute("aria-checked")) === "true" &&
+      (await htmlTheme()) === "work",
   );
 
   // --- No sideways scroll at any size ----------------------------------------

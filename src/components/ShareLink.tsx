@@ -4,7 +4,8 @@ import { AdminControls } from '@/components/AdminControls'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { COPIED_FEEDBACK_MS } from '@/constants'
-import { useContent } from '@/hooks'
+import { useContent, useTheme } from '@/hooks'
+import { withThemeParam } from '@/lib/themeStorage'
 import { cn } from '@/lib/utils'
 
 interface ShareLinkProps {
@@ -29,7 +30,8 @@ interface ShareLinkProps {
 export function ShareLink({ sessionId, onEndSession }: ShareLinkProps) {
   const [isCopied, setIsCopied] = useState(false)
   const content = useContent()
-  const url = `${window.location.origin}/${sessionId}/join`
+  const { theme } = useTheme()
+  const url = withThemeParam(`${window.location.origin}/${sessionId}/join`, theme)
 
   async function handleCopy() {
     await navigator.clipboard.writeText(url)
