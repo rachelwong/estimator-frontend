@@ -222,8 +222,11 @@ Flagged near-duplicates, kept as drawn: `night-850`/`night-800`, `sky-925`/`sky-
 | `crowd-foreground`           | Text on crowd 0–2                                | `plum-950`   | `steel-100`     |
 | `crowd-3-foreground`         | Text on crowd 3                                  | `white`      | `white`         |
 | `crowd-4-foreground`         | Text on crowd 4                                  | `white`      | `sky-975`       |
-| `switch-track`               | Theme switch track                               | `grape-200`  | `sky-750`       |
-| `switch-track-hover`         | Theme switch hover                               | `grape-200`  | `sky-720`       |
+| `switch-track`               | Theme switch track (phase 3: `grape-100`, as `S10-Toggle` draws it) | `grape-100`  | `sky-750`       |
+| `switch-track-hover`         | Theme switch hover                               | `grape-100`  | `sky-720`       |
+| `switch-border`              | Switch edge, and the Play knob's edge (_added_)  | `plum-950`   | `sky-400`       |
+| `switch-foreground`          | Switch label (_added_)                           | `plum-950`   | `white`         |
+| `switch-knob`                | Switch knob (_added_)                            | `white`      | `white`         |
 | `chrome-dot`                 | Window chrome middle dot                         | `mint-400`   | `night-700` _pick_ (Work has no chrome) |
 | `tint-plain`, `tint-butter`, `tint-mint`, `tint-lavender` | How-to-use card tints (plain, mint, lavender _added_) | `white`, `butter`, `mint-100`, `grape-50` | `night-800` _pick_ |
 
@@ -268,14 +271,14 @@ src/
   constants.ts               + Theme, ActionFailure                                          ✓
   lib/themeContext.ts        the React context                                               ✓
   components/
-    ThemeProvider.tsx        useState(Theme.PLAY), sets <html data-theme>                    ✓ (fonts: phase 3)
-    ThemeSwitch.tsx          role="switch", aria-checked, label + aria-label from content    ✓ (plain; styled in phase 3)
+    ThemeProvider.tsx        useState(Theme.PLAY), sets <html data-theme>, loads Work fonts   ✓
+    ThemeSwitch.tsx          role="switch", aria-checked, label + aria-label from content    ✓
   hooks/useTheme.ts          { theme, toggleTheme }                                          ✓
   hooks/useContent.ts        the theme's resolved content (both resolved once at load)       ✓
   utils/content.ts           resolveContent(tree, theme)                                     ✓
   utils/actionError.ts       server message, or the theme's words for an ActionFailure       ✓
-  utils/loadWorkFonts.ts     one cached promise of the @fontsource imports
-  assets/sprites/work/       Round 14 SVGs (wordmark, house-rule illustrations, knob slash) + Work copies of shared icons
+  utils/loadWorkFonts.ts     the two @fontsource-variable imports (import() caches them)      ✓
+  assets/sprites/work/       Round 14 SVGs (wordmark, house-rule illustrations, knob slash ✓) + Work copies of shared icons
 ```
 
 ---
@@ -286,7 +289,7 @@ Each phase ships on its own, and each is checked before the next starts (kill se
 
 1. **Centralise copy + theme state (no visual change).** ✓ Done. `CONTENT` holds every visible string, aria-label, window title, chip, validation and action message, the demo Reveal's names and description, and the crowd chatter, each as `{ play, work }`. Counts and positions are functions; inline emphasis and links are HTML parsed with `html-react-parser`. Copy that left `constants.ts`: `POINT_SYSTEM_LABEL`, `SELECTION_LABEL`, `AXIS_LABEL`, `REVEAL_NOTICE_BODY`, `ERROR_SCREEN_COPY`, `WELCOME_DEMO_REVEAL`, `WELCOME_DEMO_DESCRIPTION`, `CROWD_CHATTER_LINES`. Pulled forward from phase 3 so the swap can be seen: `Theme`, `ThemeProvider` around `RouterProvider`, `useTheme`, and a plain `ThemeSwitch` in `PageLayout`. Not moved: server error messages (they come from the backend), `index.html` meta. Smoke suite rewritten to test behaviour only (decision 20), plus a switch check: starts on Play, flips `aria-checked` and `<html data-theme>`, reload returns to Play.
 2. **Two-tier tokens, Play only (no visual change).** ✓ Done. Pixel-diffed against the phase 1 build on every screen at 3 breakpoints. Tailwind's default palette, shadows and radii are cleared (`--color-*: initial`), so only roles generate utilities. Roles the table lacked, or whose Play value was wrong, are marked _added_ above. Decorative Play-only colours (change-flash rainbow, confetti, sprite sticker shadow) read primitives directly. Radius roles are applied where the job is unambiguous (buttons, fields, chips, tooltips, popover, notices, cards, dialog, House rules, loader, slider); the rest wait for the phase 4 walk. Was: Add Play primitives and every role above with its Play value (resolve each "today"); map roles in `@theme inline`; drop the old `@theme` names. Assign each existing use to a role: `ink` (77 uses), `white` (24), `selection` (6) and `accent` (9) all split by job. Shadows and radii move onto their roles. Raw CSS in `index.css` (keyframes, slider) moves onto roles. Update the hex comments in sprites. Update `DESIGN.md` §2, §4 and §11 to the role names.
-3. **Switch look + fonts.** The plumbing landed in phase 1; what's left is lazy Work fonts and styling the switch. Play look: pill, lavender track, spade knob, Silkscreen "Play". Work look: Round 14 pill, "Work". Work doesn't look right yet. That's expected. Verify `cn` merges classes carrying the `work:` variant without dropping any.
+3. **Switch look + fonts.** ✓ Done. Work fonts are `@fontsource-variable/red-hat-display` and `red-hat-text` (one variable file per family covers 500–700 / 400–600), dynamic-imported by `ThemeProvider` when Work turns on: none fetched on Play, fetched once on the first switch, none after. A `[data-theme='work']` block now holds the switch roles, `shadow-knob` and the three font roles; the `work` custom variant is declared. Work primitives added so far: `sky-400`, `sky-720`, `sky-750`. Play switch from `S10-Toggle` (92×34 pill, 3px ink edge, white spade knob on the left, Silkscreen 12px); Work switch as built on the `NL-*` headers (76×30, 1px `sky-400` edge, white knob on the right carrying the yellow slash, Red Hat Text 600 13px). Knob glyphs are sprites (`switch-spade.svg`, `work/switch-slash.svg`). Focus keeps the repo's outline (`ring`) rather than the board's double box-shadow ring. `cn` checked: `work:` classes are never dropped against their Play twins, and two `work:` classes that conflict keep the last one. Work doesn't look right outside the switch yet. That's expected. Was: lazy Work fonts and styling the switch; verify `cn` merges classes carrying the `work:` variant without dropping any.
 4. **Work tokens + layout.** Add Work primitives and the `[data-theme='work']` overrides for every role, plus `color-scheme: dark`. Then walk every screen at 3 breakpoints against the `NL-*` boards and add `work:` classes only where tokens can't reach: borders 3px→1px (dashed stays dashed), gapless grid (G6), header layout, admin bar, popovers and the end-session dialog.
 5. **Imagery + motion.** Work: `FOLD / FLIP` wordmark in place of the card lockup. Pixel sprites hidden (hero, team, demo, scatter, dither band). House-rules line illustrations from `NL-HouseRules-*` (their stroke alphas live in the SVGs). Work copies (`sprites/work/`) of every shared icon still visible in Work, starting with `menu`, `close`, `bug`. Swaps go in the component via `useTheme()` (17 files import sprites today). Work SVGs carry hardcoded Work hex (svgs-live-in-sprites). Motion off in Work: logo, change flash, confetti, chatter, Reveal wave, Feedback tile; pixel loader → plain bar.
 6. **Document + verify.** `DESIGN.md` gets a "Work theme" section (tokens, type, shape, imagery, no motion) and the pointer at its top is updated. Lint, build, smoke both themes (the switch check landed in phase 1; it reads no copy, per decision 20). Check: a live session survives toggling mid-estimate, first switch loads fonts once, reduced motion, AA contrast on every Work foreground/background role pair.

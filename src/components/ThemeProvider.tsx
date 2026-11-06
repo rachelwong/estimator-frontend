@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { Theme } from '@/constants'
 import { ThemeContext } from '@/lib/themeContext'
 import type { Theme as ThemeValue } from '@/types'
+import { loadWorkFonts } from '@/utils'
 
 interface ThemeProviderProps {
   children: ReactNode
@@ -21,6 +22,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     const root = document.documentElement
 
     if (theme === Theme.WORK) {
+      // Text shows in the fallback face until the fonts land (font-display: swap).
+      loadWorkFonts()
       root.dataset.theme = Theme.WORK
     } else {
       delete root.dataset.theme

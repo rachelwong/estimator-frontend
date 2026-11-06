@@ -18,8 +18,8 @@
    Tier 2, roles: one job each. Components only ever use roles (`bg-card`,
    `shadow-control`), and a theme swaps role values, never classes. Two roles
    with the same Play value stay two roles, because Work gives them different
-   ones. Every role starts on its Play value; Work overrides arrive under
-   [data-theme='work'] in phase 4. */
+   ones. Every role starts on its Play value; Work overrides sit under
+   [data-theme='work'] below (the switch and fonts so far, the rest in phase 4). */
 :root {
   /* tier 1: Play primitives */
   --plum-950: #1e1b2e;
@@ -41,6 +41,11 @@
   --coral-400: #ff5a5f;
   --brick-700: #b42318;
   --white: #ffffff;
+
+  /* tier 1: Work primitives (the NL-* boards), so far only the switch's */
+  --sky-400: #5fb2d6;
+  --sky-720: #0d7dae;
+  --sky-750: #0b6e99;
 
   /* tier 2: colour roles, Play values */
   --background: var(--cream);
@@ -120,8 +125,11 @@
   --crowd-foreground: var(--plum-950);
   --crowd-3-foreground: var(--white);
   --crowd-4-foreground: var(--white);
-  --switch-track: var(--grape-200);
-  --switch-track-hover: var(--grape-200);
+  --switch-track: var(--grape-100);
+  --switch-track-hover: var(--grape-100);
+  --switch-border: var(--plum-950);
+  --switch-foreground: var(--plum-950);
+  --switch-knob: var(--white);
   --chrome-dot: var(--mint-400);
   --tint-plain: var(--white);
   --tint-butter: var(--butter);
@@ -163,6 +171,29 @@
   --font-body: "Figtree Variable", system-ui, sans-serif;
   --font-label: "Silkscreen", monospace;
 }
+
+/* Work's role values (docs/plans/themes.md). Only the switch's roles and the
+   fonts so far; phase 4 adds the rest and color-scheme: dark. The Red Hat
+   faces load on the first switch (utils/loadWorkFonts.ts), and until they land
+   text shows in the fallback face. */
+[data-theme="work"] {
+  --switch-track: var(--sky-750);
+  --switch-track-hover: var(--sky-720);
+  --switch-border: var(--sky-400);
+  --switch-foreground: var(--white);
+  --switch-knob: var(--white);
+
+  --shadow-knob: 0 1px 2px rgb(0 0 0 / 0.3);
+
+  --font-display: "Red Hat Display Variable", sans-serif;
+  --font-body: "Red Hat Text Variable", system-ui, sans-serif;
+  --font-label: "Red Hat Text Variable", system-ui, sans-serif;
+}
+
+/* For what a token can't express in Work: border widths, layout, sizes
+   (decision 11). `:where` keeps it at zero added specificity, so a `work:`
+   class overrides its Play twin by source order alone. */
+@custom-variant work (&:where([data-theme="work"], [data-theme="work"] *));
 
 /* Roles mapped to utilities. Tailwind's own palette is cleared, so a class
    naming a colour that isn't a role (`bg-white`, `text-red-500`) generates
@@ -251,6 +282,9 @@
   --color-crowd-4-foreground: var(--crowd-4-foreground);
   --color-switch-track: var(--switch-track);
   --color-switch-track-hover: var(--switch-track-hover);
+  --color-switch-border: var(--switch-border);
+  --color-switch-foreground: var(--switch-foreground);
+  --color-switch-knob: var(--switch-knob);
   --color-chrome-dot: var(--chrome-dot);
   --color-tint-plain: var(--tint-plain);
   --color-tint-butter: var(--tint-butter);
